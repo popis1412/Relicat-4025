@@ -81,11 +81,7 @@ public class PlayerController : MonoBehaviour
             if(distance < (1.5f / transform.localScale.x) + 0.2f)
             {
                 GameObject click_obj = hit.transform.gameObject;
-                if(Time.time > startholdtime + timeDig)
-                {
-                    lastDigTime = startholdtime;
-                    click_obj.GetComponent<Block>().BlockDestroy(lastDigTime);
-                }
+                click_obj.GetComponent<Block>().BlockDestroy(Time.deltaTime);
             }
 
             //print(distance);
@@ -105,23 +101,19 @@ public class PlayerController : MonoBehaviour
     // Tip: 코드 퍼스트, 모델 퍼스트, 데이터 퍼스트
 
     // TOOD: 플레이어가 모래에 갇혔을 때, 플레이어의 캐는 범위를 블럭 1로 설정을 한다. ( 시야 범위는 그냥 그대로 둬도 됨)
-    void Digging()
-    {
-        
-    }
     // https://discussions.unity.com/t/new-input-system-how-to-use-the-hold-interaction/726823/4
     // 일단 Digging을 할 때 계속 꾹 누르게 된다고 한다면 계속 블럭을 캘 수 있게 하기 (마크처럼)
-    private IEnumerator DiggingProcess(InputAction.CallbackContext callback)
-    {
-        isdigging = true;
+    //private IEnumerator DiggingProcess(InputAction.CallbackContext callback)
+    //{
+    //    isdigging = true;
 
-        while(isdigging)
-        {
-            Digging();
+    //    while(isdigging)
+    //    {
+    //        Digging();
 
-            yield return isdigging = false;
-        }
-    }
+    //        yield return isdigging = false;
+    //    }
+    //}
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

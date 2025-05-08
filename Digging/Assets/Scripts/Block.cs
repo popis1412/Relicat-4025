@@ -65,15 +65,15 @@ public class Block : MonoBehaviour
 
         print($"blockHealth: {blockHealth}, blockDamage: {blockDamage}");
 
-        if(blockHealth < 2.25f)
+        if(blockHealth > 0.05f)
         {
             spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/block/block_breaking_01");
         }
-        else if(blockHealth > 1.0f)
+        else if(blockHealth > 0.03f)
         {
             spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/block/block_breaking_02");
         }
-        else if(blockHealth > 0.5f)
+        else if(blockHealth > 0.02f)
         {
             spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/block/block_breaking_03");
         }
