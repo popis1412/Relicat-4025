@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 704f8b9034c57b641b18587947f362d4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - level1_block_Normal_0: {instanceID: 0}
+  - level1_block_Normal_1: {instanceID: 0}
+  - level1_block_Normal_2: {instanceID: 0}
+  - level1_block_Jewel_0: {instanceID: 0}
+  - level1_block_Jewel_1: {instanceID: 0}
+  - level1_block_Jewel_2: {instanceID: 0}
+  - spriteRenderer: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
