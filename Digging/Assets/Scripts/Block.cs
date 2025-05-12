@@ -26,13 +26,8 @@ public class Block : MonoBehaviour
     private void Awake()
     {
         spriteRenderer = this.GetComponent<SpriteRenderer>();
-
-        Normal_block_Breaking = Resources.LoadAll<Sprite>("Sprites/block/Block_breaking");
-    }
-
-    private void Start()
-    {
         blockHealth = 3;
+        Normal_block_Breaking = Resources.LoadAll<Sprite>("Sprites/block/Block_breaking");
     }
 
     public void ChangeBlock(int newBlockType)
@@ -68,7 +63,7 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void BlockDestroy(float blockDamage)
+    public void BlockDestroy(float blockDamage, GameObject player)
     {
         blockHealth -= blockDamage;
 
