@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.InputSystem.Interactions;
 
 public class PlayerController : MonoBehaviour
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float jumpSpeed = 5f;
+    [SerializeField] private float maxHangDistance = 0.5f;
 
     [SerializeField] private float timeDig = 0.5f;     // 블록 캐는 시간
     [SerializeField] private float startholdtime;    // 처음 누른 시간
@@ -51,15 +53,23 @@ public class PlayerController : MonoBehaviour
         playercontrols.Player.Jump.canceled += ctx => isJumping = false;
 
         playercontrols.Player.Digging.started += DiggingStart;
-        playercontrols.Player.Digging.performed += Digging;
+        //playercontrols.Player.Digging.performed += Digging;
     }
 
-    private void DiggingStart(InputAction.CallbackContext context)
+    private void Update()
     {
-        startholdtime = Time.time;
+        if(playercontrols.Player.Digging.IsPressed())
+        {
+            GameObject block = GetVaildBlockUnderMouse();
+            if(block != null)
+            {
+                block.GetComponent<Block>().BlockDestroy(Time.deltaTime);
+            }
+        }
     }
 
-    private void Digging(InputAction.CallbackContext context)
+    // 클릭한 블록 가져오기
+    private GameObject GetVaildBlockUnderMouse()
     {
         // 마우스 레이저
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -71,22 +81,57 @@ public class PlayerController : MonoBehaviour
             Vector2 playerPos = new Vector2(transform.position.x, transform.position.y);
             Vector2 hitPos = new Vector2(hit.transform.position.x, hit.transform.position.y);
 
-            float distance = Mathf.Sqrt(Mathf.Pow(hitPos.x - playerPos.x, 2) +
-                Mathf.Pow(hitPos.y - playerPos.y, 2));
+            // 두 Vector의 사이의 거리
+            float distance = Mathf.Sqrt(Mathf.Pow(hitPos.x - playerPos.x, 2) + Mathf.Pow(hitPos.y - playerPos.y, 2));
+            // 캐릭터 기준 블록을 캘 수 있는 최대 거리
+            float DigDistance = (1.5f / transform.localScale.x) + maxHangDistance;
+
+            if(distance < DigDistance)
+            {
+                return hit.collider.gameObject;
+            }
+            //print($"block Distance: {DigDistance}, Character Distance: {distance}");
+        }
+
+        return null;
+    }
 
 
-            // 타일과 충돌 및 두 물체의 거리가 √2보다 작으면 블록을 캐기
-            // 0.2f를 더한 이유는 플레이어가 블럭으로부터 항상 가운데(0.5)에 있는 것이 아니기 때문에
-            // 플레이어가 아슬하게 걸치는 거리인 0.2를 더한 것임. 
-            if(distance < (1.5f / transform.localScale.x) + 0.2f)
+    private void DiggingStart(InputAction.CallbackContext context)
+    {
+        startholdtime = Time.time;
+    }
+
+    /*private void Digging(InputAction.CallbackContext context)
+    {
+        // 마우스 레이저
+        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
+
+        // 콜라이더가 없(배경, 빈 화면)거나 블록인 경우만 캐기 
+        if(hit.collider != null && hit.collider.CompareTag("Block"))
+        {
+            Vector2 playerPos = new Vector2(transform.position.x, transform.position.y);
+            Vector2 hitPos = new Vector2(hit.transform.position.x, hit.transform.position.y);
+
+            // 두 Vector의 사이의 거리
+            float distance = Mathf.Sqrt(Mathf.Pow(hitPos.x - playerPos.x, 2) + Mathf.Pow(hitPos.y - playerPos.y, 2));
+            // 캐릭터 기준 블록을 캘 수 있는 최대 거리
+            float DigDistance = (1.5f / transform.localScale.x) + maxHangDistance;
+
+            if(distance < DigDistance) 
             {
                 GameObject click_obj = hit.transform.gameObject;
-                click_obj.GetComponent<Block>().BlockDestroy(Time.deltaTime);
+                
+                //if(Time.time < startholdtime + timeDig)
+                //{
+                //    startholdtime = Time.time;
+                //}
             }
-
-            //print(distance);
+            //print($"block Distance: {DigDistance}, Character Distance: {distance}");
         }
-    }
+        
+    }*/
 
     private void FixedUpdate()
     {
