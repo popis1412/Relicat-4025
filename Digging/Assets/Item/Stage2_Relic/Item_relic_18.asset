@@ -10,7 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b81c96ecd3f7b634aba59c5ff6767807, type: 3}
-  m_Name: Item_relic03
+  m_Name: Item_relic_18
   m_EditorClassIdentifier: 
-  itemName: can
-  itemImage: {fileID: 21300000, guid: 03bc42e00af211d429e288e4fe51ba25, type: 3}
+  itemName: gamepad
+  itemImage: {fileID: 21300000, guid: f5086e6c4615f3942ba83b5bc5667fd5, type: 3}
+  count: 0
+  rarity: 3
+  value: 300
+  duplicate_value: 60

@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     public Inventory Inventory;
     [SerializeField] private List<Item> items;
+    [SerializeField] private List<Item> minerals;
 
     [SerializeField] private GameObject Inventory_obj;
     Vector3 Inventory_StartPos;
@@ -32,12 +33,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         currentTime += Time.deltaTime;
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    Inventory.AddItem(items[3], 1);
-        //}
-
-        // 인벤토리 Tab 액션
+        
         if (Input.GetKeyDown(KeyCode.Tab) && !isInventoryMoving)
         {
             currentTime = 0f;
@@ -73,26 +69,40 @@ public class Player : MonoBehaviour
         {
             Inventory.ClearItem();
         }
-        if (Input.GetKeyDown(KeyCode.Keypad0))
+
+
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            Inventory.AddItem(items[0], 1);
+            Inventory.AddItem(minerals[0], 1);
         }
-        if (Input.GetKeyDown(KeyCode.Keypad1))
+        if (Input.GetKeyDown(KeyCode.X))
         {
-            Inventory.AddItem(items[1], 1);
+            Inventory.AddItem(items[9], 1);
         }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            Inventory.AddItem(items[17], 1);
+        }
+
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Inventory.SellItem(items[0]);
+            Inventory.SellItem(minerals[0]);
+            //Debug.Log(minerals[0].value);
+            //Debug.Log(minerals[0].duplicate_value);
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
-            Inventory.SellItem(items[1]);
+            Inventory.SellItem(items[9]);
+            //Debug.Log(items[9].value);
+            //Debug.Log(items[9].duplicate_value);
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Inventory.SellItem(items[2]);
+            Inventory.SellItem(items[17]);
+            //Debug.Log(items[17].value);
+            //Debug.Log(items[17].duplicate_value);
         }
+
     }
 }
