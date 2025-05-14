@@ -51,19 +51,17 @@ public class PlayerController : MonoBehaviour
 
         playercontrols.Player.Jump.canceled += ctx => jumpInput = 0;
         playercontrols.Player.Jump.canceled += ctx => isJumping = false;
-
-        playercontrols.Player.Digging.started += DiggingStart;
-        //playercontrols.Player.Digging.performed += Digging;
     }
 
     private void Update()
     {
+        // 마우스 왼쪽 버튼 누르는 동안
         if(playercontrols.Player.Digging.IsPressed())
         {
             GameObject block = GetVaildBlockUnderMouse();
             if(block != null)
             {
-                block.GetComponent<Block>().BlockDestroy(Time.deltaTime);
+                block.GetComponent<Block>().BlockDestroy(Time.deltaTime, this.gameObject);
             }
         }
     }
@@ -95,43 +93,6 @@ public class PlayerController : MonoBehaviour
 
         return null;
     }
-
-
-    private void DiggingStart(InputAction.CallbackContext context)
-    {
-        startholdtime = Time.time;
-    }
-
-    /*private void Digging(InputAction.CallbackContext context)
-    {
-        // 마우스 레이저
-        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
-
-        // 콜라이더가 없(배경, 빈 화면)거나 블록인 경우만 캐기 
-        if(hit.collider != null && hit.collider.CompareTag("Block"))
-        {
-            Vector2 playerPos = new Vector2(transform.position.x, transform.position.y);
-            Vector2 hitPos = new Vector2(hit.transform.position.x, hit.transform.position.y);
-
-            // 두 Vector의 사이의 거리
-            float distance = Mathf.Sqrt(Mathf.Pow(hitPos.x - playerPos.x, 2) + Mathf.Pow(hitPos.y - playerPos.y, 2));
-            // 캐릭터 기준 블록을 캘 수 있는 최대 거리
-            float DigDistance = (1.5f / transform.localScale.x) + maxHangDistance;
-
-            if(distance < DigDistance) 
-            {
-                GameObject click_obj = hit.transform.gameObject;
-                
-                //if(Time.time < startholdtime + timeDig)
-                //{
-                //    startholdtime = Time.time;
-                //}
-            }
-            //print($"block Distance: {DigDistance}, Character Distance: {distance}");
-        }
-        
-    }*/
 
     private void FixedUpdate()
     {
