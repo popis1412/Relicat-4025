@@ -6,6 +6,7 @@ using TMPro;
 public class Inventory : MonoBehaviour
 {
     public List<Item> items;
+    public int money;
 
     [SerializeField]
     private Transform slotParent;
@@ -114,6 +115,8 @@ public class Inventory : MonoBehaviour
         }
         items.Clear();
         FreshSlot();
+
+        money = 0;
         
     }
 
@@ -127,9 +130,12 @@ public class Inventory : MonoBehaviour
 
                 if (items[i].count <= 0)
                 {
+                    items[i].count = 0;
                     items.RemoveAt(i);
                 }
 
+                money += _item.value;
+                Debug.Log(money);
                 break; // 아이템은 유일하다고 가정
             }
         }
@@ -137,20 +143,4 @@ public class Inventory : MonoBehaviour
         FreshSlot(); // 리스트 변경 후 UI 갱신
     }
 
-
-
-    private void SearchSlotEA(string num)
-    {
-        for (int i = 0; i < items.Count; i++)
-        {
-            if (slots[i].item.itemImage != null)
-            {
-                Transform parent = slots[i].transform.parent;
-                TextMeshProUGUI childtext = parent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-                Debug.Log(childtext);
-                childtext.text = num;
-            }
-
-        }
-    }
 }
