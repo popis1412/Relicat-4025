@@ -63,7 +63,7 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void BlockDestroy(float blockDamage, GameObject player)
+    public void BlockDestroy(float blockDamage, Player player)
     {
         blockHealth -= blockDamage;
 
