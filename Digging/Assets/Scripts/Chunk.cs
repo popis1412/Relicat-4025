@@ -9,13 +9,16 @@ public class Chunk : MonoBehaviour
 
     [SerializeField] int boxCount = 3;       //생성할 랜덤박스 개수
     [SerializeField] int jewelCount = 10;    //생성할 보석 개수
-
-    [SerializeField] GameObject player;
+    [SerializeField] int sandCount = 10; // 생성할 모래 개수
+    [SerializeField] int relicBlockCount = 3;   //생성할 유물블럭 개수
 
     public void AppendBlocksDictionary()
     {
         for (int i = 0; i < blocks.Length; i++)
+        {
             blocksDictionary.blockPosition.Add(blocks[i].transform.position, blocks[i]);
+            blocks[i].GetComponent<Block>().blocksDictionary = blocksDictionary;
+        }
     }
 
     void CallChangeBlock(GameObject block, int changeBlockType)
@@ -23,6 +26,7 @@ public class Chunk : MonoBehaviour
         block.GetComponent<Block>().nowBlockType = changeBlockType;
         block.GetComponent<Block>().ChangeBlock(changeBlockType);
     }
+
     void Start()
     {
         List<int> numbers = new List<int>();    //랜덤 수열 선언
@@ -43,6 +47,7 @@ public class Chunk : MonoBehaviour
 
         int blockChangeCount = 0;   //바꾼 블럭 개수
 
+        //보물상자 생성 시작
         int boxIndex = blockChangeCount + boxCount;
         for (int i = blockChangeCount; i <  boxIndex; i++)
         {
@@ -51,10 +56,10 @@ public class Chunk : MonoBehaviour
             {
                 blocks[numbers[i]].GetComponent<Block>().nowBlockType = 1;
                 blocks[numbers[i]].GetComponent<Block>().ChangeBlock(1);
-                Vector2 xPlus = new Vector2(blocks[numbers[i]].transform.position.x + 1.0f, blocks[numbers[i]].transform.position.y);
-                Vector2 xMinus = new Vector2(blocks[numbers[i]].transform.position.x - 1.0f, blocks[numbers[i]].transform.position.y);
-                Vector2 yPlus = new Vector2(blocks[numbers[i]].transform.position.x, blocks[numbers[i]].transform.position.y + 1.0f);
-                Vector2 yMinus = new Vector2(blocks[numbers[i]].transform.position.x, blocks[numbers[i]].transform.position.y - 1.0f);
+                Vector2 xPlus = (Vector2)blocks[numbers[i]].transform.position + new Vector2(1, 0);
+                Vector2 xMinus = (Vector2)blocks[numbers[i]].transform.position + new Vector2(-1, 0);
+                Vector2 yPlus = (Vector2)blocks[numbers[i]].transform.position + new Vector2(0, 1);
+                Vector2 yMinus = (Vector2)blocks[numbers[i]].transform.position + new Vector2(0, -1);
 
                 if (blocksDictionary.blockPosition.ContainsKey(xPlus) &&
                     blocksDictionary.blockPosition[xPlus].GetComponent<Block>().nowBlockType == 0)
@@ -84,40 +89,55 @@ public class Chunk : MonoBehaviour
 
 
         }
+        //보물상자 생성 끝
 
-        int jewelIndex = blockChangeCount + jewelCount;
-
-        for(int i = blockChangeCount; i < jewelIndex; i++)
+        //보석:석탄 생성 시작
+        int coalIndex = blockChangeCount + jewelCount;
+        for(int i = blockChangeCount; i < coalIndex; i++)
         {
             blockChangeCount++;
             if (blocks[numbers[i]].GetComponent<Block>().nowBlockType != 0)
             {
-                jewelIndex++;
+                coalIndex++;
             }
             else
             {
                 CallChangeBlock(blocks[numbers[i]], 2);
             }
         }
+        //보석:석탄 생성 끝
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        float distanceToPlayer = Vector2.Distance(this.transform.position, player.transform.position);
-
-        if(player != null)
+        //모래 생성 시작
+        int sandIndex = blockChangeCount + sandCount;
+        for (int i = blockChangeCount; i < sandIndex; i++)
         {
-            if (this.gameObject.activeSelf && distanceToPlayer > 300)
+            blockChangeCount++;
+            if (blocks[numbers[i]].GetComponent<Block>().nowBlockType != 0)
             {
-                this.gameObject.SetActive(false);
+                sandIndex++;
             }
-            else if (!this.gameObject.activeSelf && distanceToPlayer <= 300)
+            else
             {
-                this.gameObject.SetActive(true);
+                CallChangeBlock(blocks[numbers[i]], 6);
             }
         }
+        //모래 생성 끝
+
+        //유물 생성 시작
+        int relicBoxIndex = blockChangeCount + relicBlockCount;
+        for (int i = blockChangeCount; i < relicBoxIndex; i++)
+        {
+            blockChangeCount++;
+            if (blocks[numbers[i]].GetComponent<Block>().nowBlockType != 0)
+            {
+                relicBoxIndex++;
+            }
+            else
+            {
+                CallChangeBlock(blocks[numbers[i]], 4);
+            }
+        }
+        //유물 생성 끝
     }
 
 }

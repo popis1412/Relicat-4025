@@ -5,8 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Inventory Inventory;
-    [SerializeField] private List<Item> items;
-    [SerializeField] private List<Item> minerals;
+    public List<Item> items;
+    public List<Item> minerals;
 
     [SerializeField] private GameObject Inventory_obj;
     Vector3 Inventory_StartPos;
