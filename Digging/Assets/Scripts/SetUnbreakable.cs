@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ground : MonoBehaviour
+public class SetUnbreakable : MonoBehaviour
 {
     [SerializeField] BlocksDictionary blocksDictionary;
     [SerializeField] GameObject[] blocks;
@@ -12,6 +12,15 @@ public class Ground : MonoBehaviour
         {
             blocksDictionary.blockPosition.Add(blocks[i].transform.position, blocks[i]);
             blocks[i].GetComponent<Block>().blocksDictionary = blocksDictionary;
+        }
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < blocks.Length; i++)
+        {
+            blocks[i].GetComponent<Block>().nowBlockType = -1;
+            blocks[i].GetComponent<Block>().ChangeBlock(-1);
         }
     }
 }
