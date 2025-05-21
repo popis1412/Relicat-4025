@@ -29,6 +29,7 @@ public class Inventory : MonoBehaviour
         FreshSlot();
     }
 
+    // 슬롯 새로고침
     public void FreshSlot()
     {
         int i = 0;
@@ -62,6 +63,7 @@ public class Inventory : MonoBehaviour
             if (item.itemName == _item.itemName)
             {
                 _item.count += addEA;
+                _item.ishaveitem = true;
                 for(int i = 0; i < items.Count; i++)
                 {
                     if(slots[i].item.itemName == _item.itemName)
@@ -100,6 +102,8 @@ public class Inventory : MonoBehaviour
             Debug.Log("슬롯이 가득 차 있습니다.");
         }
     }
+
+    // 보유중인 아이템 초기화
     public void ClearItem()
     {
         foreach (Item item in items)
@@ -120,6 +124,7 @@ public class Inventory : MonoBehaviour
         
     }
 
+    // 특정 아이템 판매
     public void SellItem(Item _item)
     {
         for (int i = 0; i < items.Count; i++)
@@ -127,15 +132,27 @@ public class Inventory : MonoBehaviour
             if (items[i].itemName == _item.itemName)
             {
                 items[i].count--;
-
+                if (items[i].isMineral == true)
+                {
+                    money += _item.value;
+                }
+                else if(items[i].isalreadySell == false)
+                {
+                    money += _item.value;
+                    items[i].isalreadySell = true;
+                }
+                else
+                {
+                    money += _item.duplicate_value;
+                }
+                
                 if (items[i].count <= 0)
                 {
                     items[i].count = 0;
                     items.RemoveAt(i);
                 }
-
-                money += _item.value;
                 Debug.Log(money);
+
                 break; // 아이템은 유일하다고 가정
             }
         }
@@ -143,4 +160,31 @@ public class Inventory : MonoBehaviour
         FreshSlot(); // 리스트 변경 후 UI 갱신
     }
 
+    // 특정 아이템 전부 판매
+    public void SellAllItem(Item _item)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (items[i].itemName == _item.itemName)
+            {
+                int idx = items[i].count;
+                for (int j = 0; j < idx; j++)
+                {
+                    items[i].count--;
+
+                    if (items[i].count <= 0)
+                    {
+                        items[i].count = 0;
+                        items.RemoveAt(i);
+                    }
+                    money += _item.value;
+                }
+                
+                Debug.Log(money);
+                break; // 아이템은 유일하다고 가정
+            }
+        }
+
+        FreshSlot(); // 리스트 변경 후 UI 갱신
+    }
 }

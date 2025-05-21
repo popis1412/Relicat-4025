@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Item
+  - Block
+  - Shop
+  - Museum
+  - Collect
   layers:
   - Default
   - TransparentFX
