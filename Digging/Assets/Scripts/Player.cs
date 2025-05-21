@@ -5,11 +5,13 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Inventory Inventory;
+
     public Collection Collection;
+
     public List<Item> items;
     public List<Item> minerals;
 
-    // ÀÎº¥Åä¸®
+    // ì¸ë²¤í† ë¦¬
     [SerializeField] private GameObject Inventory_obj;
     Vector3 Inventory_StartPos;
     Vector3 Inventory_EndPos;
@@ -19,17 +21,17 @@ public class Player : MonoBehaviour
     private bool isOnInventory = false;
 
 
-    // »óÁ¡
-    [SerializeField] private GameObject shopUIPanel; // »óÁ¡ UI ÆĞ³Î
-    private bool isNearShop = false; // »óÁ¡ ±ÙÃ³¿¡ ÀÖ´ÂÁö Ã¼Å©
+    // ìƒì 
+    [SerializeField] private GameObject shopUIPanel; // ìƒì  UI íŒ¨ë„
+    private bool isNearShop = false; // ìƒì  ê·¼ì²˜ì— ìˆëŠ”ì§€ ì²´í¬
 
     Vector3 Shop_StartPos;
     Vector3 Shop_EndPos;
     private bool isShopMoving = false;
     private bool isOnShop = false;
 
-    // ¹Ú¹°°ü
-    [SerializeField] private GameObject CollectUIPanel; // µµ°¨ UI ÆĞ³Î
+    // ë°•ë¬¼ê´€
+    [SerializeField] private GameObject CollectUIPanel; // ë„ê° UI íŒ¨ë„
     private bool isNearMuseum = false;
     private bool isInMuseum = false;
     private bool isNearCollection = false;
@@ -49,7 +51,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // UI ½ÃÀÛ/µµÂø Æ÷Áö¼Ç ÁöÁ¤
+        // UI ì‹œì‘/ë„ì°© í¬ì§€ì…˜ ì§€ì •
         Inventory_StartPos = new Vector3(-200f, Screen.height / 2, 0f);
         Inventory_EndPos = new Vector3(0f, Screen.height / 2, 0f);
 
@@ -59,7 +61,7 @@ public class Player : MonoBehaviour
         Collect_StartPos = new Vector3(2420f, Screen.height / 2, 0f);
         Collect_EndPos = new Vector3(1920f, Screen.height / 2, 0f);
 
-        // ¾ÆÀÌÅÛ ÃÊ±âÈ­
+        // ì•„ì´í…œ ì´ˆê¸°í™”
         for (int i = 0; i < items.Count; i++)
         {
             items[i].count = 0;
@@ -110,7 +112,7 @@ public class Player : MonoBehaviour
 
     }
 
-    // ÀÎº¥Åä¸® »óÈ£ÀÛ¿ë
+    // ì¸ë²¤í† ë¦¬ ìƒí˜¸ì‘ìš©
     private void Interaction_Inventory()
     {
         if (Input.GetKeyDown(KeyCode.Tab) && !isInventoryMoving && !isOnShop)
@@ -119,7 +121,7 @@ public class Player : MonoBehaviour
             isInventoryMoving = true;
         }
 
-        // ÀÎº¥Åä¸® UI ÀÌµ¿ ¾Ö´Ï¸ŞÀÌ¼Ç
+        // ì¸ë²¤í† ë¦¬ UI ì´ë™ ì• ë‹ˆë©”ì´ì…˜
         if (isInventoryMoving && !isOnInventory)
         {
             currentTime += Time.deltaTime;
@@ -128,7 +130,7 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
-                isInventoryMoving = false; // ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á
+                isInventoryMoving = false; // ì• ë‹ˆë©”ì´ì…˜ ì™„ë£Œ
                 isOnInventory = true;
             }
         }
@@ -140,17 +142,17 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
-                isInventoryMoving = false; // ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á
+                isInventoryMoving = false; // ì• ë‹ˆë©”ì´ì…˜ ì™„ë£Œ
                 isOnInventory = false;
             }
         }
     }
 
-    // F »óÈ£ÀÛ¿ë
+    // F ìƒí˜¸ì‘ìš©
     private void Interaction_F()
     {
         
-        // »óÁ¡ UI ÀÌµ¿ ¾Ö´Ï¸ŞÀÌ¼Ç
+        // ìƒì  UI ì´ë™ ì• ë‹ˆë©”ì´ì…˜
         if (isShopMoving && !isOnShop)
         {
             currentTime += Time.deltaTime;
@@ -159,7 +161,7 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
-                isShopMoving = false; // ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á
+                isShopMoving = false; // ì• ë‹ˆë©”ì´ì…˜ ì™„ë£Œ
                 isOnShop = true;
             }
         }
@@ -171,12 +173,12 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
-                isShopMoving = false; // ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á
+                isShopMoving = false; // ì• ë‹ˆë©”ì´ì…˜ ì™„ë£Œ
                 isOnShop = false;
             }
         }
 
-        // »óÁ¡ »óÈ£ÀÛ¿ë
+        // ìƒì  ìƒí˜¸ì‘ìš©
         if (isNearShop && Input.GetKeyDown(KeyCode.F) && !isInventoryMoving && !isShopMoving)
         {
             currentTime = 0f;
@@ -202,7 +204,7 @@ public class Player : MonoBehaviour
 
         }
 
-        // ¹Ú¹°°ü »óÈ£ÀÛ¿ë
+        // ë°•ë¬¼ê´€ ìƒí˜¸ì‘ìš©
         if (isNearMuseum && Input.GetKeyDown(KeyCode.F))
         {
 
@@ -219,9 +221,9 @@ public class Player : MonoBehaviour
 
         }
 
-        // µµ°¨ »óÈ£ÀÛ¿ë
+        // ë„ê° ìƒí˜¸ì‘ìš©
 
-        // µµ°¨ UI ÀÌµ¿ ¾Ö´Ï¸ŞÀÌ¼Ç
+        // ë„ê° UI ì´ë™ ì• ë‹ˆë©”ì´ì…˜
         if (isCollectMoving && !isOnCollect)
         {
             currentTime += Time.deltaTime;
@@ -230,7 +232,7 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
-                isCollectMoving = false; // ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á
+                isCollectMoving = false; // ì• ë‹ˆë©”ì´ì…˜ ì™„ë£Œ
                 isOnCollect = true;
             }
         }
@@ -242,12 +244,12 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
-                isCollectMoving = false; // ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á
+                isCollectMoving = false; // ì• ë‹ˆë©”ì´ì…˜ ì™„ë£Œ
                 isOnCollect = false;
             }
         }
 
-        // µµ°¨ »óÈ£ÀÛ¿ë
+        // ë„ê° ìƒí˜¸ì‘ìš©
         if (isNearCollection && Input.GetKeyDown(KeyCode.F) && !isInventoryMoving && !isCollectMoving)
         {
             currentTime = 0f;
@@ -263,7 +265,7 @@ public class Player : MonoBehaviour
                 isInventoryMoving = true;
             }
 
-            // È¹µæÇÑ À¯¹°À» µµ°¨¿¡ È°¼ºÈ­
+            // íšë“í•œ ìœ ë¬¼ì„ ë„ê°ì— í™œì„±í™”
             for(int i = 0; i < items.Count; i++)
             {
                 Collection.li_isCollect[i] = items[i].ishaveitem;
@@ -291,17 +293,17 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Shop"))
         {
             isNearShop = true;
-            Debug.Log("»óÁ¡¿¡ Á¢±ÙÇß½À´Ï´Ù. F Å°·Î »óÈ£ÀÛ¿ë.");
+            Debug.Log("ìƒì ì— ì ‘ê·¼í–ˆìŠµë‹ˆë‹¤. F í‚¤ë¡œ ìƒí˜¸ì‘ìš©.");
         }
         if (other.CompareTag("Museum"))
         {
             isNearMuseum = true;
-            Debug.Log("¹Ú¹°°ü¿¡ Á¢±ÙÇß½À´Ï´Ù. F Å°·Î »óÈ£ÀÛ¿ë.");
+            Debug.Log("ë°•ë¬¼ê´€ì— ì ‘ê·¼í–ˆìŠµë‹ˆë‹¤. F í‚¤ë¡œ ìƒí˜¸ì‘ìš©.");
         }
         if (other.CompareTag("Collect"))
         {
             isNearCollection = true;
-            Debug.Log("µµ°¨¿¡ Á¢±ÙÇß½À´Ï´Ù. F Å°·Î »óÈ£ÀÛ¿ë.");
+            Debug.Log("ë„ê°ì— ì ‘ê·¼í–ˆìŠµë‹ˆë‹¤. F í‚¤ë¡œ ìƒí˜¸ì‘ìš©.");
         }
     }
 
@@ -310,17 +312,17 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Shop"))
         {
             isNearShop = false;
-            Debug.Log("»óÁ¡¿¡¼­ ¹ş¾î³µ½À´Ï´Ù.");
+            Debug.Log("ìƒì ì—ì„œ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤.");
         }
         if (other.CompareTag("Museum"))
         {
             isNearMuseum = false;
-            Debug.Log("¹Ú¹°°ü¿¡¼­ ¹ş¾î³µ½À´Ï´Ù.");
+            Debug.Log("ë°•ë¬¼ê´€ì—ì„œ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤.");
         }
         if (other.CompareTag("Collect"))
         {
             isNearCollection = false;
-            Debug.Log("µµ°¨¿¡¼­ ¹ş¾î³µ½À´Ï´Ù.");
+            Debug.Log("ë„ê°ì—ì„œ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤.");
         }
     }
 
