@@ -13,6 +13,8 @@ public class Item : ScriptableObject
     public int rarity;
     public int value;
     public int duplicate_value;
+    public bool ishaveitem;
+    public bool isalreadySell;
 
 #if UNITY_EDITOR
     private void OnValidate()
