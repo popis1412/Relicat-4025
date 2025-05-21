@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1812071150501119635}
   - component: {fileID: 1812071150501119634}
   - component: {fileID: 7658506844736294697}
-  - component: {fileID: 1812071150501119637}
+  - component: {fileID: 4419884989568717112}
   m_Layer: 0
   m_Name: block
   m_TagString: Block
@@ -132,7 +132,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1812071150501119637
+--- !u!114 &4419884989568717112
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,17 +144,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704f8b9034c57b641b18587947f362d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level1_block_Normal_0: {fileID: 1937594144, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  level1_block_Normal_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  level1_block_Normal_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  level1_block_Jewel_0: {fileID: 21300000, guid: c0a2e1845ac955649b542cb18b05abf2, type: 3}
-  level1_block_Jewel_1: {fileID: 0}
-  level1_block_Jewel_2: {fileID: 0}
-  Normal_block_Breaking: []
+  monster1: {fileID: 0}
+  block_Normal_0: {fileID: 1937594144, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Normal_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Normal_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Coal_0: {fileID: 21300000, guid: 2439d2ac883d9a24292f6aead832d61d, type: 3}
+  block_Jewel_Coal_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Coal_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Copper_0: {fileID: 21300000, guid: 1f0bb0f539755ad43b20c01ddd3a78ea, type: 3}
+  block_Jewel_Copper_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Copper_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Iron_0: {fileID: 21300000, guid: 2ffe036f44e85b64a8455b23fa99630d, type: 3}
+  block_Jewel_Iron_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Iron_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Gold_0: {fileID: 21300000, guid: 2a6a049d11900ea4f814015582f4a442, type: 3}
+  block_Jewel_Gold_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Gold_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Ruby_0: {fileID: 21300000, guid: 0440c5d43003fe4459fe2064098c9d37, type: 3}
+  block_Jewel_Ruby_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Ruby_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Diamond_0: {fileID: 21300000, guid: 10437a5526fd8924b9fe93e5c32e001f, type: 3}
+  block_Jewel_Diamond_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Jewel_Diamond_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Rock_0: {fileID: 21300000, guid: c653e1b5301f14c4593a85778156106d, type: 3}
+  block_Rock_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Rock_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Sand_0: {fileID: 21300000, guid: e0d90381f7b947443aeab2975416e212, type: 3}
+  block_Sand_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Sand_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_unbreakable_0: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
   nowBlockType: 0
-  blockType: 0
-  blockHealth: 0
-  spriteRenderer: {fileID: 1812071150501119634}
+  spriteRenderer: {fileID: 0}
+  blocksDictionary: {fileID: 0}
 --- !u!1 &6704852269892935808
 GameObject:
   m_ObjectHideFlags: 0
