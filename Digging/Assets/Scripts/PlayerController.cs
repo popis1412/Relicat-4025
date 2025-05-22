@@ -1,172 +1,179 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
-using UnityEngine.InputSystem.Interactions;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
+﻿using UnityEngine;
+
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerControl playercontrols;
+    private PlayerControl input;
+    private Rigidbody2D rb;
+    private Collider2D col;
+    private Player playerScript;
 
     private Vector2 moveInput;
-    private float jumpInput;
+    private float flyInput;
+    private float flyAxis; // 상승 입력 부드럽게 보간할 값
 
-    [SerializeField] private float moveSpeed = 2f;
-    // 점프 관련 변수
-    public float jumpSpeed = 5f;      // 점프 속도 (초기 속도)
-    public float jumpAcceleration = 1f; // 점프 가속도 (점프 중 상승 속도)
-    public float gravity = -9.81f;    // 중력 (아래로 가는 힘)
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float flySpeed = 8f;          // 상승 속도(최대 상승 속도)
+    [SerializeField] private float flySmoothSpeed = 5f;    // 상승 입력 보간 속도
+    [SerializeField] private float maxHangDistance = 0.5f; // 블록에 걸쳐 떠 있을 수 있는 최대 거리
 
-    private float currentJumpSpeed = 0f; // 현재 점프 속도
-    [SerializeField] private float maxHangDistance = 0.5f;
+    private bool isFlying;
+    private int blockLayer;
 
-    // 이전 outline 저장하는 변수
-    static GameObject previousOutline = null;
-    // Player 스크립트 인벤토리
-    Player playerScript;
-
-
-    bool isJumping = false;
-    bool isdigging = false;
-
-    private Rigidbody2D rb;
-    private Collider2D characterCollider;
+    // 모래에 플레이어가 끼었을 경우
+    private const float HeadCheckYOffset = 0.2f;  // 레이저 Y Offset
+    private const float HeadCheckRadius = 0.1f;   // Overlap 반지름
+    private const float NarrowDigDistance = 0.5f; // 캘 수 있는 범위
 
     private void Awake()
     {
-        playercontrols = new PlayerControl();
+        input = new PlayerControl();
         rb = GetComponent<Rigidbody2D>();
-        characterCollider = GetComponent<CapsuleCollider2D>();
+        col = GetComponent<CapsuleCollider2D>();
         playerScript = GetComponent<Player>();
+
+        blockLayer = LayerMask.GetMask("Block");
     }
 
-    private void OnEnable() => playercontrols.Enable();
-    private void OnDisable() => playercontrols.Disable();
-
-    private void Start()
+    private void OnEnable()
     {
-        playercontrols.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        playercontrols.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+        input.Enable();
 
-        playercontrols.Player.Jump.started += ctx => jumpInput = ctx.ReadValue<float>();
-        playercontrols.Player.Jump.started += ctx => isJumping = true;
+        input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        input.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
-        playercontrols.Player.Jump.canceled += ctx => jumpInput = 0;
-        playercontrols.Player.Jump.canceled += ctx => isJumping = false;
+        input.Player.Jump.started += ctx => isFlying = true;
+        input.Player.Jump.performed += ctx => flyInput = ctx.ReadValue<float>();
+        input.Player.Jump.canceled += ctx =>
+        {
+            flyInput = 0;
+            isFlying = false;
+        };
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        // 클릭한 블록 저장
-        GameObject block = GetVaildBlockUnderMouse();
+        UpdateJumpAxisSmoothly();
+        HandleMovement();
+        HandleDigging();
+        //IsStuckInSand();
+    }
 
-        // 마우스 왼쪽 버튼 누르는 동안
-        if (playercontrols.Player.Digging.IsPressed() && block != null)
+    // 상승 입력을 부드럽게 보간(0 ~ 1 사이 값을 천천히 변화)
+    private void UpdateJumpAxisSmoothly()
+    {
+        flyAxis = Mathf.Lerp(flyAxis, flyInput, Time.deltaTime * flySmoothSpeed);
+    }
+
+    // 플레이어 이동 및 상승(수직 속도) 처리
+    private void HandleMovement()
+    {
+        float horizontalVelocity = moveInput.x * moveSpeed;
+        ///<TOOD>
+        /// 굴착소년 쿵처럼 일정한 속도로 하고 싶다면 이 코드를 사용
+        ///float verticalVelocity = 
+        ///    isJumping ? jumpAxis * jumpSpeed  :  // 점프 중이면 가속 누적
+        ///    rb.velocity.y;                      // 아니면 기존 y속도 유지(중력)
+        ///</TOOD>
+        float verticalVelocity = CalculateVerticalVelocity();
+
+        // Rigdbody 속도 설정 (y속도는 최대 flySpeed 범위 내로 제한)
+        rb.velocity = new Vector2(horizontalVelocity, Mathf.Clamp(verticalVelocity, -flySpeed * 2f, flySpeed));
+
+        //print($"isFlying: {isFlying}, verticalVelocity: {verticalVelocity}");
+    }
+
+    // verticalVelocity 계산: 정지 상태, 상승 중, 하강 중 일때 처리 구분
+    private float CalculateVerticalVelocity()
+    {
+        float curYVelocity = rb.velocity.y;
+
+        if(isFlying || curYVelocity > 0f)
         {
-            block.GetComponent<Block>().BlockDestroy(Time.deltaTime, playerScript);
+            // 상승 중: 기존속도(입력값) + 가속도
+            //print("상승 중");
+            return flyInput * curYVelocity + flyAxis * flySpeed;
         }
-
-        // 3. 블록 아웃라인 생성
-        try
+        else if(curYVelocity < 0f)
         {
-            // 새로운 outline 가져오기
-            GameObject outline = block?.transform.Find("outline")?.gameObject;
-
-            // 이전 outline이 존재하고, 현재 block의 outline과 다르면 이전 것을 비활성화
-            if(previousOutline != null && previousOutline != outline)
-            {
-                previousOutline.SetActive(false);
-            }
-
-            // 현재 block의 outline이 유효하면 활성화
-            if (outline != null)
-            {
-                outline.SetActive(true);
-                previousOutline = outline; // 새로운 outline을 기록
-            }
-            else
-            {
-                previousOutline = null; // outline이 없으면 기록을 null로
-            }
+            // 하강 중: 기본속도(Rigdbody 속도) + 가속도
+            //print("하강 중");
+            return curYVelocity + flyAxis * flySpeed;
         }
-        catch
+        else
         {
-            Debug.Log("블록이 없거나 outline이 없습니다");
+            // 정지 상태: 현재 Rigdbody y 속도 유지
+            //print("정지 상태");
+            return curYVelocity;
         }
     }
 
-    // 클릭한 블록 가져오기
+    // 클릭한 블록 파괴 처리
+    private void HandleDigging()
+    {
+        GameObject targetBlock = GetVaildBlockUnderMouse();
+
+        if(!input.Player.Digging.IsPressed() || targetBlock == null)
+            return;
+
+        Block block = targetBlock.GetComponent<Block>();
+        block.BlockDestroy(Time.deltaTime * flySpeed, playerScript);
+    }
+
+    // 마우스 위치 기준으로 파괴 가능한 블록 반환
     private GameObject GetVaildBlockUnderMouse()
     {
         // 마우스 레이저
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
 
-        // 콜라이더가 없(배경, 빈 화면)거나 블록인 경우만 캐기 
-        if(hit.collider != null && hit.collider.CompareTag("Block"))
-        {
-            Vector2 playerPos = new Vector2(transform.position.x, transform.position.y);
-            Vector2 hitPos = new Vector2(hit.transform.position.x, hit.transform.position.y);
+        // 콜라이더가 없(배경, 빈 화면)거나 블록인 경우만 캐기
+        if(hit.collider == null || !hit.collider.CompareTag("Block"))
+            return null;
 
-            // 두 Vector의 사이의 거리
-            float distance = Mathf.Sqrt(Mathf.Pow(hitPos.x - playerPos.x, 2) + Mathf.Pow(hitPos.y - playerPos.y, 2));
-            // 캐릭터 기준 블록을 캘 수 있는 최대 거리
-            float DigDistance = (1.5f / transform.localScale.x) + maxHangDistance;
+        Vector2 playerPos = new (transform.position.x, transform.position.y);
+        Vector2 hitPos = new (hit.transform.position.x, hit.transform.position.y);
 
-            if(distance < DigDistance)
-            {
-                return hit.collider.gameObject;
-            }
-            //print($"block Distance: {DigDistance}, Character Distance: {distance}");
-        }
+        // 일반적인 캐기 거리
+        float distance = Mathf.Sqrt(Mathf.Pow(hitPos.x - playerPos.x, 2) + Mathf.Pow(hitPos.y - playerPos.y, 2));
 
-        return null;
+        // 캐릭터 기준 블록을 캘 수 있는 최대 거리
+        float digDistance = IsStuckInSand() ? 
+            NarrowDigDistance :     // 모래만 캘 수 있는 범위(0.5)
+            (1.5f / transform.localScale.x) + maxHangDistance;
+
+        return distance < digDistance ? hit.collider.gameObject : null;
+
+        //print($"block Distance: {DigDistance}, Character Distance: {distance}");
     }
 
-    private void FixedUpdate()
+    private bool IsStuckInSand()
     {
-        float horizontal = moveInput.x * moveSpeed;
-        //float vertical = jumpInput * jumpSpeed;
+        // 머리 위 오버랩 감지
+        Vector2 headCheckPosition = (Vector2)transform.position + new Vector2(0, HeadCheckRadius);
 
-        //if(isJumping)
-        //    rb.velocity = new Vector2(horizontal, vertical);
-        //else // 나중에 가속도 추가 => 속도 변화량 * 걸린 시간
-        //    rb.velocity = new Vector2(horizontal, -jumpSpeed);
+        Collider2D hit = Physics2D.OverlapCircle(headCheckPosition, HeadCheckRadius, blockLayer);
 
-        // 점프 가속 제로 추가와 보안해야 됨.
-        if (jumpInput > 0 && !isJumping) { isJumping = true; currentJumpSpeed = jumpSpeed; }  // 점프 시작
-        if (isJumping) { currentJumpSpeed += jumpAcceleration * Time.deltaTime; rb.velocity = new Vector2(horizontal, currentJumpSpeed); }
-        else { rb.velocity = new Vector2(horizontal, gravity); }  // 중력 적용
-        if (rb.velocity.y <= 0 && isJumping) { isJumping = false; currentJumpSpeed = 0f; }  // 점프 종료
+        if(hit == null)
+            return false;
+
+        Block block = hit.gameObject.GetComponent<Block>();
+        if(block == null || block.blocksDictionary == null)
+            return false;
+
+        bool foundBlock = block.blocksDictionary.blockPosition.TryGetValue(block.transform.position, out GameObject _);
+        if(foundBlock)
+            Debug.Log($"모래 블록 끼임 감지: {hit.name}");
+
+        return foundBlock;
     }
-    // Tip: 코드 퍼스트, 모델 퍼스트, 데이터 퍼스트
 
-    // TOOD: 플레이어가 모래에 갇혔을 때, 플레이어의 캐는 범위를 블럭 1로 설정을 한다. ( 시야 범위는 그냥 그대로 둬도 됨)
-    // https://discussions.unity.com/t/new-input-system-how-to-use-the-hold-interaction/726823/4
-    // 일단 Digging을 할 때 계속 꾹 누르게 된다고 한다면 계속 블럭을 캘 수 있게 하기 (마크처럼)
-    //private IEnumerator DiggingProcess(InputAction.CallbackContext callback)
-    //{
-    //    isdigging = true;
-
-    //    while(isdigging)
-    //    {
-    //        Digging();
-
-    //        yield return isdigging = false;
-    //    }
-    //}
-
+    // 충돌 처리
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ContactPoint2D contact = collision.contacts[0];
-        Vector2 pos = contact.point;
-        Vector2 normal = contact.normal;
 
-        Debug.DrawRay(pos, normal, Color.red);
-
+        // 아이템 먹을 시
         if(collision.gameObject.tag == "Item")
         {
             Destroy(collision.gameObject);
