@@ -77,3 +77,4 @@ crashlytics-build.properties
 Digging/Library/*
 Digging/Logs/*
 Digging/Temp/*
+Digging/obj/*
