@@ -6,12 +6,15 @@ public class Ground : MonoBehaviour
 {
     [SerializeField] BlocksDictionary blocksDictionary;
     [SerializeField] GameObject[] blocks;
+    [SerializeField] BlockBreakingEffectManager effectManager;
     public void AppendBlocksDictionary()
     {
         for (int i = 0; i < blocks.Length; i++)
         {
+            Block blockScript = blocks[i].GetComponent<Block>();
             blocksDictionary.blockPosition.Add(blocks[i].transform.position, blocks[i]);
-            blocks[i].GetComponent<Block>().blocksDictionary = blocksDictionary;
+            blockScript.blocksDictionary = blocksDictionary;
+            blockScript.effectManager = effectManager;
         }
     }
 }

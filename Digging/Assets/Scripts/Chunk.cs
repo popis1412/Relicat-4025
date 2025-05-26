@@ -6,6 +6,7 @@ public class Chunk : MonoBehaviour
 {
     [SerializeField] BlocksDictionary blocksDictionary;
     [SerializeField] GameObject[] blocks;
+    [SerializeField] BlockBreakingEffectManager effectManager;
 
     [SerializeField] int boxCount = 3;       //생성할 랜덤박스 개수
     [SerializeField] int jewelCount = 10;    //생성할 보석 개수
@@ -16,8 +17,10 @@ public class Chunk : MonoBehaviour
     {
         for (int i = 0; i < blocks.Length; i++)
         {
+            Block blockScript = blocks[i].GetComponent<Block>();
             blocksDictionary.blockPosition.Add(blocks[i].transform.position, blocks[i]);
-            blocks[i].GetComponent<Block>().blocksDictionary = blocksDictionary;
+            blockScript.blocksDictionary = blocksDictionary;
+            blockScript.effectManager = effectManager;
         }
     }
 
