@@ -53,6 +53,7 @@ public class Block : MonoBehaviour
     [SerializeField] SpriteRenderer spriteRenderer;
 
     public BlocksDictionary blocksDictionary;   //BlocksDictionary에서 Chunk에 호출하는 AppendBlocksDictionary에서 할당될 예정
+    public BlockBreakingEffectManager effectManager;
 
     Vector2 targetDropPosition;
     bool isDropping;
@@ -153,7 +154,7 @@ public class Block : MonoBehaviour
 
     public void BlockDestroy(float blockDamage, Player playerScript) //*플레이어 컨트롤러에서 Player를 추가해주면
     {
-        print(blockDamage);
+        effectManager.CallEffect(this.gameObject);
         if (blockHealth - blockDamage > 0 && blockType != 1)  //블럭에 대미지 주기
         {
             blockHealth -= blockDamage;
