@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float flySpeed = 8f;          // 상승 속도(최대 상승 속도)
-    [SerializeField] private float flySmoothSpeed = 5f;    // 상승 입력 보간 속도
     [SerializeField] private float maxHangDistance = 0.5f; // 블록에 걸쳐 떠 있을 수 있는 최대 거리
 
     private bool isFlying;
@@ -39,11 +38,11 @@ public class PlayerController : MonoBehaviour
     {
         input.Enable();
 
-        input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        input.Player.Move.performed += ctx => moveInput = IsStuckInSand() ? Vector2.zero : ctx.ReadValue<Vector2>();
         input.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
         input.Player.Jump.started += ctx => isFlying = true;
-        input.Player.Jump.performed += ctx => flyInput = ctx.ReadValue<float>();
+        input.Player.Jump.performed += ctx => flyInput = IsStuckInSand() ? 0f : ctx.ReadValue<float>();
         input.Player.Jump.canceled += ctx =>
         {
             flyInput = 0;
@@ -56,13 +55,12 @@ public class PlayerController : MonoBehaviour
         UpdateJumpAxisSmoothly();
         HandleMovement();
         HandleDigging();
-        //IsStuckInSand();
     }
 
     // 상승 입력을 부드럽게 보간(0 ~ 1 사이 값을 천천히 변화)
     private void UpdateJumpAxisSmoothly()
     {
-        flyAxis = Mathf.Lerp(flyAxis, flyInput, Time.deltaTime * flySmoothSpeed);
+        flyAxis = Mathf.Lerp(flyAxis, flyInput * flySpeed, Time.deltaTime);
     }
 
     // 플레이어 이동 및 상승(수직 속도) 처리
@@ -87,25 +85,36 @@ public class PlayerController : MonoBehaviour
     private float CalculateVerticalVelocity()
     {
         float curYVelocity = rb.velocity.y;
+        // 가속도 = 현재 속도 - 이전속도
+        float a = (flyInput * flyAxis - curYVelocity) / Time.fixedDeltaTime;
+        a = Mathf.Clamp(a, -30f, 30f);
+        float result = 0f;
 
         if(isFlying || curYVelocity > 0f)
         {
             // 상승 중: 기존속도(입력값) + 가속도
-            //print("상승 중");
-            return flyInput * curYVelocity + flyAxis * flySpeed;
+            print("상승 중");
+            result = curYVelocity + a * Time.fixedDeltaTime;
         }
         else if(curYVelocity < 0f)
         {
             // 하강 중: 기본속도(Rigdbody 속도) + 가속도
-            //print("하강 중");
-            return curYVelocity + flyAxis * flySpeed;
+            print("하강 중");
+            result = curYVelocity;
         }
         else
         {
             // 정지 상태: 현재 Rigdbody y 속도 유지
-            //print("정지 상태");
-            return curYVelocity;
+            print("정지 상태");
+            result = 0f;
         }
+        print($"현재속도: {curYVelocity:F3}, 가속도: {a:F3}, 반환속도: {result:F3}");
+        result = Mathf.Clamp(result, -flySpeed, flySpeed);
+
+
+        return result;
+        
+
     }
 
     // 클릭한 블록 파괴 처리
@@ -152,6 +161,7 @@ public class PlayerController : MonoBehaviour
         // 머리 위 오버랩 감지
         Vector2 headCheckPosition = (Vector2)transform.position + new Vector2(0, HeadCheckRadius);
 
+        // 캐릭터도 감지되기 때문에 Layer를 Block으로 해 놓아야 함.
         Collider2D hit = Physics2D.OverlapCircle(headCheckPosition, HeadCheckRadius, blockLayer);
 
         if(hit == null)
@@ -163,7 +173,10 @@ public class PlayerController : MonoBehaviour
 
         bool foundBlock = block.blocksDictionary.blockPosition.TryGetValue(block.transform.position, out GameObject _);
         if(foundBlock)
+        {
             Debug.Log($"모래 블록 끼임 감지: {hit.name}");
+        }
+            
 
         return foundBlock;
     }
