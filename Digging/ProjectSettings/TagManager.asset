@@ -9,6 +9,7 @@ TagManager:
   - Shop
   - Museum
   - Collect
+  - Table
   layers:
   - Default
   - TransparentFX
@@ -48,6 +49,9 @@ TagManager:
     locked: 0
   - name: Back
     uniqueID: 1956235483
+    locked: 0
+  - name: block
+    uniqueID: 1319789357
     locked: 0
   - name: Middle
     uniqueID: 124320615

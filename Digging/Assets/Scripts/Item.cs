@@ -15,6 +15,7 @@ public class Item : ScriptableObject
     public int duplicate_value;
     public bool ishaveitem;
     public bool isalreadySell;
+    public string Info;
 
 #if UNITY_EDITOR
     private void OnValidate()

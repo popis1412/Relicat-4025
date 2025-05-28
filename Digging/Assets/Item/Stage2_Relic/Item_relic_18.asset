@@ -15,6 +15,11 @@ MonoBehaviour:
   itemName: gamepad
   itemImage: {fileID: 21300000, guid: f5086e6c4615f3942ba83b5bc5667fd5, type: 3}
   count: 0
+  isMineral: 0
   rarity: 3
   value: 300
   duplicate_value: 60
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uC6C0\uC9C1\uC774\uB294 \uD654\uBA74 \uC18D \uC138\uACC4\uB97C \uC870\uC885\uD558\uB358
+    \uB3C4\uAD6C! \uC778\uAC04\uB4E4\uC740 \uC774\uAC78\uB85C \uB180\uC558\uB300"

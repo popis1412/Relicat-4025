@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -40,6 +42,12 @@ public class Player : MonoBehaviour
     Vector3 Collect_EndPos;
     private bool isCollectMoving = false;
     private bool isOnCollect = false;
+
+    // 진열장
+    [SerializeField] private GameObject RelicInfoUIPanel; // 진열장 설명 UI 패널
+    [SerializeField] private GameObject RelicInfoImage;
+    [SerializeField] private GameObject RelicInfoName;
+    [SerializeField] private GameObject RelicInfoText;
 
 
     private void Awake()
@@ -305,6 +313,21 @@ public class Player : MonoBehaviour
             isNearCollection = true;
             Debug.Log("도감에 접근했습니다. F 키로 상호작용.");
         }
+        if (other.CompareTag("Table"))
+        {
+            Debug.Log(other.gameObject.name);
+            int idx = int.Parse(other.gameObject.name);
+            if (Collection.li_isCollect[idx] == true)
+            {
+                RelicInfoImage.GetComponent<Image>().sprite = items[idx].itemImage;
+                RelicInfoName.GetComponent<TextMeshProUGUI>().text = items[idx].itemName;
+                RelicInfoText.GetComponent<TextMeshProUGUI>().text = items[idx].Info;
+                RelicInfoUIPanel.SetActive(true);
+            }
+
+            
+            Debug.Log("진열장에 접근했습니다.");
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -323,6 +346,11 @@ public class Player : MonoBehaviour
         {
             isNearCollection = false;
             Debug.Log("도감에서 벗어났습니다.");
+        }
+        if (other.CompareTag("Table"))
+        {
+            RelicInfoUIPanel.SetActive(false);
+            Debug.Log("진열장에서 벗어났습니다.");
         }
     }
 

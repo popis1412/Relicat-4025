@@ -15,6 +15,11 @@ MonoBehaviour:
   itemName: glasses
   itemImage: {fileID: 21300000, guid: b94ff25bc2f54ed4b893302c0a002db5, type: 3}
   count: 0
+  isMineral: 0
   rarity: 1
   value: 100
   duplicate_value: 20
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uB208 \uC704\uC5D0 \uC62C\uB824\uB193\uB294 \uBB3C\uAC74\uC778\uAC70 \uAC19\uC740\uB370
+    \uB108\uBB34 \uC5B4\uC9C0\uB7EC\uC6CC\u2026"

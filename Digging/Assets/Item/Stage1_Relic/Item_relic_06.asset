@@ -15,6 +15,11 @@ MonoBehaviour:
   itemName: tire
   itemImage: {fileID: 21300000, guid: b74933a5a45720f42b8ec88af1c7f11c, type: 3}
   count: 0
+  isMineral: 0
   rarity: 1
   value: 100
   duplicate_value: 20
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uAC15\uCCA0 \uC9D0\uC2B9\uC758 \uBC1C\uBC14\uB2E5! \uAD74\uB9AC\uBA74 \uAF64
+    \uC7AC\uBBF8\uC788\uC5B4"
