@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Ground : MonoBehaviour
 {
+    [SerializeField] int stageNum;
     [SerializeField] BlocksDictionary blocksDictionary;
     [SerializeField] GameObject[] blocks;
     [SerializeField] BlockBreakingEffectManager effectManager;
@@ -13,6 +14,7 @@ public class Ground : MonoBehaviour
         {
             Block blockScript = blocks[i].GetComponent<Block>();
             blocksDictionary.blockPosition.Add(blocks[i].transform.position, blocks[i]);
+            blockScript.stageNum = stageNum;
             blockScript.blocksDictionary = blocksDictionary;
             blockScript.effectManager = effectManager;
         }

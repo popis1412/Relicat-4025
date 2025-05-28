@@ -1,54 +1,84 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class Block : MonoBehaviour
 {
+    [SerializeField] GameObject relicEffect;
+    GameObject actvieRelicEffect;
+
+    [SerializeField] GameObject dropItem;
+
     [SerializeField] GameObject monster1;
 
     [SerializeField] Sprite block_Normal_0;
     [SerializeField] Sprite block_Normal_1;
     [SerializeField] Sprite block_Normal_2;
+    [SerializeField] Sprite block_Normal_3;
+    [SerializeField] Sprite block_Normal_4;
 
     [SerializeField] Sprite block_Jewel_Coal_0;
     [SerializeField] Sprite block_Jewel_Coal_1;
     [SerializeField] Sprite block_Jewel_Coal_2;
+    [SerializeField] Sprite block_Jewel_Coal_3;
+    [SerializeField] Sprite block_Jewel_Coal_4;
 
     [SerializeField] Sprite block_Jewel_Copper_0;
     [SerializeField] Sprite block_Jewel_Copper_1;
     [SerializeField] Sprite block_Jewel_Copper_2;
+    [SerializeField] Sprite block_Jewel_Copper_3;
+    [SerializeField] Sprite block_Jewel_Copper_4;
 
     [SerializeField] Sprite block_Jewel_Iron_0;
     [SerializeField] Sprite block_Jewel_Iron_1;
     [SerializeField] Sprite block_Jewel_Iron_2;
+    [SerializeField] Sprite block_Jewel_Iron_3;
+    [SerializeField] Sprite block_Jewel_Iron_4;
 
     [SerializeField] Sprite block_Jewel_Gold_0;
     [SerializeField] Sprite block_Jewel_Gold_1;
     [SerializeField] Sprite block_Jewel_Gold_2;
+    [SerializeField] Sprite block_Jewel_Gold_3;
+    [SerializeField] Sprite block_Jewel_Gold_4;
 
     [SerializeField] Sprite block_Jewel_Ruby_0;
     [SerializeField] Sprite block_Jewel_Ruby_1;
     [SerializeField] Sprite block_Jewel_Ruby_2;
+    [SerializeField] Sprite block_Jewel_Ruby_3;
+    [SerializeField] Sprite block_Jewel_Ruby_4;
 
     [SerializeField] Sprite block_Jewel_Diamond_0;
     [SerializeField] Sprite block_Jewel_Diamond_1;
     [SerializeField] Sprite block_Jewel_Diamond_2;
+    [SerializeField] Sprite block_Jewel_Diamond_3;
+    [SerializeField] Sprite block_Jewel_Diamond_4;
 
     [SerializeField] Sprite block_Rock_0;
     [SerializeField] Sprite block_Rock_1;
     [SerializeField] Sprite block_Rock_2;
+    [SerializeField] Sprite block_Rock_3;
+    [SerializeField] Sprite block_Rock_4;
 
     [SerializeField] Sprite block_Sand_0;
     [SerializeField] Sprite block_Sand_1;
     [SerializeField] Sprite block_Sand_2;
+    [SerializeField] Sprite block_Sand_3;
+    [SerializeField] Sprite block_Sand_4;
 
     [SerializeField] Sprite block_unbreakable_0;
+
+    [SerializeField] Sprite boxCloseSprite;
+    [SerializeField] Sprite boxOpenSprite;
 
 
     public int nowBlockType = 0; //다른 코드에서 blockChange를 실행했지만 실제 blockType 변동까지 느리기 때문에 다른 코드에서 blockChange를 호출함과 동시에 미리 무슨 blockType 으로 바뀔지 확인할 변수
     int blockType = 0; 
     float blockHealth = 3;
     float blockMaxHealth = 3;
+
+    public int stageNum = 0;
 
     [SerializeField] SpriteRenderer spriteRenderer;
 
@@ -61,11 +91,44 @@ public class Block : MonoBehaviour
     float dropSpeed = 0.1f;
     float maxDropSpeed = 0.5f;
 
+    bool canOpenBox = false;
+    GameObject getPlayer;
+    bool boxOpen = false;
+    float boxDestroyCount = 2f;
+
+    bool isItemDrop = false;
+    int itemDropCount = 0;
+
     private void Awake()
     {
         spriteRenderer = this.GetComponent<SpriteRenderer>();
     }
 
+    void ItemDrop(int itemType, int itemCode, Player playerScript, int addEA) //itemType 0은 유물, 1은 광물
+    {
+        GameObject newDropItem = Instantiate(dropItem, this.transform.position, Quaternion.identity);
+
+        DropItem dropItemScript = newDropItem.GetComponent<DropItem>();
+
+        Sprite dropItemSprite;
+
+        if (itemType == 0)
+        {
+            dropItemSprite = playerScript.items[itemCode].itemImage;
+        }
+        else
+        {
+            dropItemSprite = playerScript.minerals[itemCode].itemImage;
+        }
+
+        dropItemScript.setDropItem(itemType, itemCode, dropItemSprite, addEA);
+        //if (itemDropCount > 1)
+        //    itemDropCount--;
+        //else
+        //{
+        //    Destroy(this.gameObject);
+        //}
+    }
     public void ChangeBlock(int newBlockType)   //블럭 교체 명령
     {
         //-1은 무적블럭, 0은 normal, 1은 보물상자, 2는 석탄, 3은 단단한바위, 4는 유물, 5는 몬스터, 6은 모래, 7은 구리, 8은 철(은), 9는 금, 10은 루비, 11은 다이아
@@ -87,7 +150,13 @@ public class Block : MonoBehaviour
         }
         else if(newBlockType == 1)
         {
-            spriteRenderer.sprite = block_Normal_1;     //보물상자 들어와야 함
+            spriteRenderer.sprite = boxCloseSprite;     //보물상자 들어와야 함
+            BoxCollider2D boxCollider = this.gameObject.GetComponent<BoxCollider2D>();
+            if (boxCollider != null)
+            {
+                boxCollider.isTrigger = true;
+                boxCollider.size = new Vector2(2f, 2f);
+            }
         }
         else if (newBlockType == 2)
         {
@@ -103,7 +172,8 @@ public class Block : MonoBehaviour
         }
         else if (newBlockType == 4)
         {
-            spriteRenderer.sprite = block_Jewel_Diamond_0;  //유물 들어와야 함
+            spriteRenderer.sprite = block_Normal_0;
+            actvieRelicEffect = Instantiate(relicEffect, this.transform);
             blockHealth = 3;
             blockMaxHealth = 3;
         }
@@ -154,73 +224,26 @@ public class Block : MonoBehaviour
 
     public void BlockDestroy(float blockDamage, Player playerScript) //*플레이어 컨트롤러에서 Player를 추가해주면
     {
-        effectManager.CallEffect(this.gameObject);
-        if (blockHealth - blockDamage > 0 && blockType != 1)  //블럭에 대미지 주기
+        if (blockType != 1)
         {
-            blockHealth -= blockDamage;
-
-            if (blockHealth < blockMaxHealth/3 * 2)
+            effectManager.CallEffect(this.gameObject);
+            if (blockHealth - blockDamage > 0)  //블럭에 대미지 주기
             {
-                if (blockHealth < blockMaxHealth/3) //블럭 체력이 3분의 1 이하일 때
+                blockHealth -= blockDamage;
+
+                if (blockHealth < blockMaxHealth && blockHealth >= blockMaxHealth / 4 * 3) //블럭 체력이 3분의 1 이하일 때
                 {
-                    if (blockType == 0 || blockType == 5) //일반블럭 or 몬스터 블럭
-                    {
-                        spriteRenderer.sprite = block_Normal_2;
-                    }
-                    else if (blockType == 2) //석탄
-                    {
-                        spriteRenderer.sprite = block_Jewel_Coal_2;
-                    }
-                    else if (blockType == 3) //단단한 바위
-                    {
-                        spriteRenderer.sprite = block_Rock_2;
-                    }
-                    else if (blockType == 4) //유물
-                    {
-                        spriteRenderer.sprite = block_Jewel_Diamond_2;
-                    }
-                    else if (blockType == 6) //모래
-                    {
-                        spriteRenderer.sprite = block_Sand_2;
-                    }
-                    else if (blockType == 7) //구리
-                    {
-                        spriteRenderer.sprite = block_Jewel_Copper_2;
-                    }
-                    else if (blockType == 8) //철
-                    {
-                        spriteRenderer.sprite = block_Jewel_Iron_2;
-                    }
-                    else if(blockType == 9) //금
-                    {
-                        spriteRenderer.sprite = block_Jewel_Gold_2;
-                    }
-                    else if(blockType == 10) //루비
-                    {
-                        spriteRenderer.sprite = block_Jewel_Ruby_2;
-                    }
-                    else if(blockType == 11) //다이아
-                    {
-                        spriteRenderer.sprite = block_Jewel_Diamond_2;
-                    }
-                }
-                else //블럭 체력이 3분의 2 이하일 때
-                {
-                    if (blockType == 0 || blockType == 5) //일반블럭 or 몬스터 블럭
+                    if (blockType == 0 || blockType == 4 ||blockType == 5) //일반블럭 or 유물블럭 or몬스터 블럭
                     {
                         spriteRenderer.sprite = block_Normal_1;
                     }
-                    else if (blockType == 2) // 석탄
+                    else if (blockType == 2) //석탄
                     {
                         spriteRenderer.sprite = block_Jewel_Coal_1;
                     }
                     else if (blockType == 3) //단단한 바위
                     {
                         spriteRenderer.sprite = block_Rock_1;
-                    }
-                    else if (blockType == 4) //유물
-                    {
-                        spriteRenderer.sprite = block_Jewel_Diamond_1;
                     }
                     else if (blockType == 6) //모래
                     {
@@ -247,82 +270,201 @@ public class Block : MonoBehaviour
                         spriteRenderer.sprite = block_Jewel_Diamond_1;
                     }
                 }
-            }
-        }
-        else //블럭 파괴
-        {
-            
-            if(blockType == 0)
-            {
-                //일반 블럭 부쉈을 때
-            }
-            else if (blockType == 1)
-            {
-                //보물상자 부쉈을 때 
-            }
-            else if(blockType == 2)
-            {
-                //석탄 부쉈을 때
-                playerScript.Inventory.AddItem(playerScript.minerals[0], 1);
-            }
-            else if (blockType == 3)
-            {
-                //단단한 바위 부쉈을 때
-            }
-            else if (blockType == 4)
-            {
-                //유물 부쉈을 때
-            }
-            else if (blockType == 5)
-            {
-                //몬스터 블럭 부쉈을 때
-                Instantiate(monster1);
-            }
-            else if (blockType == 6)
-            {
-                //모래 부쉈을 때
-            }
-            else if (blockType == 7)
-            {
-                //구리 부쉈을 때
-                playerScript.Inventory.AddItem(playerScript.minerals[1], 1);
-            }
-            else if (blockType == 8)
-            {
-                //철 부쉈을 때
-                playerScript.Inventory.AddItem(playerScript.minerals[2], 1);
-            }
-            else if (blockType == 9)
-            {
-                //금 부쉈을 때
-                playerScript.Inventory.AddItem(playerScript.minerals[3], 1);
-            }
-            else if (blockType == 10)
-            {
-                //루비 부쉈을 때
-                playerScript.Inventory.AddItem(playerScript.minerals[4], 1);
-            }
-            else if (blockType == 11)
-            {
-                //다이아 부쉈을 때
-                playerScript.Inventory.AddItem(playerScript.minerals[5], 1);
-            }
-
-
-            blocksDictionary.blockPosition.Remove(this.transform.position);
-            
-
-            if (blocksDictionary.blockPosition.ContainsKey((Vector2)this.transform.position + new Vector2(0, 1))) //내 위에 블럭 있는지 체크
-            {
-                GameObject aboveBlock = blocksDictionary.blockPosition[(Vector2)transform.position + new Vector2(0, 1)]; ;
-                if (aboveBlock.GetComponent<Block>().blockType == 6) //내 위에 있는 블럭이 모래면 떨어트리기
+                else if (blockHealth < blockMaxHealth / 4 * 3 && blockHealth >= blockMaxHealth / 2) //블럭 체력이 3분의 1 이하일 때
                 {
-                    aboveBlock.GetComponent<Block>().DropBlock(aboveBlock.GetComponent<Block>().DropCheck(this.transform.position, 0));
+                    if (blockType == 0 || blockType == 4 || blockType == 5) //일반블럭 or 유물블럭 or몬스터 블럭
+                    {
+                        spriteRenderer.sprite = block_Normal_2;
+                    }
+                    else if (blockType == 2) //석탄
+                    {
+                        spriteRenderer.sprite = block_Jewel_Coal_2;
+                    }
+                    else if (blockType == 3) //단단한 바위
+                    {
+                        spriteRenderer.sprite = block_Rock_2;
+                    }
+                    else if (blockType == 6) //모래
+                    {
+                        spriteRenderer.sprite = block_Sand_2;
+                    }
+                    else if (blockType == 7) //구리
+                    {
+                        spriteRenderer.sprite = block_Jewel_Copper_2;
+                    }
+                    else if (blockType == 8) //철
+                    {
+                        spriteRenderer.sprite = block_Jewel_Iron_2;
+                    }
+                    else if (blockType == 9) //금
+                    {
+                        spriteRenderer.sprite = block_Jewel_Gold_2;
+                    }
+                    else if (blockType == 10) //루비
+                    {
+                        spriteRenderer.sprite = block_Jewel_Ruby_2;
+                    }
+                    else if (blockType == 11) //다이아
+                    {
+                        spriteRenderer.sprite = block_Jewel_Diamond_2;
+                    }
+                }
+                else if (blockHealth < blockMaxHealth / 2 && blockHealth >= blockMaxHealth / 4) //블럭 체력이 3분의 1 이하일 때
+                {
+                    if (blockType == 0 || blockType == 4 || blockType == 5) //일반블럭 or 유물블럭 or몬스터 블럭
+                    {
+                        spriteRenderer.sprite = block_Normal_3;
+                    }
+                    else if (blockType == 2) //석탄
+                    {
+                        spriteRenderer.sprite = block_Jewel_Coal_3;
+                    }
+                    else if (blockType == 3) //단단한 바위
+                    {
+                        spriteRenderer.sprite = block_Rock_3;
+                    }
+                    else if (blockType == 6) //모래
+                    {
+                        spriteRenderer.sprite = block_Sand_3;
+                    }
+                    else if (blockType == 7) //구리
+                    {
+                        spriteRenderer.sprite = block_Jewel_Copper_3;
+                    }
+                    else if (blockType == 8) //철
+                    {
+                        spriteRenderer.sprite = block_Jewel_Iron_3;
+                    }
+                    else if (blockType == 9) //금
+                    {
+                        spriteRenderer.sprite = block_Jewel_Gold_3;
+                    }
+                    else if (blockType == 10) //루비
+                    {
+                        spriteRenderer.sprite = block_Jewel_Ruby_3;
+                    }
+                    else if (blockType == 11) //다이아
+                    {
+                        spriteRenderer.sprite = block_Jewel_Diamond_3;
+                    }
+                }
+                else if (blockHealth < blockMaxHealth / 4 && blockHealth > 0) //블럭 체력이 3분의 1 이하일 때
+                {
+                    if (blockType == 0 || blockType == 4 || blockType == 5) //일반블럭 or 유물블럭 or몬스터 블럭
+                    {
+                        spriteRenderer.sprite = block_Normal_4;
+                    }
+                    else if (blockType == 2) //석탄
+                    {
+                        spriteRenderer.sprite = block_Jewel_Coal_4;
+                    }
+                    else if (blockType == 3) //단단한 바위
+                    {
+                        spriteRenderer.sprite = block_Rock_4;
+                    }
+                    else if (blockType == 6) //모래
+                    {
+                        spriteRenderer.sprite = block_Sand_4;
+                    }
+                    else if (blockType == 7) //구리
+                    {
+                        spriteRenderer.sprite = block_Jewel_Copper_4;
+                    }
+                    else if (blockType == 8) //철
+                    {
+                        spriteRenderer.sprite = block_Jewel_Iron_4;
+                    }
+                    else if (blockType == 9) //금
+                    {
+                        spriteRenderer.sprite = block_Jewel_Gold_4;
+                    }
+                    else if (blockType == 10) //루비
+                    {
+                        spriteRenderer.sprite = block_Jewel_Ruby_4;
+                    }
+                    else if (blockType == 11) //다이아
+                    {
+                        spriteRenderer.sprite = block_Jewel_Diamond_4;
+                    }
                 }
             }
-            Destroy(this.gameObject);//무조건 이 if문에서 맨 마지막으로
-        }
+            else//블럭 파괴
+            {
 
+                if (blockType == 0)
+                {
+                    //일반 블럭 부쉈을 때
+                }
+                else if (blockType == 2)
+                {
+                    //석탄 부쉈을 때
+                    isItemDrop = true;
+                    ItemDrop(1, 0, playerScript, 1);
+                }
+                else if (blockType == 3)
+                {
+                    //단단한 바위 부쉈을 때
+                }
+                else if (blockType == 4)
+                {
+                    //유물 부쉈을 때
+                    if (actvieRelicEffect != null)
+                        Destroy(actvieRelicEffect);
+                    ItemDrop(0, Random.Range(0,10), playerScript, 1);
+
+                }
+                else if (blockType == 5)
+                {
+                    //몬스터 블럭 부쉈을 때
+                    Instantiate(monster1);
+                }
+                else if (blockType == 6)
+                {
+                    //모래 부쉈을 때
+                }
+                else if (blockType == 7)
+                {
+                    //구리 부쉈을 때
+                    isItemDrop = true;
+                    ItemDrop(1, 1, playerScript, 1);
+                }
+                else if (blockType == 8)
+                {
+                    //철 부쉈을 때
+                    ItemDrop(1, 2, playerScript, 1);
+                }
+                else if (blockType == 9)
+                {
+                    //금 부쉈을 때
+                    ItemDrop(1, 3, playerScript, 1);
+                }
+                else if (blockType == 10)
+                {
+                    //루비 부쉈을 때
+                    ItemDrop(1, 4, playerScript, 1);
+                }
+                else if (blockType == 11)
+                {
+                    //다이아 부쉈을 때
+                    ItemDrop(1, 5, playerScript, 1);
+                }
+
+
+                blocksDictionary.blockPosition.Remove(this.transform.position);
+
+
+                if (blocksDictionary.blockPosition.ContainsKey((Vector2)this.transform.position + new Vector2(0, 1))) //내 위에 블럭 있는지 체크
+                {
+                    GameObject aboveBlock = blocksDictionary.blockPosition[(Vector2)transform.position + new Vector2(0, 1)]; ;
+                    if (aboveBlock.GetComponent<Block>().blockType == 6) //내 위에 있는 블럭이 모래면 떨어트리기
+                    {
+                        aboveBlock.GetComponent<Block>().DropBlock(aboveBlock.GetComponent<Block>().DropCheck(this.transform.position, 0));
+                    }
+                }
+
+                Destroy(this.gameObject);//무조건 이 if문에서 맨 마지막으로
+            }
+        }
     }
 
     public int DropCheck(Vector2 dropCheckPosition, int checkDropHeight) //모래 얼마나 떨어질지 계산(재귀함수)
@@ -354,6 +496,7 @@ public class Block : MonoBehaviour
         isDropping = true; //떨어트리는게 눈에 보여야 하기 때문에 떨어트리라는 변수를 체크하고 Update()가 알아서 떨어트리게 함
     }
 
+
     private void Update()
     {
         if (isDropping) //떨어져야함
@@ -378,6 +521,78 @@ public class Block : MonoBehaviour
 
             
         }
+
+        //보물상자에서 플레이어가 멀어졌는데도 canOpenBox가 true인 경우 해제
+        if (blockType == 1 && canOpenBox == true && Vector2.Distance(this.gameObject.transform.position, getPlayer.transform.position) > 2.5f) 
+        {
+            canOpenBox = false;
+        }
+
+        //보물상자 근처에 플레이어가 있는 상태에서 F키(상호작용키)를 누를시 보물상자 해제
+        if(blockType == 1 && canOpenBox == true && Input.GetKeyDown(KeyCode.F))
+        {
+
+            if(stageNum == 1)
+            {
+                Player playerScript = getPlayer.GetComponent<Player>();
+                int randCoal = Random.Range(1, 11);
+                int randCopper = Random.Range(1, 11);
+                //itemDropCount += randCoal;
+                //itemDropCount += randCopper;
+                
+                for (int i = 0; i < randCoal; i++)
+                {
+                    ItemDrop(1, 0, getPlayer.GetComponent<Player>(), 1);
+                }
+
+                for (int i = 0; i < randCopper; i++)
+                {
+                    ItemDrop(1, 1, playerScript.GetComponent<Player>(), 1);
+                }
+
+                spriteRenderer.sprite = boxOpenSprite;
+                boxOpen = true;
+            }
+        }
+
+        if(boxOpen == true)
+        {
+            if (boxDestroyCount - Time.deltaTime > 0)
+                boxDestroyCount -= Time.deltaTime;
+            else
+            {
+                blocksDictionary.blockPosition.Remove(this.transform.position);
+                Destroy(this.gameObject);
+            }
+        }
     }
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (blockType == 1 && collision.tag == "Player")
+        {
+            getPlayer = collision.gameObject;
+            canOpenBox = true;
+        }
+
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (blockType == 1 && collision.tag == "Player")
+        {
+            getPlayer = collision.gameObject;
+            canOpenBox = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (blockType == 1 && collision.tag == "Player")
+        {
+            getPlayer = collision.gameObject;
+            canOpenBox = false;
+        }
+    }
 }

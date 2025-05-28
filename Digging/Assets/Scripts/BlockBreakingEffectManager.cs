@@ -70,9 +70,4 @@ public class BlockBreakingEffectManager : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            print(loopCount);
-    }
 }
