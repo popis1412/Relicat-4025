@@ -15,6 +15,12 @@ MonoBehaviour:
   itemName: lighter
   itemImage: {fileID: 21300000, guid: 20cac3991dff7f845a8a08b5f1a22451, type: 3}
   count: 0
+  isMineral: 0
   rarity: 1
   value: 100
   duplicate_value: 20
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uB538\uAE4D! \uBD88\uC774 \uB098\uC624\uB294 \uC791\uC740 \uC0C1\uC790.
+    \uC778\uAC04\uB4E4\uC740 \uC774\uAC78\uB85C \uD734\uB300\uC6A9\uC73C\uB85C \uBC25\uC744
+    \uB370\uC6CC\uBA39\uC5C8\uB098?"

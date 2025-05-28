@@ -15,6 +15,11 @@ MonoBehaviour:
   itemName: battery
   itemImage: {fileID: 21300000, guid: 3462afce4559e624495d54fec7418b52, type: 3}
   count: 0
+  isMineral: 0
   rarity: 3
   value: 300
   duplicate_value: 60
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uC791\uC740 \uC5D0\uB108\uC9C0 \uB369\uC5B4\uB9AC! \uC778\uAC04\uC774 \uB9CC\uB4E0
+    \uAE30\uACC4\uB4E4\uC774 \uC774\uAC78 \uBA39\uACE0 \uC6C0\uC9C1\uC600\uB300"

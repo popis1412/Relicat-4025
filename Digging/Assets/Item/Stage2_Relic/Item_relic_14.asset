@@ -15,6 +15,11 @@ MonoBehaviour:
   itemName: hammer
   itemImage: {fileID: 21300000, guid: fc16bf73bfc5df14cb0657581f1176d1, type: 3}
   count: 0
+  isMineral: 0
   rarity: 2
   value: 200
   duplicate_value: 40
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uBB50\uB4E0 \uB450\uB4E4\uAE30\uBA74 \uD574\uACB0\uB41C\uB2E4\uB294 \uB3C4\uAD6C.
+    \uC870\uC2EC\uD558\uC9C0 \uC54A\uC73C\uBA74 \uB2E4\uCE60\uC9C0\uB3C4 \uBAB0\uB77C"

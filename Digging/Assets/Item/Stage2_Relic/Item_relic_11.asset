@@ -19,3 +19,7 @@ MonoBehaviour:
   rarity: 1
   value: 100
   duplicate_value: 20
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uC791\uACE0 \uBFB0\uC871\uD55C \uAE08\uC18D \uBC14\uB298! \uC778\uAC04\uC740
+    \uC774\uAC78\uB85C \uBB34\uC5B8\uAC00\uB97C \uBCBD\uC5D0 \uBC15\uC544 \uACE0\uC815\uD588\uB300"

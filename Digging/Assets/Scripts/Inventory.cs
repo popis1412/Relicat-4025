@@ -2,18 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using static UnityEditor.Progress;
+using Unity.VisualScripting;
 
 public class Inventory : MonoBehaviour
 {
     public List<Item> items;
     public int money;
+    [SerializeField] private TextMeshProUGUI money_text;
 
     [SerializeField]
     private Transform slotParent;
     [SerializeField]
     private Slot[] slots;
-    
 
+    [SerializeField] private GameObject getItem_LogPanel;
+    [SerializeField] private Image getItem_Image;
+    [SerializeField] private TextMeshProUGUI getItem_Name;
+    [SerializeField] private TextMeshProUGUI getItem_EA;
+    private int dupleLog = 1;
 
 
 #if UNITY_EDITOR
@@ -52,6 +60,9 @@ public class Inventory : MonoBehaviour
             TextMeshProUGUI childtext = parent.GetChild(1).GetComponent<TextMeshProUGUI>();
             childtext.text = "";
         }
+
+        money_text.text = money.ToString();
+
     }
 
     // addEA: 갯수, _item: Item Object
@@ -72,6 +83,8 @@ public class Inventory : MonoBehaviour
                         TextMeshProUGUI childtext = parent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
                         Debug.Log(childtext);
                         childtext.text = item.count.ToString();
+
+                        ItemLog(_item, addEA);
                     }
                     
                 }
@@ -94,6 +107,8 @@ public class Inventory : MonoBehaviour
                     TextMeshProUGUI childtext = parent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
                     Debug.Log(childtext);
                     childtext.text = _item.count.ToString();
+
+                    ItemLog(_item, addEA);
                 }
             }
         }
@@ -186,5 +201,37 @@ public class Inventory : MonoBehaviour
         }
 
         FreshSlot(); // 리스트 변경 후 UI 갱신
+    }
+
+    // 아이템 획득 로그
+    private void ItemLog(Item _item, int addEA)
+    {
+        
+        getItem_LogPanel.SetActive(true);
+        
+        // 같은 아이템 연속 획득 시 
+        if(getItem_Name.text == _item.itemName)
+        {
+            getItem_EA.text = "X " + (addEA+dupleLog).ToString();
+            dupleLog++;
+        }
+        // 다른 아이템 획득 시
+        else
+        {
+            getItem_Image.GetComponent<Image>().sprite = _item.itemImage;
+            getItem_Name.text = _item.itemName;
+            getItem_EA.text = "X " + addEA.ToString();
+
+            dupleLog = 1;
+        }
+        
+        CancelInvoke("closeItemLog");
+        Invoke("closeItemLog", 3f);
+    }
+
+    // 일정 시간 뒤 로그 패널 닫기
+    private void closeItemLog()
+    {
+        getItem_LogPanel.SetActive(false);
     }
 }

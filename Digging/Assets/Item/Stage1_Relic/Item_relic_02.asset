@@ -15,6 +15,11 @@ MonoBehaviour:
   itemName: cd
   itemImage: {fileID: 21300000, guid: df8da32fe04327b409cd7dad36fca2d6, type: 3}
   count: 0
+  isMineral: 0
   rarity: 1
   value: 100
   duplicate_value: 20
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uBC18\uC9DD\uBC18\uC9DD \uBE5B\uB098\uB294 \uB465\uADFC\uD310! \uC74C\uC545\uC774
+    \uB4E4\uB9B0\uB2E4\uB294\uB370 \uB09C \uADF8\uB0E5 \uB178\uB294 \uAC8C \uC88B\uC544"

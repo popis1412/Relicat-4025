@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3057011070943476779}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.258819, w: 0.9659259}
   m_LocalPosition: {x: 0.381, y: -0.17176536, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3083855431188750818}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -30}
 --- !u!212 &9061234234504050687
 SpriteRenderer:
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.28, y: 1.28}
+  m_Size: {x: 0.5, y: 0.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -114,7 +114,6 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3083855431188750820}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.713, z: 0}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
@@ -122,6 +121,7 @@ Transform:
   m_Children:
   - {fileID: 573297793211744211}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3083855431188750819
 SpriteRenderer:
@@ -185,25 +185,6 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -253,10 +234,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 100
-  jumpSpeed: 10
-  timeDig: 0.5
-  startholdtime: 0
-  lastDigTime: 0
+  flyAcceleration: 10
+  flySpeed: 8
+  deceleration: 15
+  maxHangDistance: 0.5
 --- !u!50 &3083855431188750829
 Rigidbody2D:
   serializedVersion: 4
@@ -274,12 +255,6 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -318,9 +293,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Inventory: {fileID: 0}
+  Collection: {fileID: 0}
   items:
   - {fileID: 11400000, guid: 416a9583a517d62438a89e3e240559f0, type: 2}
   - {fileID: 11400000, guid: 48da0b7f30b2cf648b06afee5c3a60c8, type: 2}
   - {fileID: 11400000, guid: 1d8f1a49a21e41a44bf688609343179c, type: 2}
   - {fileID: 11400000, guid: be1d291ff0bec8241b3a1543d4839f7d, type: 2}
+  minerals: []
   Inventory_obj: {fileID: 0}
+  shopUIPanel: {fileID: 0}
+  CollectUIPanel: {fileID: 0}
+  RelicInfoUIPanel: {fileID: 0}
+  RelicInfoImage: {fileID: 0}
+  RelicInfoName: {fileID: 0}
+  RelicInfoText: {fileID: 0}

@@ -15,6 +15,11 @@ MonoBehaviour:
   itemName: can
   itemImage: {fileID: 21300000, guid: 03bc42e00af211d429e288e4fe51ba25, type: 3}
   count: 0
+  isMineral: 0
   rarity: 2
   value: 200
   duplicate_value: 40
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uB69C\uAED1 \uC5F4\uBA74 \uB0C4\uC0C8\uBD80\uD130 \uB05D\uB0B4\uC918! \uADFC\uB370
+    \uB69C\uAED1 \uC5EC\uB294 \uAC8C \uBB38\uC81C\uC57C\u2026"
