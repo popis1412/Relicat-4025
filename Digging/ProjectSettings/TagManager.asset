@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Item
+  - Block
+  - Shop
+  - Museum
+  - Collect
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Block
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Back
+    uniqueID: 1956235483
+    locked: 0
+  - name: Middle
+    uniqueID: 124320615
+    locked: 0
+  - name: MiddleEffect
+    uniqueID: 1570297691
+    locked: 0
+  - name: Front
+    uniqueID: 1847501263
+    locked: 0
