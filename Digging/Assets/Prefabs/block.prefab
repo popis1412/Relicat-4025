@@ -73,15 +73,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 124320615
-  m_SortingLayer: 2
+  m_SortingLayerID: 1956235483
+  m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 8b1c742dc68137c45a570217c4fa57a1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 65023ee168a12c447a36c79744bc962d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.28, y: 1.28}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -105,7 +105,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    newSize: {x: 1.28, y: 1.28}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -125,36 +125,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704f8b9034c57b641b18587947f362d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relicEffect: {fileID: 5099109402161310600, guid: 981735d29b52e7641ad03093bce8609a, type: 3}
+  dropItem: {fileID: 5480586821343649714, guid: 202c5e0557af70e4aaf46a08c4f977b3, type: 3}
   monster1: {fileID: 0}
-  block_Normal_0: {fileID: 1937594144, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Normal_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Normal_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Coal_0: {fileID: 21300000, guid: 2439d2ac883d9a24292f6aead832d61d, type: 3}
-  block_Jewel_Coal_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Coal_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Copper_0: {fileID: 21300000, guid: 1f0bb0f539755ad43b20c01ddd3a78ea, type: 3}
-  block_Jewel_Copper_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Copper_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Iron_0: {fileID: 21300000, guid: 2ffe036f44e85b64a8455b23fa99630d, type: 3}
-  block_Jewel_Iron_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Iron_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Gold_0: {fileID: 21300000, guid: 2a6a049d11900ea4f814015582f4a442, type: 3}
-  block_Jewel_Gold_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Gold_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Ruby_0: {fileID: 21300000, guid: 0440c5d43003fe4459fe2064098c9d37, type: 3}
-  block_Jewel_Ruby_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Ruby_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Diamond_0: {fileID: 21300000, guid: 10437a5526fd8924b9fe93e5c32e001f, type: 3}
-  block_Jewel_Diamond_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Jewel_Diamond_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Rock_0: {fileID: 21300000, guid: c653e1b5301f14c4593a85778156106d, type: 3}
-  block_Rock_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Rock_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Sand_0: {fileID: 21300000, guid: e0d90381f7b947443aeab2975416e212, type: 3}
-  block_Sand_1: {fileID: 553612899, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_Sand_2: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
-  block_unbreakable_0: {fileID: 2051221381, guid: edcf47c9150bc36419ba8921e6e67c40, type: 3}
+  block_Normal_0: {fileID: 21300000, guid: 65023ee168a12c447a36c79744bc962d, type: 3}
+  block_Normal_1: {fileID: 21300000, guid: 7b305d06e0a8f134793c66642d659043, type: 3}
+  block_Normal_2: {fileID: 21300000, guid: bb0be65c57b99784597f2d560d021883, type: 3}
+  block_Normal_3: {fileID: 21300000, guid: 7d8dac56ab88537468e6be5d84c25f0b, type: 3}
+  block_Normal_4: {fileID: 21300000, guid: 9a1af8741e6c8f744acdc81b5fef5c4d, type: 3}
+  block_Jewel_Coal_0: {fileID: 21300000, guid: 5993ea02bebf1144caaaeeb1c436e127, type: 3}
+  block_Jewel_Coal_1: {fileID: 21300000, guid: 60bfb931bb2adaa4c87492deee7f18e8, type: 3}
+  block_Jewel_Coal_2: {fileID: 21300000, guid: e83f086ac66892d4486ebfa4311317e6, type: 3}
+  block_Jewel_Coal_3: {fileID: 21300000, guid: 1375b159688754a49927a7dd71f81754, type: 3}
+  block_Jewel_Coal_4: {fileID: 21300000, guid: 16a1ba93859f7da409120c84e0d0303b, type: 3}
+  block_Jewel_Copper_0: {fileID: 21300000, guid: 596de36b5c4a9104db37fc12598952bb, type: 3}
+  block_Jewel_Copper_1: {fileID: 21300000, guid: ad2de73b42981c5419d4dbf4dc242b9a, type: 3}
+  block_Jewel_Copper_2: {fileID: 21300000, guid: f105f0fb81c2c724b8f7a88e45e0075b, type: 3}
+  block_Jewel_Copper_3: {fileID: 21300000, guid: e3a25ed50de71f64eba2ea6de2d2b081, type: 3}
+  block_Jewel_Copper_4: {fileID: 21300000, guid: d53b0618751fb5e4da74cf3d7149a4b1, type: 3}
+  block_Jewel_Iron_0: {fileID: 21300000, guid: 8828e2b57609da24a859bab8d1e0a4a9, type: 3}
+  block_Jewel_Iron_1: {fileID: 21300000, guid: b3d7427b47b2fe840b489d99d60584f2, type: 3}
+  block_Jewel_Iron_2: {fileID: 21300000, guid: e311e1505bba18340aa64166db5b87b6, type: 3}
+  block_Jewel_Iron_3: {fileID: 21300000, guid: f3751c5349738dd41b03cd9468949a58, type: 3}
+  block_Jewel_Iron_4: {fileID: 21300000, guid: 226d4832e718c03438dcbde28c8360c8, type: 3}
+  block_Jewel_Gold_0: {fileID: 21300000, guid: c82c84ec82a2aab499f79b023b641d9e, type: 3}
+  block_Jewel_Gold_1: {fileID: 21300000, guid: 56594e0dc3dff774ca9dfed9210279aa, type: 3}
+  block_Jewel_Gold_2: {fileID: 21300000, guid: e94869165196fb440a3c8edb406c05af, type: 3}
+  block_Jewel_Gold_3: {fileID: 21300000, guid: d0c6c60cfc52a06448ba29578a351be1, type: 3}
+  block_Jewel_Gold_4: {fileID: 21300000, guid: a8ed98308aa69374781a28c610948e83, type: 3}
+  block_Jewel_Ruby_0: {fileID: 21300000, guid: cee6ee3511837c44bbe611a5c5c27e2f, type: 3}
+  block_Jewel_Ruby_1: {fileID: 21300000, guid: f2a68895fac8b174d811880a532eeb6e, type: 3}
+  block_Jewel_Ruby_2: {fileID: 21300000, guid: 8ab40bb39343ccb45805a3a3f3d3e0f8, type: 3}
+  block_Jewel_Ruby_3: {fileID: 21300000, guid: 0434092c1ebaa4b40b496ac92a83d91b, type: 3}
+  block_Jewel_Ruby_4: {fileID: 21300000, guid: 1416d016f33328b429de30e7351dd0e1, type: 3}
+  block_Jewel_Diamond_0: {fileID: 21300000, guid: adbc74fd229c0a341b9d9e4948103af6, type: 3}
+  block_Jewel_Diamond_1: {fileID: 21300000, guid: 58fe351bac9162e4c8fde3824a64adfa, type: 3}
+  block_Jewel_Diamond_2: {fileID: 21300000, guid: e050d4def0114b846819458c347a194d, type: 3}
+  block_Jewel_Diamond_3: {fileID: 21300000, guid: 4affefc4c06157e4fab050b033c976dc, type: 3}
+  block_Jewel_Diamond_4: {fileID: 21300000, guid: 21b0bb5c1bfca5b40ab9f8e58bad51f1, type: 3}
+  block_Rock_0: {fileID: 21300000, guid: 974b4f0980ebb7e4db5c20729c071f17, type: 3}
+  block_Rock_1: {fileID: 21300000, guid: 0dd1cc4db98d02f4993d32daa640d326, type: 3}
+  block_Rock_2: {fileID: 21300000, guid: 9fd26174aa54e4c49bcba485ebd73d9b, type: 3}
+  block_Rock_3: {fileID: 21300000, guid: fa1e07d97f697e84f93d8d94a5da3104, type: 3}
+  block_Rock_4: {fileID: 21300000, guid: fea72f842a5639a4a945f022b5ab979b, type: 3}
+  block_Sand_0: {fileID: 21300000, guid: 7607028946a38df4e85886a156840bee, type: 3}
+  block_Sand_1: {fileID: 21300000, guid: b1173b797507f0b45a1a694f8073063b, type: 3}
+  block_Sand_2: {fileID: 21300000, guid: ec466a02a4390dd498a7df79af9952f3, type: 3}
+  block_Sand_3: {fileID: 21300000, guid: 6caa241acf3332d4a8c17099ed0f4ae2, type: 3}
+  block_Sand_4: {fileID: 21300000, guid: 19f992d7d8fa24c47bdecac5e5f59860, type: 3}
+  block_unbreakable_0: {fileID: 21300000, guid: 6ca785946826488488f6193c53db908a, type: 3}
+  boxCloseSprite: {fileID: 21300000, guid: b9c014df8fbd4ae4281a081c0cd835f0, type: 3}
+  boxOpenSprite: {fileID: 21300000, guid: 295090e2154a2314b9288e304890a78c, type: 3}
   nowBlockType: 0
+  stageNum: 0
   spriteRenderer: {fileID: 0}
   blocksDictionary: {fileID: 0}
   effectManager: {fileID: 0}
@@ -239,6 +262,6 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
