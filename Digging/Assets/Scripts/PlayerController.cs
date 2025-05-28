@@ -30,6 +30,10 @@ public class PlayerController : MonoBehaviour
     private const float HeadCheckRadius = 0.1f;   // Overlap 반지름
     private const float NarrowDigDistance = 0.5f; // 캘 수 있는 범위
 
+    [SerializeField] float WalkminX = 2.5f;     // 캐릭터가 이동할 수 있는 맵의 최소 X범위
+    [SerializeField] float WalkmaxX = 26.93f;   // 캐릭터가 이동할 수 있는 맵의 최소 X범위
+
+
     private void Awake()
     {
         input = new PlayerControl();
@@ -84,6 +88,21 @@ public class PlayerController : MonoBehaviour
         // Rigdbody 속도 설정 (y속도는 최대 flySpeed 범위 내로 제한)
         rb.velocity = new Vector2(horizontalVelocity, Mathf.Clamp(verticalVelocity, -flySpeed, flySpeed));
 
+        // 맵 이동 제한
+        if(transform.position.x < WalkminX)
+        {
+            // 벗어난 위치를 경계선으로 보정
+            Vector2 targetPositionX = new Vector2(WalkminX, transform.position.y);
+
+            // 부드럽게 경계 안으로 이동
+            transform.position = Vector3.Lerp(transform.position, targetPositionX, Time.deltaTime * 5f);
+        }
+        else if(transform.position.x > WalkmaxX)
+        {
+            Vector2 targetPositionX = new Vector2(WalkmaxX, transform.position.y);
+            transform.position = Vector3.Lerp(transform.position, targetPositionX, Time.deltaTime * 5f);
+        }
+
         float playerRot;
 
         if (moveInput.x > 0)
@@ -129,30 +148,6 @@ public class PlayerController : MonoBehaviour
 
         // 상승 중이면 상속도 우선, 아니면 중력 등 자연스러운 하강 유지
         return isFlying || curYVelocity > 0f ? verticalSpeed : curYVelocity;
-
-        /*if(isFlying || curYVelocity > 0f)
-        //{
-        //    // 상승 중: 기존속도(입력값) + 가속도
-        //    print("상승 중");
-        //    result = curYVelocity + a * Time.fixedDeltaTime;
-        //}
-        //else if(curYVelocity < 0f)
-        //{
-        //    // 하강 중: 기본속도(Rigdbody 속도) + 가속도
-        //    print("하강 중");
-        //    result = curYVelocity;
-        //}
-        //else
-        //{
-        //    // 정지 상태: 현재 Rigdbody y 속도 유지
-        //    print("정지 상태");
-        //    result = 0f;
-        //}
-        //print($"현재속도: {curYVelocity:F3}, 가속도: {a:F3}, 반환속도: {result:F3}");
-        //result = Mathf.Clamp(result, -flySpeed, flySpeed);
-
-
-        //return result;*/
     }
 
     // 클릭한 블록 파괴 처리
@@ -164,7 +159,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         Block block = targetBlock.GetComponent<Block>();
-        block.BlockDestroy(Time.deltaTime, playerScript);
+        block.BlockDestroy(Time.deltaTime * flySpeed, playerScript);
     }
 
     // 마우스 위치 기준으로 파괴 가능한 블록 반환
@@ -217,17 +212,5 @@ public class PlayerController : MonoBehaviour
             
 
         return foundBlock;
-    }
-
-    // 충돌 처리
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        ContactPoint2D contact = collision.contacts[0];
-
-        // 아이템 먹을 시
-        if(collision.gameObject.tag == "Item")
-        {
-            Destroy(collision.gameObject);
-        }
     }
 }
