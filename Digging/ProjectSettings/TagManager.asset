@@ -47,18 +47,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Back
+  - name: 6
+    uniqueID: 756493957
+    locked: 0
+  - name: 5
     uniqueID: 1956235483
     locked: 0
-  - name: block
+  - name: 4
     uniqueID: 1319789357
     locked: 0
-  - name: Middle
+  - name: 3
     uniqueID: 124320615
     locked: 0
-  - name: MiddleEffect
+  - name: 2
     uniqueID: 1570297691
     locked: 0
-  - name: Front
+  - name: 1
     uniqueID: 1847501263
     locked: 0
