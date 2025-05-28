@@ -155,7 +155,6 @@ public class Block : MonoBehaviour
             if (boxCollider != null)
             {
                 boxCollider.isTrigger = true;
-                boxCollider.size = new Vector2(2f, 2f);
             }
         }
         else if (newBlockType == 2)
@@ -531,8 +530,9 @@ public class Block : MonoBehaviour
         //보물상자 근처에 플레이어가 있는 상태에서 F키(상호작용키)를 누를시 보물상자 해제
         if(blockType == 1 && canOpenBox == true && Input.GetKeyDown(KeyCode.F))
         {
+            print("hey");
 
-            if(stageNum == 1)
+            if (stageNum == 1)
             {
                 Player playerScript = getPlayer.GetComponent<Player>();
                 int randCoal = Random.Range(1, 11);
