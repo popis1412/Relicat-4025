@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 
 public class PlayerController : MonoBehaviour
@@ -11,10 +12,14 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private float flyInput;
     private float flyAxis; // 상승 입력 부드럽게 보간할 값
+    private float verticalSpeed;
 
+    [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float flyAcceleration = 10f;
     [SerializeField] private float flySpeed = 8f;          // 상승 속도(최대 상승 속도)
-    [SerializeField] private float flySmoothSpeed = 5f;    // 상승 입력 보간 속도
+    [SerializeField] private float deceleration = 15f;
+
     [SerializeField] private float maxHangDistance = 0.5f; // 블록에 걸쳐 떠 있을 수 있는 최대 거리
 
     private bool isFlying;
@@ -39,11 +44,11 @@ public class PlayerController : MonoBehaviour
     {
         input.Enable();
 
-        input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        input.Player.Move.performed += ctx => moveInput = IsStuckInSand() ? Vector2.zero : ctx.ReadValue<Vector2>();
         input.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
         input.Player.Jump.started += ctx => isFlying = true;
-        input.Player.Jump.performed += ctx => flyInput = ctx.ReadValue<float>();
+        input.Player.Jump.performed += ctx => flyInput = IsStuckInSand() ? 0f : ctx.ReadValue<float>();
         input.Player.Jump.canceled += ctx =>
         {
             flyInput = 0;
@@ -56,13 +61,12 @@ public class PlayerController : MonoBehaviour
         UpdateJumpAxisSmoothly();
         HandleMovement();
         HandleDigging();
-        //IsStuckInSand();
     }
 
     // 상승 입력을 부드럽게 보간(0 ~ 1 사이 값을 천천히 변화)
     private void UpdateJumpAxisSmoothly()
     {
-        flyAxis = Mathf.Lerp(flyAxis, flyInput, Time.deltaTime * flySmoothSpeed);
+        flyAxis = Mathf.Lerp(flyAxis, flyInput, Time.deltaTime * flySpeed);
     }
 
     // 플레이어 이동 및 상승(수직 속도) 처리
@@ -78,7 +82,21 @@ public class PlayerController : MonoBehaviour
         float verticalVelocity = CalculateVerticalVelocity();
 
         // Rigdbody 속도 설정 (y속도는 최대 flySpeed 범위 내로 제한)
-        rb.velocity = new Vector2(horizontalVelocity, Mathf.Clamp(verticalVelocity, -flySpeed * 2f, flySpeed));
+        rb.velocity = new Vector2(horizontalVelocity, Mathf.Clamp(verticalVelocity, -flySpeed, flySpeed));
+
+        float playerRot;
+
+        if (moveInput.x > 0)
+        {
+            playerRot = 0f;
+            transform.rotation = Quaternion.Euler(0f, playerRot, 0f);
+        }
+        else if(moveInput.x < 0)
+        {
+            playerRot = 180f;
+            transform.rotation = Quaternion.Euler(0f, playerRot, 0f);
+        }
+
 
         //print($"isFlying: {isFlying}, verticalVelocity: {verticalVelocity}");
     }
@@ -88,24 +106,53 @@ public class PlayerController : MonoBehaviour
     {
         float curYVelocity = rb.velocity.y;
 
-        if(isFlying || curYVelocity > 0f)
+        if(flyInput > 0f)
         {
-            // 상승 중: 기존속도(입력값) + 가속도
-            //print("상승 중");
-            return flyInput * curYVelocity + flyAxis * flySpeed;
-        }
-        else if(curYVelocity < 0f)
-        {
-            // 하강 중: 기본속도(Rigdbody 속도) + 가속도
-            //print("하강 중");
-            return curYVelocity + flyAxis * flySpeed;
+            // 상승 중: 가속
+            print("상승 중");
+            if(transform.position.y > 1.5f)
+            {
+                verticalSpeed = 0;  // 플레이어가 멈춤
+            }
+            verticalSpeed += flyAcceleration * flyAxis * Time.fixedDeltaTime;
+            verticalSpeed = Mathf.Min(verticalSpeed, flySpeed);
         }
         else
         {
-            // 정지 상태: 현재 Rigdbody y 속도 유지
-            //print("정지 상태");
-            return curYVelocity;
+            // 입력 없음: 감속
+            print("하강 중");
+            verticalSpeed -= deceleration * Time.fixedDeltaTime;
+            verticalSpeed = Mathf.Max(0f, verticalSpeed);
         }
+
+        //print(verticalSpeed);
+
+        // 상승 중이면 상속도 우선, 아니면 중력 등 자연스러운 하강 유지
+        return isFlying || curYVelocity > 0f ? verticalSpeed : curYVelocity;
+
+        /*if(isFlying || curYVelocity > 0f)
+        //{
+        //    // 상승 중: 기존속도(입력값) + 가속도
+        //    print("상승 중");
+        //    result = curYVelocity + a * Time.fixedDeltaTime;
+        //}
+        //else if(curYVelocity < 0f)
+        //{
+        //    // 하강 중: 기본속도(Rigdbody 속도) + 가속도
+        //    print("하강 중");
+        //    result = curYVelocity;
+        //}
+        //else
+        //{
+        //    // 정지 상태: 현재 Rigdbody y 속도 유지
+        //    print("정지 상태");
+        //    result = 0f;
+        //}
+        //print($"현재속도: {curYVelocity:F3}, 가속도: {a:F3}, 반환속도: {result:F3}");
+        //result = Mathf.Clamp(result, -flySpeed, flySpeed);
+
+
+        //return result;*/
     }
 
     // 클릭한 블록 파괴 처리
@@ -117,7 +164,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         Block block = targetBlock.GetComponent<Block>();
-        block.BlockDestroy(Time.deltaTime * flySpeed, playerScript);
+        block.BlockDestroy(Time.deltaTime, playerScript);
     }
 
     // 마우스 위치 기준으로 파괴 가능한 블록 반환
@@ -152,6 +199,7 @@ public class PlayerController : MonoBehaviour
         // 머리 위 오버랩 감지
         Vector2 headCheckPosition = (Vector2)transform.position + new Vector2(0, HeadCheckRadius);
 
+        // 캐릭터도 감지되기 때문에 Layer를 Block으로 해 놓아야 함.
         Collider2D hit = Physics2D.OverlapCircle(headCheckPosition, HeadCheckRadius, blockLayer);
 
         if(hit == null)
@@ -163,7 +211,10 @@ public class PlayerController : MonoBehaviour
 
         bool foundBlock = block.blocksDictionary.blockPosition.TryGetValue(block.transform.position, out GameObject _);
         if(foundBlock)
+        {
             Debug.Log($"모래 블록 끼임 감지: {hit.name}");
+        }
+            
 
         return foundBlock;
     }
