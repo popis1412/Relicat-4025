@@ -134,91 +134,96 @@ public class Block : MonoBehaviour
         //-1은 무적블럭, 0은 normal, 1은 보물상자, 2는 석탄, 3은 단단한바위, 4는 유물, 5는 몬스터, 6은 모래, 7은 구리, 8은 철(은), 9는 금, 10은 루비, 11은 다이아
         if (blockType != 0)
             Debug.Log(transform.position + " : 잘못된 호출");
-
-        blockType = newBlockType;
-        if (newBlockType == -1)
+        if (blockType != -1)
         {
-            spriteRenderer.sprite = block_unbreakable_0;
-            blockHealth = 100;
-            blockMaxHealth = 100;
-        }
-        else if (newBlockType == 0)
-        {
-            spriteRenderer.sprite = block_Normal_0;
-            blockHealth = 3;
-            blockMaxHealth = 3;
-        }
-        else if(newBlockType == 1)
-        {
-            spriteRenderer.sprite = boxCloseSprite;     //보물상자 들어와야 함
-            BoxCollider2D boxCollider = this.gameObject.GetComponent<BoxCollider2D>();
-            if (boxCollider != null)
+            blockType = newBlockType;
+            if (newBlockType == -1)
             {
-                boxCollider.isTrigger = true;
+                spriteRenderer.sprite = block_unbreakable_0;
+                blockHealth = 100;
+                blockMaxHealth = 100;
+            }
+            else if (newBlockType == 0)
+            {
+                spriteRenderer.sprite = block_Normal_0;
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else if(newBlockType == 1)
+            {
+                spriteRenderer.sprite = boxCloseSprite;     //보물상자 들어와야 함
+                BoxCollider2D boxCollider = this.gameObject.GetComponent<BoxCollider2D>();
+                if (boxCollider != null)
+                {
+                    boxCollider.isTrigger = true;
+                }
+            }
+            else if (newBlockType == 2)
+            {
+                spriteRenderer.sprite = block_Jewel_Coal_0;
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else if (newBlockType == 3)
+            {
+                spriteRenderer.sprite = block_Rock_0;
+                blockHealth = 9;
+                blockMaxHealth = 9;
+            }
+            else if (newBlockType == 4)
+            {
+                spriteRenderer.sprite = block_Normal_0;
+                actvieRelicEffect = Instantiate(relicEffect, this.transform);
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else if (newBlockType == 5)
+            {
+                spriteRenderer.sprite = block_Normal_1; //일반블럭처럼 보이게 함
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else if (newBlockType == 6)
+            {
+                spriteRenderer.sprite = block_Sand_0;
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else if (newBlockType == 7)
+            {
+                spriteRenderer.sprite = block_Jewel_Copper_0;
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else if (newBlockType == 8)
+            {
+                spriteRenderer.sprite = block_Jewel_Iron_0;
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else if (newBlockType == 9)
+            {
+                spriteRenderer.sprite = block_Jewel_Gold_0;
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else if (newBlockType == 10)
+            {
+                spriteRenderer.sprite = block_Jewel_Ruby_0;
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else if (newBlockType == 11)
+            {
+                spriteRenderer.sprite = block_Jewel_Diamond_0;
+                blockHealth = 3;
+                blockMaxHealth = 3;
             }
         }
-        else if (newBlockType == 2)
+        else
         {
-            spriteRenderer.sprite = block_Jewel_Coal_0;
-            blockHealth = 3;
-            blockMaxHealth = 3;
+            print("벽에 대한 호출인지 확인이 필요");
         }
-        else if (newBlockType == 3)
-        {
-            spriteRenderer.sprite = block_Rock_0;
-            blockHealth = 9;
-            blockMaxHealth = 9;
-        }
-        else if (newBlockType == 4)
-        {
-            spriteRenderer.sprite = block_Normal_0;
-            actvieRelicEffect = Instantiate(relicEffect, this.transform);
-            blockHealth = 3;
-            blockMaxHealth = 3;
-        }
-        else if (newBlockType == 5)
-        {
-            spriteRenderer.sprite = block_Normal_0; //일반블럭처럼 보이게 함
-            blockHealth = 3;
-            blockMaxHealth = 3;
-        }
-        else if (newBlockType == 6)
-        {
-            spriteRenderer.sprite = block_Sand_0;
-            blockHealth = 3;
-            blockMaxHealth = 3;
-        }
-        else if (newBlockType == 7)
-        {
-            spriteRenderer.sprite = block_Jewel_Copper_0;
-            blockHealth = 3;
-            blockMaxHealth = 3;
-        }
-        else if (newBlockType == 8)
-        {
-            spriteRenderer.sprite = block_Jewel_Iron_0;
-            blockHealth = 3;
-            blockMaxHealth = 3;
-        }
-        else if (newBlockType == 9)
-        {
-            spriteRenderer.sprite = block_Jewel_Gold_0;
-            blockHealth = 3;
-            blockMaxHealth = 3;
-        }
-        else if (newBlockType == 10)
-        {
-            spriteRenderer.sprite = block_Jewel_Ruby_0;
-            blockHealth = 3;
-            blockMaxHealth = 3;
-        }
-        else if (newBlockType == 11)
-        {
-            spriteRenderer.sprite = block_Jewel_Diamond_0;
-            blockHealth = 3;
-            blockMaxHealth = 3;
-        }
-
     }
 
     public void BlockDestroy(float blockDamage, Player playerScript) //*플레이어 컨트롤러에서 Player를 추가해주면
@@ -414,8 +419,9 @@ public class Block : MonoBehaviour
                 }
                 else if (blockType == 5)
                 {
+                    print("몬스터 블럭 파괴");
                     //몬스터 블럭 부쉈을 때
-                    Instantiate(monster1);
+                    Instantiate(monster1, transform.position, Quaternion.identity);
                 }
                 else if (blockType == 6)
                 {
