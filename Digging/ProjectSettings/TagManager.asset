@@ -10,6 +10,7 @@ TagManager:
   - Museum
   - Collect
   - Table
+  - Enemy
   layers:
   - Default
   - TransparentFX

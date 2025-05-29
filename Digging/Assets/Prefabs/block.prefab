@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1956235483
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 65023ee168a12c447a36c79744bc962d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -127,7 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   relicEffect: {fileID: 5099109402161310600, guid: 981735d29b52e7641ad03093bce8609a, type: 3}
   dropItem: {fileID: 5480586821343649714, guid: 202c5e0557af70e4aaf46a08c4f977b3, type: 3}
-  monster1: {fileID: 0}
+  monster1: {fileID: 7607264377076006493, guid: ffa88da670edaeb459bc8f4f0d4202de, type: 3}
   block_Normal_0: {fileID: 21300000, guid: 65023ee168a12c447a36c79744bc962d, type: 3}
   block_Normal_1: {fileID: 21300000, guid: 7b305d06e0a8f134793c66642d659043, type: 3}
   block_Normal_2: {fileID: 21300000, guid: bb0be65c57b99784597f2d560d021883, type: 3}

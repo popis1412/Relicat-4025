@@ -16,6 +16,7 @@ public class Chunk : MonoBehaviour
     [SerializeField] int relicBlockCount = 1;   //생성할 유물블럭 개수
     [SerializeField] int hardBlockCount = 7;    //생성할 단단한블럭 개수
     [SerializeField] int unbreakableCount = 3;  //생성할 안부서지는블럭 개수
+    [SerializeField] int monsterBlockCount = 1;  //생성할 안부서지는블럭 개수
 
 
     public void AppendBlocksDictionary()
@@ -204,7 +205,6 @@ public class Chunk : MonoBehaviour
         generateBlock(numbers, blockChangeCount, relicBlockCount, 4);
         //유물 생성 끝
 
-
         //단단한블럭 생성 시작
         generateBlock(numbers, blockChangeCount, hardBlockCount, 3);
         //단단한블럭 생성 끝
@@ -212,6 +212,10 @@ public class Chunk : MonoBehaviour
         //안부서지는블럭 생성 시작
         generateBlock(numbers, blockChangeCount, unbreakableCount, -1);
         //안부서지는블럭 생성 끝
+
+        //몬스터블럭 생성 시작
+        generateBlock(numbers, blockChangeCount, monsterBlockCount, 5);
+        //몬스터블럭 생성 끝
     }
 
 
