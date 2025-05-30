@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
 
     public List<Item> items;
     public List<Item> minerals;
+    public List<Item> UseItems;
+    public List<Item> UpgradeItems;
 
     // 인벤토리
     [SerializeField] private GameObject Inventory_obj;
@@ -53,7 +55,32 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         Inventory_obj.transform.position = new Vector3(-200f, Screen.height / 2, 0f);
-        
+
+        // 아이템 초기화
+        for (int i = 0; i < items.Count; i++)
+        {
+            items[i].count = 0;
+            items[i].accumulation_count = 0;
+            items[i].ishaveitem = false;
+            items[i].isalreadySell = false;
+
+        }
+
+        for (int i = 0; i < minerals.Count; i++)
+        {
+            minerals[i].count = 0;
+        }
+
+        for(int i = 0; i < UseItems.Count; i++)
+        {
+            UseItems[i].count = 0;
+        }
+
+        for(int i = 0; i < UpgradeItems.Count; i++)
+        {
+            UpgradeItems[i].count = 1;
+            UpgradeItems[i].value = 10;
+        }
     }
 
     // Start is called before the first frame update
@@ -69,18 +96,7 @@ public class Player : MonoBehaviour
         Collect_StartPos = new Vector3(2420f, Screen.height / 2, 0f);
         Collect_EndPos = new Vector3(1920f, Screen.height / 2, 0f);
 
-        // 아이템 초기화
-        for (int i = 0; i < items.Count; i++)
-        {
-            items[i].count = 0;
-            items[i].ishaveitem = false;
-            items[i].isalreadySell = false;
-        }
-
-        for(int i = 0; i < minerals.Count; i++)
-        {
-            minerals[i].count = 0;
-        }
+        
     }
 
     // Update is called once per frame
@@ -107,7 +123,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            Inventory.AddItem(items[0], 1);
+            Inventory.AddItem(items[Random.Range(0,20)], 1);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
@@ -117,13 +133,16 @@ public class Player : MonoBehaviour
         {
             Inventory.AddItem(items[7], 1);
         }
-
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Collection.collect_sum += 10;
+        }
     }
 
     // 인벤토리 상호작용
     private void Interaction_Inventory()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) && !isInventoryMoving && !isOnShop)
+        if (Input.GetKeyDown(KeyCode.Tab) && !isInventoryMoving && !isOnShop && !isOnCollect)
         {
             currentTime = 0f;
             isInventoryMoving = true;
@@ -317,7 +336,7 @@ public class Player : MonoBehaviour
         {
             Debug.Log(other.gameObject.name);
             int idx = int.Parse(other.gameObject.name);
-            if (Collection.li_isCollect[idx] == true)
+            if (Collection.li_isRelicOnTable[idx] == true)
             {
                 RelicInfoImage.GetComponent<Image>().sprite = items[idx].itemImage;
                 RelicInfoName.GetComponent<TextMeshProUGUI>().text = items[idx].itemName;

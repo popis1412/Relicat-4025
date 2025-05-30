@@ -15,7 +15,9 @@ MonoBehaviour:
   itemName: can
   itemImage: {fileID: 21300000, guid: 03bc42e00af211d429e288e4fe51ba25, type: 3}
   count: 0
+  accumulation_count: 0
   isMineral: 0
+  isRelic: 1
   rarity: 2
   value: 200
   duplicate_value: 40

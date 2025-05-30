@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1956235483
+  m_SortingLayerID: 756493957
   m_SortingLayer: 1
   m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 10b0106fd96792e47b25bd7f1b445f59, type: 3}
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 010314c4829c2204b98aed8a1ae7da39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hintUI_Image: {fileID: 4656295882969126947}
+  hintUI_Image: {fileID: 3195256813965560588}
   hintUI_Text: {fileID: 7147456227152411569}
 --- !u!1001 &3583873414548890822
 PrefabInstance:
@@ -266,11 +266,19 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -541.1
       objectReference: {fileID: 0}
+    - target: {fileID: 8969131318103274369, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -942.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8969131318103274369, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -541.13
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
---- !u!1 &4656295882969126947 stripped
+--- !u!1 &3195256813965560588 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 8152084385543896293, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2156006809821212618, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
   m_PrefabInstance: {fileID: 3583873414548890822}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &7147456226060001388 stripped
