@@ -230,7 +230,7 @@ public class Block : MonoBehaviour
     {
         if (blockType != 1)
         {
-            effectManager.CallEffect(this.gameObject);
+            effectManager.CallBreakingEffect(this.gameObject);
             if (blockHealth - blockDamage > 0)  //블럭에 대미지 주기
             {
                 blockHealth -= blockDamage;
@@ -394,7 +394,7 @@ public class Block : MonoBehaviour
             }
             else//블럭 파괴
             {
-
+                effectManager.CallBreakEffect(this.gameObject);
                 if (blockType == 0)
                 {
                     //일반 블럭 부쉈을 때
@@ -466,7 +466,7 @@ public class Block : MonoBehaviour
                         aboveBlock.GetComponent<Block>().DropBlock(aboveBlock.GetComponent<Block>().DropCheck(this.transform.position, 0));
                     }
                 }
-
+                
                 Destroy(this.gameObject);//무조건 이 if문에서 맨 마지막으로
             }
         }
