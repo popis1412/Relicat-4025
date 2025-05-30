@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float WalkminX = 2.5f;     // 캐릭터가 이동할 수 있는 맵의 최소 X범위
     [SerializeField] float WalkmaxX = 26.93f;   // 캐릭터가 이동할 수 있는 맵의 최소 X범위
 
+    public float pickdamage = 1f;
+
 
     private void Awake()
     {
@@ -89,19 +91,19 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(horizontalVelocity, Mathf.Clamp(verticalVelocity, -flySpeed, flySpeed));
 
         // 맵 이동 제한
-        if(transform.position.x < WalkminX)
-        {
-            // 벗어난 위치를 경계선으로 보정
-            Vector2 targetPositionX = new Vector2(WalkminX, transform.position.y);
+        //if(transform.position.x < WalkminX)
+        //{
+        //    // 벗어난 위치를 경계선으로 보정
+        //    Vector2 targetPositionX = new Vector2(WalkminX, transform.position.y);
 
-            // 부드럽게 경계 안으로 이동
-            transform.position = Vector3.Lerp(transform.position, targetPositionX, Time.deltaTime * 5f);
-        }
-        else if(transform.position.x > WalkmaxX)
-        {
-            Vector2 targetPositionX = new Vector2(WalkmaxX, transform.position.y);
-            transform.position = Vector3.Lerp(transform.position, targetPositionX, Time.deltaTime * 5f);
-        }
+        //    // 부드럽게 경계 안으로 이동
+        //    transform.position = Vector3.Lerp(transform.position, targetPositionX, Time.deltaTime * 5f);
+        //}
+        //else if(transform.position.x > WalkmaxX)
+        //{
+        //    Vector2 targetPositionX = new Vector2(WalkmaxX, transform.position.y);
+        //    transform.position = Vector3.Lerp(transform.position, targetPositionX, Time.deltaTime * 5f);
+        //}
 
         float playerRot;
 
@@ -128,7 +130,7 @@ public class PlayerController : MonoBehaviour
         if(flyInput > 0f)
         {
             // 상승 중: 가속
-            print("상승 중");
+            //print("상승 중");
             if(transform.position.y > 1.5f)
             {
                 verticalSpeed = 0;  // 플레이어가 멈춤
@@ -139,7 +141,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             // 입력 없음: 감속
-            print("하강 중");
+            //print("하강 중");
             verticalSpeed -= deceleration * Time.fixedDeltaTime;
             verticalSpeed = Mathf.Max(0f, verticalSpeed);
         }
@@ -159,7 +161,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         Block block = targetBlock.GetComponent<Block>();
-        block.BlockDestroy(Time.deltaTime * flySpeed, playerScript);
+        block.BlockDestroy(Time.deltaTime * pickdamage, playerScript);
     }
 
     // 마우스 위치 기준으로 파괴 가능한 블록 반환

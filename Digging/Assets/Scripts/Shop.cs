@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
     public Inventory Inventory;
     public Player player;
+    public PlayerController playerController;
 
-    private int shopView_idx;
+    public int shopView_idx;
     [SerializeField] private GameObject[] shopList;
+
+    [SerializeField] private TextMeshProUGUI shop_pickLvText;
 
     private void Start()
     {
@@ -92,4 +96,42 @@ public class Shop : MonoBehaviour
     {
         Inventory.SellAllItem(player.minerals[0]);
     }
+
+
+    //아이템 구매 버튼
+    public void Button_Buy_Item_Bomb()
+    {
+        if(Inventory.money >= player.UseItems[0].value)
+        {
+            Inventory.money -= player.UseItems[0].value;
+            Inventory.AddItem(player.UseItems[0], 1);
+        }
+        
+    }
+    public void Button_Buy_Item_Torch()
+    {
+        if (Inventory.money >= player.UseItems[1].value)
+        {
+            Inventory.money -= player.UseItems[1].value;
+            Inventory.AddItem(player.UseItems[1], 1);
+        }
+
+    }
+
+    // 업그레이드 버튼
+    public void Button_Upgrade_Pick()
+    {
+        if(Inventory.money >= player.UpgradeItems[0].value)
+        {
+            Inventory.money -= player.UpgradeItems[0].value;
+            playerController.pickdamage += 0.4f;
+            player.UpgradeItems[0].count++;
+            shop_pickLvText.text = "레벨 : " + player.UpgradeItems[0].count;
+            player.UpgradeItems[0].value += 10;
+
+            Debug.Log(playerController.pickdamage);
+            Inventory.FreshSlot();
+        }
+    }
+
 }

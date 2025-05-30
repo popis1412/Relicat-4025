@@ -15,7 +15,13 @@ MonoBehaviour:
   itemName: diamond
   itemImage: {fileID: 21300000, guid: 82743c74b23150f4f992d3fce2220573, type: 3}
   count: 0
+  accumulation_count: 0
   isMineral: 1
   rarity: 2
   value: 300
   duplicate_value: 0
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uC644\uC804 \uB9D1\uC740 \uC5BC\uC74C \uAC19\uC544! \uBE5B\uC744 \uBC1B\uC73C\uBA74
+    \uBC18\uC9DD\uBC18\uC9DD \uCDA4\uC744 \uCDB0. \uBC24\uC5D0\uB3C4 \uB208\uC5D0
+    \uB744\uB294 \uD2B9\uBCC4\uD55C \uB140\uC11D"

@@ -9,7 +9,9 @@ public class Item : ScriptableObject
     public string itemName;
     public Sprite itemImage;
     public int count = 0;
+    public int accumulation_count = 0;
     public bool isMineral;
+    public bool isRelic;
     public int rarity;
     public int value;
     public int duplicate_value;
