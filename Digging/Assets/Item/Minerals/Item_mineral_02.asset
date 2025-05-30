@@ -15,7 +15,13 @@ MonoBehaviour:
   itemName: copper
   itemImage: {fileID: 21300000, guid: ffee3bc931e874f46b1819a725d69e82, type: 3}
   count: 0
+  accumulation_count: 0
   isMineral: 1
   rarity: 1
   value: 8
   duplicate_value: 0
+  ishaveitem: 1
+  isalreadySell: 0
+  Info: "\uC8FC\uD669\uBE5B \uB3D9\uAE00\uD55C \uB3CC\uBA69\uC774! \uD587\uBE5B \uC544\uB798\uC120
+    \uB530\uB73B\uD558\uACE0 \uBC88\uB4E4\uBC88\uB4E4\uD574\uC11C \uACC4\uC18D \uD565\uACE0
+    \uC2F6\uC5B4\uC838"

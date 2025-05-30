@@ -15,7 +15,9 @@ MonoBehaviour:
   itemName: gamepad
   itemImage: {fileID: 21300000, guid: f5086e6c4615f3942ba83b5bc5667fd5, type: 3}
   count: 0
+  accumulation_count: 0
   isMineral: 0
+  isRelic: 1
   rarity: 3
   value: 300
   duplicate_value: 60

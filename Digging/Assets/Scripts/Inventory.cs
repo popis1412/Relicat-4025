@@ -5,11 +5,15 @@ using TMPro;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
 using Unity.VisualScripting;
+using System.Collections.ObjectModel;
 
 public class Inventory : MonoBehaviour
 {
+    public Collection collection;
+
     public List<Item> items;
     public int money;
+    public Item money_item;
     [SerializeField] private TextMeshProUGUI money_text;
 
     [SerializeField]
@@ -21,7 +25,8 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Image getItem_Image;
     [SerializeField] private TextMeshProUGUI getItem_Name;
     [SerializeField] private TextMeshProUGUI getItem_EA;
-    private int dupleLog = 1;
+    private int dupleLog = 0;
+    private int dupleMoneyLog = 0;
 
 
 #if UNITY_EDITOR
@@ -99,6 +104,7 @@ public class Inventory : MonoBehaviour
             items.Add(_item);
             FreshSlot();
             _item.count += addEA;
+            _item.ishaveitem = true;
             for (int i = 0; i < items.Count; i++)
             {
                 if (slots[i].item.itemName == _item.itemName)
@@ -150,15 +156,18 @@ public class Inventory : MonoBehaviour
                 if (items[i].isMineral == true)
                 {
                     money += _item.value;
+                    ItemLog(money_item, _item.value);
                 }
                 else if(items[i].isalreadySell == false)
                 {
                     money += _item.value;
                     items[i].isalreadySell = true;
+                    ItemLog(money_item, _item.value);
                 }
                 else
                 {
                     money += _item.duplicate_value;
+                    ItemLog(money_item, _item.duplicate_value);
                 }
                 
                 if (items[i].count <= 0)
@@ -167,6 +176,8 @@ public class Inventory : MonoBehaviour
                     items.RemoveAt(i);
                 }
                 Debug.Log(money);
+
+                
 
                 break; // 아이템은 유일하다고 가정
             }
@@ -204,27 +215,65 @@ public class Inventory : MonoBehaviour
     }
 
     // 아이템 획득 로그
-    private void ItemLog(Item _item, int addEA)
+    public void ItemLog(Item _item, int addEA)
     {
         
-        getItem_LogPanel.SetActive(true);
-        
+
         // 같은 아이템 연속 획득 시 
         if(getItem_Name.text == _item.itemName)
         {
-            getItem_EA.text = "X " + (addEA+dupleLog).ToString();
-            dupleLog++;
+            if (getItem_LogPanel.activeSelf == false)
+            {
+                
+                getItem_EA.text = "X " + addEA.ToString();
+            }
+            else if (_item == money_item)
+            {
+                dupleMoneyLog += addEA;
+                getItem_EA.text = "X " + (dupleMoneyLog + addEA).ToString();
+            }
+            else
+            {
+                dupleLog++;
+                getItem_EA.text = "X " + (addEA + dupleLog).ToString();
+            }
+            
         }
         // 다른 아이템 획득 시
         else
         {
             getItem_Image.GetComponent<Image>().sprite = _item.itemImage;
-            getItem_Name.text = _item.itemName;
+            if (_item.isRelic == true)
+            {
+                for(int i = 0; i < collection.player.items.Count; i++)
+                {
+                    if (collection.player.items[i].itemName == _item.itemName)
+                    {
+                        if(collection.li_isRelicOnTable[i] == false)
+                        {
+                            getItem_Name.text = "???";
+                        }
+                        else
+                        {
+                            getItem_Name.text = _item.itemName;
+                        }
+                    }
+                }
+                
+            }
+            else
+            {
+                getItem_Name.text = _item.itemName;
+            }
+            
             getItem_EA.text = "X " + addEA.ToString();
 
-            dupleLog = 1;
+            dupleMoneyLog = 0;
+            dupleLog = 0;
         }
-        
+
+        getItem_LogPanel.SetActive(true);
+
         CancelInvoke("closeItemLog");
         Invoke("closeItemLog", 3f);
     }
@@ -233,5 +282,7 @@ public class Inventory : MonoBehaviour
     private void closeItemLog()
     {
         getItem_LogPanel.SetActive(false);
+        dupleLog = 0;
+        dupleMoneyLog = 0;
     }
 }

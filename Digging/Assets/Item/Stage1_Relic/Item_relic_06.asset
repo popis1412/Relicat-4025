@@ -15,7 +15,9 @@ MonoBehaviour:
   itemName: tire
   itemImage: {fileID: 21300000, guid: b74933a5a45720f42b8ec88af1c7f11c, type: 3}
   count: 0
+  accumulation_count: 0
   isMineral: 0
+  isRelic: 1
   rarity: 1
   value: 100
   duplicate_value: 20

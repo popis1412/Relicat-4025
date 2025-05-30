@@ -15,7 +15,9 @@ MonoBehaviour:
   itemName: camera
   itemImage: {fileID: 21300000, guid: 3bdf1ae0ee47c064a8f7c275be84cb48, type: 3}
   count: 0
+  accumulation_count: 0
   isMineral: 0
+  isRelic: 1
   rarity: 2
   value: 200
   duplicate_value: 40
