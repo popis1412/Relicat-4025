@@ -15,7 +15,9 @@ MonoBehaviour:
   itemName: radio
   itemImage: {fileID: 21300000, guid: 4f43bf62867bdee44b6c6acde3450810, type: 3}
   count: 0
+  accumulation_count: 0
   isMineral: 0
+  isRelic: 1
   rarity: 3
   value: 300
   duplicate_value: 60

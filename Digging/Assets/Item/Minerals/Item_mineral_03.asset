@@ -15,7 +15,13 @@ MonoBehaviour:
   itemName: iron
   itemImage: {fileID: 21300000, guid: c6db13b66cddc8847b8631c809ee2167, type: 3}
   count: 0
+  accumulation_count: 0
   isMineral: 1
   rarity: 1
   value: 12
   duplicate_value: 0
+  ishaveitem: 0
+  isalreadySell: 0
+  Info: "\uD22D \uCE58\uBA74 \uB454\uD0C1\uD55C \uC18C\uB9AC\uAC00 \uB098\uB294 \uB531\uB531\uC774\uC57C.
+    \uBB34\uAC70\uC6CC\uC11C \uB04C\uAE30 \uADC0\uCC2E\uC9C0\uB9CC \uBC1C\uD1B1\uC5D0
+    \uB290\uB08C\uC740 \uC88B\uC544"

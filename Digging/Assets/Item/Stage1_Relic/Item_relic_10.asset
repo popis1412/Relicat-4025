@@ -15,7 +15,9 @@ MonoBehaviour:
   itemName: poketwatch
   itemImage: {fileID: 21300000, guid: 7197a94a79eacdf4e86fb382e36b061b, type: 3}
   count: 0
+  accumulation_count: 0
   isMineral: 0
+  isRelic: 1
   rarity: 2
   value: 200
   duplicate_value: 40
