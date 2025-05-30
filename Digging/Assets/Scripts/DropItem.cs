@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class DropItem : MonoBehaviour
 {
@@ -13,10 +14,15 @@ public class DropItem : MonoBehaviour
     float count = 0;
     bool canTake = false;
 
+    Light2D light2D;
+    float lightInnerRadius = 0.1f;
+    float lightOuterRadius = 0.3f;
+
 
     void Awake()
     {
         rigidbody = this.gameObject.GetComponent<Rigidbody2D>();
+        light2D = this.gameObject.GetComponent<Light2D>();
     }
     void Start()
     {
@@ -36,6 +42,13 @@ public class DropItem : MonoBehaviour
         else
         {
             canTake = true;
+        }
+
+        if (light2D != null)
+        {
+            float radiusPingpong = Mathf.PingPong(Time.time / 5f, 0.15f);
+            light2D.pointLightInnerRadius = lightInnerRadius + radiusPingpong;
+            //light2D.pointLightOuterRadius = lightOuterRadius + radiusPingpong;
         }
 
 

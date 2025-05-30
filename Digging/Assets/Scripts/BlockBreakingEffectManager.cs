@@ -5,55 +5,64 @@ using UnityEngine;
 public class BlockBreakingEffectManager : MonoBehaviour
 {
     [SerializeField] GameObject blockBreakingEffect;
-    private List<GameObject> effectsPool = new List<GameObject>();
-    private int poolSize = 5;
+    private List<GameObject> breakingEffectPool = new List<GameObject>();
+    private int breakingPoolSize = 5;
     int loopCount = 0;
+
+    [SerializeField] GameObject blockBreakEffect;
+    private List<GameObject> breakEffectPool = new List<GameObject>();
+    private int breakPoolSize = 5;
 
     private void Awake()
     {
-        effectsPool = new List<GameObject>();
+        breakingEffectPool = new List<GameObject>();
 
-        for (int i = 0; i < poolSize; i++)
+        for (int i = 0; i < breakingPoolSize; i++)
         {
             GameObject obj = Instantiate(blockBreakingEffect);
             obj.SetActive(false);
-            effectsPool.Add(obj);
+            breakingEffectPool.Add(obj);
+        }
+
+        for (int i = 0; i < breakingPoolSize; i++)
+        {
+            GameObject obj = Instantiate(blockBreakEffect);
+            obj.SetActive(false);
+            breakEffectPool.Add(obj);
         }
     }
 
-    public void CallEffect(GameObject callingBlock)
+    public void CallBreakingEffect(GameObject callingBlock)
     {
         int callParticleIndex = -1;
         bool isAlreadyCalled = false;
-        for(int i = 0; i < effectsPool.Count; i++)
+        for(int i = 0; i < breakingEffectPool.Count; i++)
         {
-            if (effectsPool[i].GetComponent<BlockBreakingEffect>().callingBlock == callingBlock && effectsPool[i].activeSelf)
+            if (breakingEffectPool[i].GetComponent<BlockBreakingEffect>().callingBlock == callingBlock && breakingEffectPool[i].activeSelf)
             {
                 callParticleIndex = i;
                 isAlreadyCalled = true;
                 break;
             }
-            print("reCall" + callParticleIndex + ", " + loopCount++);
         }
 
         if (isAlreadyCalled == false)
         {
-            for(int i = 0; i < effectsPool.Count; i++)
+            for(int i = 0; i < breakingEffectPool.Count; i++)
             {
-                if(!effectsPool[i].activeSelf)
+                if(!breakingEffectPool[i].activeSelf)
                 {
                     callParticleIndex = i;
                     break;
                 }
             }
-            print("SetIndex" + callParticleIndex + ", " + loopCount++);
         }
 
         if (callParticleIndex != -1)
         {
-            BlockBreakingEffect effectPoolScript = effectsPool[callParticleIndex].GetComponent<BlockBreakingEffect>();
+            BlockBreakingEffect effectPoolScript = breakingEffectPool[callParticleIndex].GetComponent<BlockBreakingEffect>();
 
-            effectsPool[callParticleIndex].SetActive(true);
+            breakingEffectPool[callParticleIndex].SetActive(true);
 
             if (isAlreadyCalled == true)
             {
@@ -61,11 +70,36 @@ public class BlockBreakingEffectManager : MonoBehaviour
             }
             else
             {
-                effectsPool[callParticleIndex].transform.position = callingBlock.transform.position;
+                breakingEffectPool[callParticleIndex].transform.position = callingBlock.transform.position;
                 effectPoolScript.callingBlock = callingBlock;
                 effectPoolScript.ParticlePlay();
-                print("callEffect" + callParticleIndex + ", " + loopCount);
             }
+
+        }
+    }
+
+    public void CallBreakEffect(GameObject callingBlock)
+    {
+
+        int callParticleIndex = -1;
+        for (int i = 0; i < breakEffectPool.Count; i++)
+        {
+            if (!breakEffectPool[i].activeSelf)
+            {
+                callParticleIndex = i;
+                break;
+            }
+        }
+
+        if (callParticleIndex != -1)
+        {
+            BlockBreakEffect effectPoolScript = breakEffectPool[callParticleIndex].GetComponent<BlockBreakEffect>();
+
+            breakEffectPool[callParticleIndex].SetActive(true);
+            
+            breakEffectPool[callParticleIndex].transform.position = callingBlock.transform.position;
+            effectPoolScript.callingBlock = callingBlock;
+            effectPoolScript.ParticlePlay();
 
         }
     }
