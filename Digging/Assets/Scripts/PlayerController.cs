@@ -30,10 +30,7 @@ public class PlayerController : MonoBehaviour
     private const float HeadCheckRadius = 0.1f;   // Overlap 반지름
     private const float NarrowDigDistance = 0.5f; // 캘 수 있는 범위
 
-    [SerializeField] float WalkminX = 2.5f;     // 캐릭터가 이동할 수 있는 맵의 최소 X범위
-    [SerializeField] float WalkmaxX = 26.93f;   // 캐릭터가 이동할 수 있는 맵의 최소 X범위
-
-    public float pickdamage = 1f;
+    public float pickdamage = 10f;
 
 
     private void Awake()
@@ -90,21 +87,6 @@ public class PlayerController : MonoBehaviour
         // Rigdbody 속도 설정 (y속도는 최대 flySpeed 범위 내로 제한)
         rb.velocity = new Vector2(horizontalVelocity, Mathf.Clamp(verticalVelocity, -flySpeed, flySpeed));
 
-        // 맵 이동 제한
-        //if(transform.position.x < WalkminX)
-        //{
-        //    // 벗어난 위치를 경계선으로 보정
-        //    Vector2 targetPositionX = new Vector2(WalkminX, transform.position.y);
-
-        //    // 부드럽게 경계 안으로 이동
-        //    transform.position = Vector3.Lerp(transform.position, targetPositionX, Time.deltaTime * 5f);
-        //}
-        //else if(transform.position.x > WalkmaxX)
-        //{
-        //    Vector2 targetPositionX = new Vector2(WalkmaxX, transform.position.y);
-        //    transform.position = Vector3.Lerp(transform.position, targetPositionX, Time.deltaTime * 5f);
-        //}
-
         float playerRot;
 
         if (moveInput.x > 0)
@@ -131,10 +113,6 @@ public class PlayerController : MonoBehaviour
         {
             // 상승 중: 가속
             //print("상승 중");
-            if(transform.position.y > 1.5f)
-            {
-                verticalSpeed = 0;  // 플레이어가 멈춤
-            }
             verticalSpeed += flyAcceleration * flyAxis * Time.fixedDeltaTime;
             verticalSpeed = Mathf.Min(verticalSpeed, flySpeed);
         }
@@ -161,7 +139,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         Block block = targetBlock.GetComponent<Block>();
-        block.BlockDestroy(Time.deltaTime * pickdamage, playerScript);
+        block.BlockDestroy(Time.deltaTime * 10f, playerScript);
     }
 
     // 마우스 위치 기준으로 파괴 가능한 블록 반환
@@ -206,13 +184,18 @@ public class PlayerController : MonoBehaviour
         if(block == null || block.blocksDictionary == null)
             return false;
 
-        bool foundBlock = block.blocksDictionary.blockPosition.TryGetValue(block.transform.position, out GameObject _);
-        if(foundBlock)
+        bool foundBlock = false;
+        if(block.blockType == 6)
         {
-            Debug.Log($"모래 블록 끼임 감지: {hit.name}");
+            foundBlock = block.blocksDictionary.blockPosition.TryGetValue(block.transform.position, out GameObject _);
+            if (foundBlock)
+            {
+                Debug.Log($"모래 블록 끼임 감지: {hit.name}");
+
+            }
         }
-            
 
         return foundBlock;
+
     }
 }

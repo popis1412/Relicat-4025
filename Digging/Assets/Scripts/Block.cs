@@ -74,7 +74,7 @@ public class Block : MonoBehaviour
 
 
     public int nowBlockType = 0; //다른 코드에서 blockChange를 실행했지만 실제 blockType 변동까지 느리기 때문에 다른 코드에서 blockChange를 호출함과 동시에 미리 무슨 blockType 으로 바뀔지 확인할 변수
-    int blockType = 0; 
+    public int blockType = 0; 
     float blockHealth = 3;
     float blockMaxHealth = 3;
 
