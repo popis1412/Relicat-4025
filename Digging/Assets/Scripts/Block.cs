@@ -75,7 +75,7 @@ public class Block : MonoBehaviour
 
     public int nowBlockType = 0; //다른 코드에서 blockChange를 실행했지만 실제 blockType 변동까지 느리기 때문에 다른 코드에서 blockChange를 호출함과 동시에 미리 무슨 blockType 으로 바뀔지 확인할 변수
     public int blockType = 0; 
-    float blockHealth = 3;
+    public float blockHealth = 3;
     float blockMaxHealth = 3;
 
     public int stageNum = 0;
@@ -425,7 +425,8 @@ public class Block : MonoBehaviour
                 }
                 else if (blockType == 6)
                 {
-                    //모래 부쉈을 때
+                    // 모래 부쉈을 때
+                    
                 }
                 else if (blockType == 7)
                 {
@@ -536,8 +537,6 @@ public class Block : MonoBehaviour
         //보물상자 근처에 플레이어가 있는 상태에서 F키(상호작용키)를 누를시 보물상자 해제
         if(blockType == 1 && canOpenBox == true && Input.GetKeyDown(KeyCode.F))
         {
-            print("hey");
-
             if (stageNum == 1)
             {
                 Player playerScript = getPlayer.GetComponent<Player>();

@@ -137,6 +137,11 @@ public class Player : MonoBehaviour
         {
             Collection.collect_sum += 10;
         }
+        // 잠시 추가함.
+        if(Input.GetKeyDown(KeyCode.Q))
+            Inventory.AddItem(UseItems[0], 3);
+        if(Input.GetKeyDown(KeyCode.E))
+            Inventory.AddItem(UseItems[1], 3);
     }
 
     // 인벤토리 상호작용

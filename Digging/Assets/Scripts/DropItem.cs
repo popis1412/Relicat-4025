@@ -80,6 +80,10 @@ public class DropItem : MonoBehaviour
                 {
                     playerScript.Inventory.AddItem(playerScript.minerals[itemCode], addEA);
                 }
+                else if(itemType == 2) // 이 아이템이 사용 아이템이라면
+                {
+                    playerScript.Inventory.AddItem(playerScript.UseItems[itemCode], addEA);
+                }
                 Destroy(this.gameObject);
             }
         }
@@ -103,6 +107,10 @@ public class DropItem : MonoBehaviour
                 else if (itemType == 1) //이 아이템이 보석이면
                 {
                     playerScript.Inventory.AddItem(playerScript.minerals[itemCode], addEA);
+                }
+                else if(itemType == 2) // 이 아이템이 사용 아이템이라면
+                {
+                    playerScript.Inventory.AddItem(playerScript.UseItems[itemCode], addEA);
                 }
                Destroy(this.gameObject);
             }

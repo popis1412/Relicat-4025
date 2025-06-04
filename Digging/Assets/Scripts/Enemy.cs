@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour
     float timer = 1f;
     float speed = 1f;
 
+    int damage = 1;
+
     float attackCooldown = 1f;
 
     void Start()
@@ -65,21 +67,23 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Player playerScript = collision.GetComponent<Player>();
+        PlayerController playerScript = collision.GetComponent<PlayerController>();
 
-        if (collision.tag == "Player")
+        if(collision.tag == "Player")
             Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), collision.GetComponent<CapsuleCollider2D>(), true);
 
-        if (playerScript != null && attackCooldown <= 0)
+        if(playerScript != null && attackCooldown <= 0)
         {
             attackCooldown = 1f;
 
             //플레이어가 대미지 입는 함수 호출 필요
+            playerScript.TakeDamage(damage, transform);
         }
     }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
-        Player playerScript = collision.GetComponent<Player>();
+        PlayerController playerScript = collision.GetComponent<PlayerController>();
 
         if (collision.tag == "Player")
             Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), collision.GetComponent<CapsuleCollider2D>(), true);
@@ -89,6 +93,7 @@ public class Enemy : MonoBehaviour
             attackCooldown = 1f;
 
             //플레이어가 대미지 입는 함수 호출 필요
+            playerScript.TakeDamage(damage, transform);
         }
     }
 

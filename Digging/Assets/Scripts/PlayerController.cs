@@ -1,48 +1,78 @@
-﻿using Unity.VisualScripting;
+﻿using System.Collections;
 using UnityEngine;
 
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerControl input;
-    private Rigidbody2D rb;
-    private Collider2D col;
-    private Player playerScript;
+    // Component References
+    PlayerControl input;
+    Rigidbody2D rb;
+    Collider2D col;
+    Player playerScript;
+    SpriteRenderer sr;
 
+    // Movement
     private Vector2 moveInput;
     private float flyInput;
-    private float flyAxis; // 상승 입력 부드럽게 보간할 값
-    private float verticalSpeed;
+    private float flyAxis;          // 비행 시 부드럽게 처리하기 위한 보간 값
+    private float verticalSpeed;    // Y축 속도
+    private bool isFlying;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float flyAcceleration = 10f;
-    [SerializeField] private float flySpeed = 8f;          // 상승 속도(최대 상승 속도)
-    [SerializeField] private float deceleration = 15f;
+    [SerializeField] private float flyAcceleration = 10f;   // 비행 가속도
+    [SerializeField] private float flySpeed = 8f;           // 최대 비행 속도
+    [SerializeField] private float deceleration = 15f;      // 비행 중 하강 시 감속도
+    //[SerializeField] private float maxHangDistance = 0.2f;  // 블록에 걸쳐 있을 때 파괴 가능 거리
 
-    [SerializeField] private float maxHangDistance = 0.5f; // 블록에 걸쳐 떠 있을 수 있는 최대 거리
+    // Use Items
+    [Header("사용 아이템들")]
+    [SerializeField] GameObject bomb;
+    [SerializeField] GameObject torch;
 
-    private bool isFlying;
+    // Size
+    float playerSize;
+    float bombSize;
+    float torchSize;
+
+    // Weapons
+    Sprite pickAxe;
+    public float pickdamage = 1f;
+    Sprite weaponSpr;
+    [SerializeField] GameObject weapon;
+
+    // Damage System
+    float maxHP = 3;
+    float currentHP = 0;
+
+    // Block Detection
     private int blockLayer;
-
     // 모래에 플레이어가 끼었을 경우
-    private const float HeadCheckYOffset = 0.2f;  // 레이저 Y Offset
     private const float HeadCheckRadius = 0.1f;   // Overlap 반지름
-    private const float NarrowDigDistance = 0.5f; // 캘 수 있는 범위
-
-    public float pickdamage = 10f;
-
+    private const float NarrowDigDistance = 0.5f; // 모래에 갇혔을 때 파괴 가능 거리
 
     private void Awake()
     {
         input = new PlayerControl();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
+        sr = GetComponent<SpriteRenderer>();
         playerScript = GetComponent<Player>();
 
         blockLayer = LayerMask.GetMask("Block");
+        pickAxe = sr.sprite;
+
+        currentHP = maxHP;
+        playerSize = sr.size.y;
+        bombSize = bomb.GetComponent<SpriteRenderer>().size.y;
+        torchSize = torch.GetComponent<SpriteRenderer>().size.y;
+
+        weapon = FindWeapon();
+        weaponSpr = weapon != null ? weapon.GetComponent<SpriteRenderer>().sprite
+            : null;
     }
 
+    // 입력 시스템 활성화 및 입력 이벤트 등록
     private void OnEnable()
     {
         input.Enable();
@@ -52,11 +82,16 @@ public class PlayerController : MonoBehaviour
 
         input.Player.Jump.started += ctx => isFlying = true;
         input.Player.Jump.performed += ctx => flyInput = IsStuckInSand() ? 0f : ctx.ReadValue<float>();
-        input.Player.Jump.canceled += ctx =>
-        {
-            flyInput = 0;
-            isFlying = false;
-        };
+        input.Player.Jump.canceled += ctx => { flyInput = 0; isFlying = false; };
+    }
+
+    private void Update()
+    {
+        // 단축키 아이템 사용
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+            UseItem(0, bomb, GetBombPosition());
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+            UseItem(1, torch, GetTorchPosition());
     }
 
     private void FixedUpdate()
@@ -66,13 +101,13 @@ public class PlayerController : MonoBehaviour
         HandleDigging();
     }
 
-    // 상승 입력을 부드럽게 보간(0 ~ 1 사이 값을 천천히 변화)
+    // 비행 입력을 부드럽게 적용(0 ~ 1 사이 값을 천천히 변화)
     private void UpdateJumpAxisSmoothly()
     {
         flyAxis = Mathf.Lerp(flyAxis, flyInput, Time.deltaTime * flySpeed);
     }
 
-    // 플레이어 이동 및 상승(수직 속도) 처리
+    // 이동 처리
     private void HandleMovement()
     {
         float horizontalVelocity = moveInput.x * moveSpeed;
@@ -87,28 +122,17 @@ public class PlayerController : MonoBehaviour
         // Rigdbody 속도 설정 (y속도는 최대 flySpeed 범위 내로 제한)
         rb.velocity = new Vector2(horizontalVelocity, Mathf.Clamp(verticalVelocity, -flySpeed, flySpeed));
 
-        float playerRot;
-
-        if (moveInput.x > 0)
+        if(moveInput.x != 0)
         {
-            playerRot = 0f;
-            transform.rotation = Quaternion.Euler(0f, playerRot, 0f);
+            float rotY = moveInput.x > 0 ? 0f : 180f;
+            transform.rotation = Quaternion.Euler(0f, rotY, 0f);
         }
-        else if(moveInput.x < 0)
-        {
-            playerRot = 180f;
-            transform.rotation = Quaternion.Euler(0f, playerRot, 0f);
-        }
-
-
         //print($"isFlying: {isFlying}, verticalVelocity: {verticalVelocity}");
     }
 
-    // verticalVelocity 계산: 정지 상태, 상승 중, 하강 중 일때 처리 구분
+    // 비행/하강 속도 계산
     private float CalculateVerticalVelocity()
     {
-        float curYVelocity = rb.velocity.y;
-
         if(flyInput > 0f)
         {
             // 상승 중: 가속
@@ -127,7 +151,7 @@ public class PlayerController : MonoBehaviour
         //print(verticalSpeed);
 
         // 상승 중이면 상속도 우선, 아니면 중력 등 자연스러운 하강 유지
-        return isFlying || curYVelocity > 0f ? verticalSpeed : curYVelocity;
+        return isFlying || rb.velocity.y > 0f ? verticalSpeed : rb.velocity.y;
     }
 
     // 클릭한 블록 파괴 처리
@@ -138,8 +162,10 @@ public class PlayerController : MonoBehaviour
         if(!input.Player.Digging.IsPressed() || targetBlock == null)
             return;
 
-        Block block = targetBlock.GetComponent<Block>();
-        block.BlockDestroy(Time.deltaTime * 10f, playerScript);
+        if(targetBlock.TryGetComponent(out Block block))
+        {
+            block.BlockDestroy(Time.deltaTime * pickdamage, playerScript);
+        }
     }
 
     // 마우스 위치 기준으로 파괴 가능한 블록 반환
@@ -156,19 +182,20 @@ public class PlayerController : MonoBehaviour
         Vector2 playerPos = new (transform.position.x, transform.position.y);
         Vector2 hitPos = new (hit.transform.position.x, hit.transform.position.y);
 
-        // 일반적인 캐기 거리
+        // 캐기 거리
         float distance = Mathf.Sqrt(Mathf.Pow(hitPos.x - playerPos.x, 2) + Mathf.Pow(hitPos.y - playerPos.y, 2));
 
         // 캐릭터 기준 블록을 캘 수 있는 최대 거리
-        float digDistance = IsStuckInSand() ? 
+        float digDistance = IsStuckInSand() ?
             NarrowDigDistance :     // 모래만 캘 수 있는 범위(0.5)
-            (1.5f / transform.localScale.x) + maxHangDistance;
+            1.5f / transform.localScale.x;
 
         return distance < digDistance ? hit.collider.gameObject : null;
 
         //print($"block Distance: {DigDistance}, Character Distance: {distance}");
     }
 
+    // 모래에 갇혔는지 판별
     private bool IsStuckInSand()
     {
         // 머리 위 오버랩 감지
@@ -180,22 +207,101 @@ public class PlayerController : MonoBehaviour
         if(hit == null)
             return false;
 
-        Block block = hit.gameObject.GetComponent<Block>();
-        if(block == null || block.blocksDictionary == null)
-            return false;
-
-        bool foundBlock = false;
-        if(block.blockType == 6)
+        if(hit.TryGetComponent(out Block block) && block.blockType == 6)
         {
-            foundBlock = block.blocksDictionary.blockPosition.TryGetValue(block.transform.position, out GameObject _);
-            if (foundBlock)
-            {
-                Debug.Log($"모래 블록 끼임 감지: {hit.name}");
-
-            }
+            return block.blocksDictionary.blockPosition.ContainsKey(block.transform.position);
         }
 
-        return foundBlock;
+        return false;
+    }
 
+    // 피해 처리
+    public void TakeDamage(int damage, Transform attacker)
+    {
+        currentHP -= damage;
+
+        if(currentHP <= 0)
+        {
+            sr.color = Color.red;
+            Die();
+        }
+        else
+        {
+            StartCoroutine(DamageEffect(attacker.position));
+        }
+    }
+
+    // 피격 시 색깔 변화와 넉백
+    private IEnumerator DamageEffect(Vector2 targetPos)
+    {
+        sr.color = Color.red;
+
+        // 방향 결정 (좌/우)
+        int dir = (transform.position.x - targetPos.x) > 0 ? 1 : -1;
+
+        Vector3 knockback = new Vector3(dir, 0.5f, 0f);
+
+        float duration = 0.2f;
+        Vector3 start = transform.position;
+        Vector3 end = start + knockback;
+        float elapsed = 0f;
+
+        while(elapsed < duration)
+        {
+            transform.position = Vector3.Lerp(start, end, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = end;
+        yield return new WaitForSeconds(0.5f);
+        sr.color = Color.white;
+    }
+
+    // 사망 처리
+    void Die()
+    {
+        transform.position = new Vector3(15.5f, 0.5f, 0f);
+        sr.color = Color.white;
+        currentHP = maxHP;
+    }
+
+    // 아이템 사용 로직
+    private void UseItem(int index, GameObject itemPrefab, Vector3 position)
+    {
+        var item = playerScript.UseItems[index];
+
+        if(item != null && item.count > 0)
+        {
+            Instantiate(itemPrefab, position, Quaternion.identity);
+            item.count--;
+            Debug.Log($"아이템 사용: {item.itemName}, 남은 개수: {item.count}");
+        }
+        else
+        {
+            Debug.LogWarning($"{item?.itemName ?? "아이템"}이 없습니다.");
+        }
+    }
+
+    // 폭탄 위치 계산
+    private Vector3 GetBombPosition() => transform.position + Vector3.up * (playerSize - bombSize);
+
+    // 횃불 생성 위치 계산
+    private Vector3 GetTorchPosition()
+    {
+        weaponSpr = torch.GetComponent<SpriteRenderer>().sprite;
+        return new Vector3(Mathf.Round(transform.position.x - 0.5f) + 0.5f, transform.position.y - (playerSize - torchSize));
+    }
+
+    // 무기 찾기
+    GameObject FindWeapon()
+    {
+        foreach(Transform child in transform)
+        {
+            if(child.CompareTag("Weapon"))
+                return child.gameObject;
+        }
+
+        return null;
     }
 }
