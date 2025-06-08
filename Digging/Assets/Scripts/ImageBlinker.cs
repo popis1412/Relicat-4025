@@ -1,0 +1,48 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class ImageBlinker : MonoBehaviour
+{
+    public Image targetImage;        // ±ôºýÀÌ°Ô ¸¸µé ÀÌ¹ÌÁö
+    public float blinkSpeed = 1.0f;  // ±ôºýÀÌ´Â ¼Óµµ (°ªÀÌ Å¬¼ö·Ï ºü¸£°Ô ±ôºýÀÓ)
+
+    private bool fadingOut = true;
+    private Color originalColor;
+
+    void Start()
+    {
+        if (targetImage == null)
+        {
+            targetImage = GetComponent<Image>();
+        }
+
+        originalColor = targetImage.color;
+    }
+
+    void Update()
+    {
+        Color color = targetImage.color;
+        float alphaChange = blinkSpeed * Time.deltaTime;
+
+        if (fadingOut)
+        {
+            color.a -= alphaChange;
+            if (color.a <= 0.3f)
+            {
+                color.a = 0.3f;
+                fadingOut = false;
+            }
+        }
+        else
+        {
+            color.a += alphaChange;
+            if (color.a >= originalColor.a)
+            {
+                color.a = originalColor.a;
+                fadingOut = true;
+            }
+        }
+
+        targetImage.color = color;
+    }
+}

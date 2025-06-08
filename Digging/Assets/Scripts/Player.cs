@@ -7,8 +7,10 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public Inventory Inventory;
-
     public Collection Collection;
+    
+    private AudioSource AudioSourceBGM;
+    private AudioSource AudioSourceSFX;
 
     public List<Item> items;
     public List<Item> minerals;
@@ -51,6 +53,10 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject RelicInfoName;
     [SerializeField] private GameObject RelicInfoText;
 
+    // 체력
+    public List<GameObject> li_PlayerHearts = new List<GameObject>(new GameObject[3]);           //플레이어 생명 오브젝트 리스트
+    public Dictionary<GameObject, bool> DicPlayerHeart = new Dictionary<GameObject, bool>();
+
 
     private void Awake()
     {
@@ -81,6 +87,14 @@ public class Player : MonoBehaviour
             UpgradeItems[i].count = 1;
             UpgradeItems[i].value = 10;
         }
+
+        //플레이어 생명 딕셔너리에 플레이어 생명 리스트에 있는 오브젝트를 저장하고 bool 변수 지정
+        DicPlayerHeart.Add(li_PlayerHearts[0], true);
+        DicPlayerHeart.Add(li_PlayerHearts[1], true);
+        DicPlayerHeart.Add(li_PlayerHearts[2], true);
+
+        this.AudioSourceBGM = SoundManager.Instance.BGMSoundPlay;
+        this.AudioSourceSFX = SoundManager.Instance.EffectSoundPlay;
     }
 
     // Start is called before the first frame update
@@ -91,7 +105,7 @@ public class Player : MonoBehaviour
         Inventory_EndPos = new Vector3(0f, Screen.height / 2, 0f);
 
         Shop_StartPos = new Vector3(2420f, Screen.height / 2, 0f);
-        Shop_EndPos = new Vector3(1920f, Screen.height / 2, 0f);
+        Shop_EndPos = new Vector3(1945f, Screen.height / 2, 0f);
 
         Collect_StartPos = new Vector3(2420f, Screen.height / 2, 0f);
         Collect_EndPos = new Vector3(1920f, Screen.height / 2, 0f);
@@ -110,7 +124,11 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            Inventory.ClearItem();
+            LostPlayerLife();
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            AddPlayerLife();
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -242,17 +260,21 @@ public class Player : MonoBehaviour
 
             if (!isInMuseum)
             {
-                gameObject.transform.position = new Vector3(50f, 0.5f, 0f);
-                isInMuseum = true;
+                FadeEffect.Instance.OnFade(FadeState.FadeInOut);
+                Invoke("InvokeInMuseum", 1.5f);
+                AudioSourceSFX.PlayOneShot(SoundManager.Instance.SFXSounds[16]);
+
             }
             else if (isInMuseum)
             {
-                gameObject.transform.position = new Vector3(18f, 0.5f, 0f);
-                isInMuseum = false;
+                FadeEffect.Instance.OnFade(FadeState.FadeInOut);
+                Invoke("InvokeOutMuseum", 1.5f);
+                AudioSourceSFX.PlayOneShot(SoundManager.Instance.SFXSounds[17]);
+
             }
 
         }
-
+        
         // 도감 상호작용
 
         // 도감 UI 이동 애니메이션
@@ -318,7 +340,71 @@ public class Player : MonoBehaviour
         }
     }
 
+    // 박물관 입장/퇴장 페이드 인아웃
+    void InvokeInMuseum()
+    {
+        gameObject.transform.position = new Vector3(50f, 0.5f, 0f);
+        isInMuseum = true;
 
+        if (AudioSourceBGM.isPlaying)
+        {
+            AudioSourceBGM.Stop();
+
+            AudioSourceBGM.clip = SoundManager.Instance.BGMs[3];
+            AudioSourceBGM.Play();
+        }
+    }
+    void InvokeOutMuseum()
+    {
+        gameObject.transform.position = new Vector3(18f, 0.5f, 0f);
+        isInMuseum = false;
+
+        if (AudioSourceBGM.isPlaying)
+        {
+            AudioSourceBGM.Stop();
+
+            AudioSourceBGM.clip = SoundManager.Instance.BGMs[2];
+            AudioSourceBGM.Play();
+        }
+    }
+
+    // 플레이어 체력 깎기
+    public void LostPlayerLife()
+    {
+        
+        for (int i = li_PlayerHearts.Count-1; i >= 0; i--)
+        {
+            if (DicPlayerHeart[li_PlayerHearts[i]] == true)
+            {
+                DicPlayerHeart[li_PlayerHearts[i]] = false;
+                li_PlayerHearts[i].SetActive(false);
+                
+                if (DicPlayerHeart[li_PlayerHearts[0]] == false)
+                {
+                    // 플레이어 사망 함수 호출
+                }
+                break;
+            }
+        }
+        
+    }
+
+    // 플레이어 체력 증가
+    public void AddPlayerLife()
+    {
+        
+        for (int i = 0; i < li_PlayerHearts.Count; i++)
+        {
+            if (DicPlayerHeart[li_PlayerHearts[i]] == false)
+            {
+                DicPlayerHeart[li_PlayerHearts[i]] = true;
+                li_PlayerHearts[i].SetActive(true);
+                
+                break;
+            }
+        }
+
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

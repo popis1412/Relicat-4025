@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Shop : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class Shop : MonoBehaviour
     [SerializeField] private GameObject[] shopList;
 
     [SerializeField] private TextMeshProUGUI shop_pickLvText;
+    [SerializeField] private TextMeshProUGUI shop_lightLvText;
+
+    [SerializeField] private Light2D playerlight;
 
     private void Start()
     {
@@ -130,6 +134,20 @@ public class Shop : MonoBehaviour
             player.UpgradeItems[0].value += 10;
 
             Debug.Log(playerController.pickdamage);
+            Inventory.FreshSlot();
+        }
+    }
+    public void Button_Upgrade_EyeLight()
+    {
+        if (Inventory.money >= player.UpgradeItems[1].value)
+        {
+            Inventory.money -= player.UpgradeItems[1].value;
+            playerlight.pointLightOuterRadius += 0.1f;
+            player.UpgradeItems[1].count++;
+            shop_lightLvText.text = "·¹º§ : " + player.UpgradeItems[1].count;
+            player.UpgradeItems[1].value += 50;
+
+            Debug.Log(playerlight.pointLightOuterRadius);
             Inventory.FreshSlot();
         }
     }
