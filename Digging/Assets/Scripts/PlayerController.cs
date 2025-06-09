@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     // Weapons
     Sprite pickAxe;
-    public float pickdamage = 1f;
+    public float pickdamage = 6f;
     Sprite weaponSpr;
     [SerializeField] GameObject weapon;
     Vector3 pivot;

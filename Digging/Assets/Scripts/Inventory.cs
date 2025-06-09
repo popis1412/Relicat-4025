@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+#if UNITY_EDITOR
 using static UnityEditor.Progress;
+#endif
 using Unity.VisualScripting;
 using System.Collections.ObjectModel;
 
 public class Inventory : MonoBehaviour
 {
+
+    public static Inventory instance;
+
     public Collection collection;
 
     public List<Item> items;
@@ -28,6 +33,9 @@ public class Inventory : MonoBehaviour
     private int dupleLog = 0;
     private int dupleMoneyLog = 0;
 
+    public GameObject badgePanel;
+    public GameObject moneyPanel;
+    public GameObject healthPanel;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -39,7 +47,29 @@ public class Inventory : MonoBehaviour
 
     void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(transform.root.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject); // 중복 방지
+        }
+
         FreshSlot();
+    }
+
+    public static Inventory Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                return null;
+            }
+            return instance;
+        }
     }
 
     // 슬롯 새로고침
@@ -66,7 +96,7 @@ public class Inventory : MonoBehaviour
             childtext.text = "";
         }
 
-        money_text.text = money.ToString();
+        money_text.text = money_item.count.ToString();
 
     }
 
@@ -155,18 +185,18 @@ public class Inventory : MonoBehaviour
                 items[i].count--;
                 if (items[i].isMineral == true)
                 {
-                    money += _item.value;
+                    money_item.count += _item.value;
                     ItemLog(money_item, _item.value);
                 }
                 else if(items[i].isalreadySell == false)
                 {
-                    money += _item.value;
+                    money_item.count += _item.value;
                     items[i].isalreadySell = true;
                     ItemLog(money_item, _item.value);
                 }
                 else
                 {
-                    money += _item.duplicate_value;
+                    money_item.count += _item.duplicate_value;
                     ItemLog(money_item, _item.duplicate_value);
                 }
                 
@@ -175,7 +205,7 @@ public class Inventory : MonoBehaviour
                     items[i].count = 0;
                     items.RemoveAt(i);
                 }
-                Debug.Log(money);
+                Debug.Log(money_item.count);
 
                 
 

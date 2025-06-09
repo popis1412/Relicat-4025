@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class LoadScene : MonoBehaviour
 {
+    public static LoadScene instance;
+
     [SerializeField] private GameObject[] li_arrowImages;
 
     public GameObject settingsPanel;
@@ -17,11 +18,36 @@ public class LoadScene : MonoBehaviour
     [SerializeField] private Slider m_MusicBGMSlider;
     [SerializeField] private Slider m_MusicSFXSlider;
 
+    public GameObject MainMenu;
+
+    public bool isAlreadyWatchStory;
+
     private void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject); // 중복 방지
+        }
+
         m_MusicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
         m_MusicBGMSlider.onValueChanged.AddListener(SetMusicVolume);
         m_MusicSFXSlider.onValueChanged.AddListener(SetSFXVolume);
+    }
+    public static LoadScene Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                return null;
+            }
+            return instance;
+        }
     }
 
     // 사운드 조절
@@ -44,11 +70,27 @@ public class LoadScene : MonoBehaviour
     public void GoMain()
     {
         FadeEffect.Instance.OnFade(FadeState.FadeInOut);
-        Invoke("InvokeLoadScene", 1.5f);
+        if (isAlreadyWatchStory == false)
+        {
+            isAlreadyWatchStory = true;
+            Invoke("InvokeLoadStory", 1.5f);
+        }
+        else if(isAlreadyWatchStory == true)
+        {
+            Invoke("InvokeLoadMain", 1.5f);
+        }
+        
+        
+        
     }
-
-    void InvokeLoadScene()
+    void InvokeLoadMain()
     {
+        MainMenu.SetActive(false);
+        SceneManager.LoadScene("csytest");
+    }
+    void InvokeLoadStory()
+    {
+        MainMenu.SetActive(false);
         SceneManager.LoadScene("Story");
     }
 
