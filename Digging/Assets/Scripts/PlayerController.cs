@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviour
         weaponSpr = weapon != null ? weapon.GetComponent<SpriteRenderer>().sprite
             : null;
 
+        pivot = transform.GetChild(3).GetComponent<Transform>().position;
         anim = GetComponent<Animator>();
     }
 
@@ -115,7 +116,6 @@ public class PlayerController : MonoBehaviour
         UpdateJumpAxisSmoothly();
         HandleMovement();
         HandleDigging();
-        pivot = transform.GetChild(3).GetComponent<Transform>().position;
     }
 
     // 비행 입력을 부드럽게 적용(0 ~ 1 사이 값을 천천히 변화)
@@ -183,17 +183,23 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        pivot = transform.GetChild(3).GetComponent<Transform>().position;
+
         t += Time.fixedDeltaTime * 2;
         t = Mathf.Clamp01(t);
 
-        angle = Mathf.Lerp(30, -60, t);
+
+        angle = Mathf.Lerp(60, -30, t);
         float rad = angle * Mathf.Deg2Rad;
+
+        
 
         Vector3 offset = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0f) * 0.1f;
 
-        print("offset: " + offset + "angle: " + angle + "t: " + t);
+        print("offset: " + offset + "angle: " + angle + "t: " + t );
+        
 
-        if(t >= 1)
+        if (t >= 1)
         {
             print("t = 0");
             t = 0;

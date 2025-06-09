@@ -84,9 +84,9 @@ public class Bomb : MonoBehaviour
     void Explode()
     {
         // 폭발 사이즈는 여기에서 정하면 됨.
-        Vector2 explosionSize = new Vector2(1f, 1f) * exploSize;
+        Vector2 explosionSize = new Vector2(1f * exploSize, 0.5f);
 
-        DrawDebugBox(transform.position, explosionSize, Color.red);
+        //DrawDebugBox(transform.position, explosionSize, Color.red);
 
         Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, explosionSize, 0f);
 
