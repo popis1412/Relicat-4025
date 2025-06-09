@@ -38,7 +38,7 @@ public class StoryScene : MonoBehaviour
                     break;
 
                 case 3:
-                    storyNum = 0;
+                    
                     FadeEffect.Instance.OnFade(FadeState.FadeInOut);
                     Invoke("InvokeLoadScene", 1.5f);
                     break;
