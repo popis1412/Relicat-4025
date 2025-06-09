@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    public static Inventory instance;
     public Inventory Inventory;
     public Collection Collection;
-    
-    private AudioSource AudioSourceBGM;
-    private AudioSource AudioSourceSFX;
+    public Shop Shop;
 
     public List<Item> items;
     public List<Item> minerals;
@@ -57,49 +57,53 @@ public class Player : MonoBehaviour
     public List<GameObject> li_PlayerHearts = new List<GameObject>(new GameObject[3]);           //플레이어 생명 오브젝트 리스트
     public Dictionary<GameObject, bool> DicPlayerHeart = new Dictionary<GameObject, bool>();
 
+    // 일시정지 탭
+    [SerializeField] private GameObject PausePanel;
+    private bool isPaused = false;
+
 
     private void Awake()
     {
-        Inventory_obj.transform.position = new Vector3(-200f, Screen.height / 2, 0f);
+        
+        
 
         // 아이템 초기화
-        for (int i = 0; i < items.Count; i++)
-        {
-            items[i].count = 0;
-            items[i].accumulation_count = 0;
-            items[i].ishaveitem = false;
-            items[i].isalreadySell = false;
+        //for (int i = 0; i < items.Count; i++)
+        //{
+        //    items[i].count = 0;
+        //    items[i].accumulation_count = 0;
+        //    items[i].ishaveitem = false;
+        //    items[i].isalreadySell = false;
 
-        }
+        //}
 
-        for (int i = 0; i < minerals.Count; i++)
-        {
-            minerals[i].count = 0;
-        }
+        //for (int i = 0; i < minerals.Count; i++)
+        //{
+        //    minerals[i].count = 0;
+        //}
 
-        for(int i = 0; i < UseItems.Count; i++)
-        {
-            UseItems[i].count = 0;
-        }
+        //for(int i = 0; i < UseItems.Count; i++)
+        //{
+        //    UseItems[i].count = 0;
+        //}
 
-        for(int i = 0; i < UpgradeItems.Count; i++)
-        {
-            UpgradeItems[i].count = 1;
-            UpgradeItems[i].value = 10;
-        }
+        //for(int i = 0; i < UpgradeItems.Count; i++)
+        //{
+        //    UpgradeItems[i].count = 1;
+        //    UpgradeItems[i].value = 10;
+        //}
 
         //플레이어 생명 딕셔너리에 플레이어 생명 리스트에 있는 오브젝트를 저장하고 bool 변수 지정
         DicPlayerHeart.Add(li_PlayerHearts[0], true);
         DicPlayerHeart.Add(li_PlayerHearts[1], true);
         DicPlayerHeart.Add(li_PlayerHearts[2], true);
 
-        this.AudioSourceBGM = SoundManager.Instance.BGMSoundPlay;
-        this.AudioSourceSFX = SoundManager.Instance.EffectSoundPlay;
     }
 
     // Start is called before the first frame update
-    void Start()
+    private IEnumerator Start()
     {
+
         // UI 시작/도착 포지션 지정
         Inventory_StartPos = new Vector3(-200f, Screen.height / 2, 0f);
         Inventory_EndPos = new Vector3(0f, Screen.height / 2, 0f);
@@ -110,7 +114,32 @@ public class Player : MonoBehaviour
         Collect_StartPos = new Vector3(2420f, Screen.height / 2, 0f);
         Collect_EndPos = new Vector3(1920f, Screen.height / 2, 0f);
 
-        
+        // 한 프레임 대기 (인스턴스 초기화 대기)
+        yield return null;
+
+        // Inventory 스크립트 연결
+        Inventory = Inventory.Instance ?? FindObjectOfType<Inventory>();
+        Shop = Shop.instance ?? FindObjectOfType<Shop>();
+        Collection = Collection.instance ?? FindObjectOfType<Collection>();
+
+        // Inventory 오브젝트 연결
+        if (Inventory != null)
+        {
+            Inventory_obj = Inventory.gameObject;
+            shopUIPanel = Shop.gameObject;
+            CollectUIPanel = Collection.gameObject;
+            Debug.Log("Inventory 연결 완료: " + Inventory_obj.name);
+        }
+        else
+        {
+            Debug.LogError("Inventory 연결 실패: Inventory.Instance가 null입니다.");
+        }
+
+        Inventory_obj.transform.position = new Vector3(-200f, Screen.height / 2, 0f);
+
+        Inventory.badgePanel.gameObject.SetActive(true);
+        Inventory.moneyPanel.gameObject.SetActive(true);
+        Inventory.healthPanel.gameObject.SetActive(true);
     }
 
     // Update is called once per frame
@@ -119,8 +148,11 @@ public class Player : MonoBehaviour
         currentTime += Time.deltaTime;
         Interaction_Inventory();
         Interaction_F();
-        
 
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            SceneManager.LoadScene("csytest");
+        }
 
         if (Input.GetKeyDown(KeyCode.G))
         {
@@ -151,7 +183,7 @@ public class Player : MonoBehaviour
         {
             Inventory.AddItem(items[7], 1);
         }
-        if (Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             Collection.collect_sum += 10;
         }
@@ -160,6 +192,54 @@ public class Player : MonoBehaviour
             Inventory.AddItem(UseItems[0], 3);
         if(Input.GetKeyDown(KeyCode.E))
             Inventory.AddItem(UseItems[1], 3);
+
+        // 일시정지 esc
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
+    }
+    // 게임 재개
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+
+        if (isPaused)
+        {
+            Time.timeScale = 0f; // 게임 일시정지
+            PausePanel.SetActive(true); // UI 표시
+        }
+        else
+        {
+            Time.timeScale = 1f; // 게임 재개
+            PausePanel.SetActive(false); // UI 숨김
+        }
+    }
+
+    // 설정
+    public void SettingButton()
+    {
+        LoadScene.instance.settingsPanel.SetActive(true);
+    }
+
+    // 메인메뉴 이동
+    public void GoMainMenu()
+    {
+        FadeEffect.Instance.OnFade(FadeState.FadeInOut);
+        isPaused = false;
+        Time.timeScale = 1f; // 게임 재개
+        PausePanel.SetActive(false); // UI 숨김
+        
+        Invoke("InvokeGoMainMenu", 1.5f);
+    }
+    void InvokeGoMainMenu()
+    {
+        SceneManager.LoadScene("Menu");
+        LoadScene.instance.MainMenu.SetActive(true);
+        Inventory.badgePanel.SetActive(false);
+        Inventory.moneyPanel.SetActive(false);
+        Inventory.healthPanel.SetActive(false);
     }
 
     // 인벤토리 상호작용
@@ -262,14 +342,29 @@ public class Player : MonoBehaviour
             {
                 FadeEffect.Instance.OnFade(FadeState.FadeInOut);
                 Invoke("InvokeInMuseum", 1.5f);
-                AudioSourceSFX.PlayOneShot(SoundManager.Instance.SFXSounds[16]);
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[16]);
+
+                // 획득한 유물을 도감에 활성화
+                for (int i = 0; i < items.Count; i++)
+                {
+                    Collection.li_isCollect[i] = items[i].ishaveitem;
+                    if (Collection.li_isCollect[i] == true)
+                    {
+                        Collection.slots[i].item = items[i];
+                    }
+                    if (Collection.li_isRelicOnTable[i] == true)
+                    {
+                        Collection.Collection_Table[i].GetComponentInChildren<SpriteRenderer>().sprite = items[i].itemImage;
+                    }
+                }
+                
 
             }
             else if (isInMuseum)
             {
                 FadeEffect.Instance.OnFade(FadeState.FadeInOut);
                 Invoke("InvokeOutMuseum", 1.5f);
-                AudioSourceSFX.PlayOneShot(SoundManager.Instance.SFXSounds[17]);
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[17]);
 
             }
 
@@ -319,15 +414,7 @@ public class Player : MonoBehaviour
                 isInventoryMoving = true;
             }
 
-            // 획득한 유물을 도감에 활성화
-            for(int i = 0; i < items.Count; i++)
-            {
-                Collection.li_isCollect[i] = items[i].ishaveitem;
-                if(Collection.li_isCollect[i] == true)
-                {
-                    Collection.slots[i].item = items[i];
-                }
-            }
+            
             
 
         }
@@ -346,12 +433,12 @@ public class Player : MonoBehaviour
         gameObject.transform.position = new Vector3(50f, 0.5f, 0f);
         isInMuseum = true;
 
-        if (AudioSourceBGM.isPlaying)
+        if (SoundManager.Instance.BGMSoundPlay.isPlaying)
         {
-            AudioSourceBGM.Stop();
+            SoundManager.Instance.BGMSoundPlay.Stop();
 
-            AudioSourceBGM.clip = SoundManager.Instance.BGMs[3];
-            AudioSourceBGM.Play();
+            SoundManager.Instance.BGMSoundPlay.clip = SoundManager.Instance.BGMs[3];
+            SoundManager.Instance.BGMSoundPlay.Play();
         }
     }
     void InvokeOutMuseum()
@@ -359,12 +446,12 @@ public class Player : MonoBehaviour
         gameObject.transform.position = new Vector3(18f, 0.5f, 0f);
         isInMuseum = false;
 
-        if (AudioSourceBGM.isPlaying)
+        if (SoundManager.Instance.BGMSoundPlay.isPlaying)
         {
-            AudioSourceBGM.Stop();
+            SoundManager.Instance.BGMSoundPlay.Stop();
 
-            AudioSourceBGM.clip = SoundManager.Instance.BGMs[2];
-            AudioSourceBGM.Play();
+            SoundManager.Instance.BGMSoundPlay.clip = SoundManager.Instance.BGMs[2];
+            SoundManager.Instance.BGMSoundPlay.Play();
         }
     }
 

@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class Shop : MonoBehaviour
 {
+    public static Shop instance;
+
     public Inventory Inventory;
     public Player player;
     public PlayerController playerController;
@@ -18,10 +21,62 @@ public class Shop : MonoBehaviour
 
     [SerializeField] private Light2D playerlight;
 
+    private float pick_damage;
+    private float lightRadius;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(transform.root.gameObject);
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+        else
+        {
+            Destroy(this.gameObject); // 중복 방지
+        }
+        pick_damage = playerController.pickdamage;
+        lightRadius = playerlight.pointLightOuterRadius;
+
+        Debug.Log(pick_damage);
+        Debug.Log(lightRadius);
+    }
+
     private void Start()
     {
         shopView_idx = 0;
         Switch_ShopView();
+
+        
+    }
+
+    private void OnDestroy()
+    {
+        // 이벤트 제거 (중복 방지)
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 씬이 로드된 후 Player 다시 찾기
+        player = FindObjectOfType<Player>();
+        playerController = FindObjectOfType<PlayerController>();
+        playerlight = FindAnyObjectByType<Light2D>();
+        Debug.Log(playerlight.gameObject.name);
+
+        playerController.pickdamage = pick_damage;
+        playerlight.pointLightOuterRadius = lightRadius;
+
+        if (player != null)
+        {
+            Debug.Log("씬 전환 후 Player 연결 완료: " + player.name);
+        }
+        else
+        {
+            Debug.LogWarning("씬 전환 후 Player를 찾지 못했습니다.");
+        }
     }
 
     // 상점 이동 왼쪽
@@ -105,18 +160,18 @@ public class Shop : MonoBehaviour
     //아이템 구매 버튼
     public void Button_Buy_Item_Bomb()
     {
-        if(Inventory.money >= player.UseItems[0].value)
+        if(Inventory.money_item.count >= player.UseItems[0].value)
         {
-            Inventory.money -= player.UseItems[0].value;
+            Inventory.money_item.count -= player.UseItems[0].value;
             Inventory.AddItem(player.UseItems[0], 1);
         }
         
     }
     public void Button_Buy_Item_Torch()
     {
-        if (Inventory.money >= player.UseItems[1].value)
+        if (Inventory.money_item.count >= player.UseItems[1].value)
         {
-            Inventory.money -= player.UseItems[1].value;
+            Inventory.money_item.count -= player.UseItems[1].value;
             Inventory.AddItem(player.UseItems[1], 1);
         }
 
@@ -125,10 +180,11 @@ public class Shop : MonoBehaviour
     // 업그레이드 버튼
     public void Button_Upgrade_Pick()
     {
-        if(Inventory.money >= player.UpgradeItems[0].value)
+        if(Inventory.money_item.count >= player.UpgradeItems[0].value)
         {
-            Inventory.money -= player.UpgradeItems[0].value;
-            playerController.pickdamage += 0.4f;
+            Inventory.money_item.count -= player.UpgradeItems[0].value;
+            pick_damage += 0.4f;
+            playerController.pickdamage = pick_damage;
             player.UpgradeItems[0].count++;
             shop_pickLvText.text = "레벨 : " + player.UpgradeItems[0].count;
             player.UpgradeItems[0].value += 10;
@@ -139,10 +195,11 @@ public class Shop : MonoBehaviour
     }
     public void Button_Upgrade_EyeLight()
     {
-        if (Inventory.money >= player.UpgradeItems[1].value)
+        if (Inventory.money_item.count >= player.UpgradeItems[1].value)
         {
-            Inventory.money -= player.UpgradeItems[1].value;
-            playerlight.pointLightOuterRadius += 0.1f;
+            Inventory.money_item.count -= player.UpgradeItems[1].value;
+            lightRadius += 0.1f;
+            playerlight.pointLightOuterRadius = lightRadius;
             player.UpgradeItems[1].count++;
             shop_lightLvText.text = "레벨 : " + player.UpgradeItems[1].count;
             player.UpgradeItems[1].value += 50;
