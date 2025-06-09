@@ -11,6 +11,8 @@ TagManager:
   - Collect
   - Table
   - Enemy
+  - Weapon
+  - Bomb
   layers:
   - Default
   - TransparentFX

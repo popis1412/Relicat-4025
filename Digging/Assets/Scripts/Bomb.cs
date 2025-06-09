@@ -48,11 +48,20 @@ public class Bomb : MonoBehaviour
         Collider2D bombCol = GetComponent<Collider2D>();
         if(bombCol == null) return;
 
-        if(playerScript != null)
+        if (playerScript != null)
         {
             Collider2D playerCol = playerScript.GetComponent<Collider2D>();
             if(playerCol != null)
                 Physics2D.IgnoreCollision(bombCol, playerCol, true);
+        }
+
+        GameObject[] bombs = GameObject.FindGameObjectsWithTag("Bomb");
+        foreach(GameObject bomb in bombs)
+        {
+            foreach (Collider2D col in bomb.GetComponents<Collider2D>())
+            {
+                Physics2D.IgnoreCollision(bombCol, col, true);
+            }
         }
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
