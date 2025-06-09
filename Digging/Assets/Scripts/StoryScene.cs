@@ -50,6 +50,6 @@ public class StoryScene : MonoBehaviour
 
     void InvokeLoadScene()
     {
-        SceneManager.LoadScene("csytest");
+        SceneManager.LoadScene(2);
     }
 }
