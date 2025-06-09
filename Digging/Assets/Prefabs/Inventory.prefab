@@ -3978,6 +3978,9 @@ MonoBehaviour:
   getItem_Image: {fileID: 1121310142}
   getItem_Name: {fileID: 528464843}
   getItem_EA: {fileID: 1048001286}
+  badgePanel: {fileID: 4240510005017097811}
+  moneyPanel: {fileID: 3637555430878052154}
+  healthPanel: {fileID: 2607832583223366522}
 --- !u!1 &5122186050832244640
 GameObject:
   m_ObjectHideFlags: 0

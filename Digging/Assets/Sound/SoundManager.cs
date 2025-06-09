@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class SoundManager : MonoBehaviour
 {
     public AudioSource BGMSoundPlay;
-    public AudioSource EffectSoundPlay;
+    public AudioSource[] EffectSoundPlay;
 
     public AudioClip[] BGMs;
     public AudioClip[] SFXSounds;
@@ -85,5 +85,21 @@ public class SoundManager : MonoBehaviour
             }
             return instance;
         }
+    }
+
+    public void SFXPlay(AudioClip SFX)
+    {
+        for (int i = 0; i < EffectSoundPlay.Length; i++)
+        {
+            if (!EffectSoundPlay[i].isPlaying)
+            {
+                EffectSoundPlay[i].PlayOneShot(SFX);
+                return;
+            }
+        }
+
+        // 전부 재생 중이면 첫 번째 AudioSource를 강제로 재생 (덮어쓰기)
+        EffectSoundPlay[0].Stop();
+        EffectSoundPlay[0].PlayOneShot(SFX);
     }
 }

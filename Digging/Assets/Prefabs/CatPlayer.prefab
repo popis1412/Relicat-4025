@@ -463,6 +463,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Inventory: {fileID: 0}
   Collection: {fileID: 0}
+  Shop: {fileID: 0}
   items:
   - {fileID: 11400000, guid: 416a9583a517d62438a89e3e240559f0, type: 2}
   - {fileID: 11400000, guid: 48da0b7f30b2cf648b06afee5c3a60c8, type: 2}
@@ -508,3 +509,4 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  PausePanel: {fileID: 0}
