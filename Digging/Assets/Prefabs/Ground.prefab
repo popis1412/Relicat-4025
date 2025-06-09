@@ -74,18 +74,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85ac03a78229fd54ca536ccbf1a1dcfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageNum: 0
   blocksDictionary: {fileID: 0}
   blocks:
-  - {fileID: 705692366327937088}
-  - {fileID: 4471828597746825199}
-  - {fileID: 1658967891327309959}
-  - {fileID: 5213227789358144440}
-  - {fileID: 8335815198147458573}
-  - {fileID: 659209129543600044}
-  - {fileID: 1573094206588343663}
-  - {fileID: 9003627141056116389}
-  - {fileID: 3752425314416930543}
-  - {fileID: 2389227104902921508}
   - {fileID: 8851279583128004831}
   - {fileID: 2262292713900982583}
   - {fileID: 226236132372602149}
@@ -106,6 +97,19 @@ MonoBehaviour:
   - {fileID: 5531126175545028338}
   - {fileID: 8495921952896063001}
   - {fileID: 2197884520387465169}
+  groundBlocks:
+  - {fileID: 705692366327937088}
+  - {fileID: 4471828597746825199}
+  - {fileID: 1658967891327309959}
+  - {fileID: 5213227789358144440}
+  - {fileID: 8335815198147458573}
+  - {fileID: 659209129543600044}
+  - {fileID: 1573094206588343663}
+  - {fileID: 9003627141056116389}
+  - {fileID: 3752425314416930543}
+  - {fileID: 2389227104902921508}
+  respawnBlcok: []
+  effectManager: {fileID: 0}
 --- !u!1001 &172482678688134501
 PrefabInstance:
   m_ObjectHideFlags: 0
