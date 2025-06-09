@@ -494,7 +494,9 @@ MonoBehaviour:
   UseItems:
   - {fileID: 11400000, guid: b22ee3248dd1b6b49a3658d1621bc4d4, type: 2}
   - {fileID: 11400000, guid: 6eaecb1d8351a794fbb8351b200080c8, type: 2}
-  UpgradeItems: []
+  UpgradeItems:
+  - {fileID: 11400000, guid: d599f05a85872824395c767f8d0ebae8, type: 2}
+  - {fileID: 11400000, guid: 04eb4ca36868e9849ac4682c0132c428, type: 2}
   Inventory_obj: {fileID: 0}
   shopUIPanel: {fileID: 0}
   CollectUIPanel: {fileID: 0}
@@ -502,3 +504,7 @@ MonoBehaviour:
   RelicInfoImage: {fileID: 0}
   RelicInfoName: {fileID: 0}
   RelicInfoText: {fileID: 0}
+  li_PlayerHearts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
