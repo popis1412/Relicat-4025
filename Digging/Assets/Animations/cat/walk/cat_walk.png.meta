@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 117513d148971574d9940c53787af9b0
+guid: a28bedc301e8f1c4cb31551b4b6d9db8
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -96,10 +96,10 @@ TextureImporter:
       name: cat_walk_0
       rect:
         serializedVersion: 2
-        x: 5
-        y: 10
-        width: 142
-        height: 179
+        x: 3
+        y: 8
+        width: 143
+        height: 174
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -107,8 +107,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b89dca601d1c66843ba4a66f203874e5
-      internalID: 1553954419
+      spriteID: 41a3ee5be19298d4da18a7b6b7a68949
+      internalID: 344977928
       vertices: []
       indices: 
       edges: []
@@ -117,10 +117,10 @@ TextureImporter:
       name: cat_walk_1
       rect:
         serializedVersion: 2
-        x: 151
+        x: 150
         y: 10
-        width: 143
-        height: 178
+        width: 142
+        height: 175
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 261d3b23a06c26a4d91f8af04f89d51d
-      internalID: -911697987
+      spriteID: a21715d115b8d6a49a43a794714b730f
+      internalID: 202703089
       vertices: []
       indices: 
       edges: []
@@ -139,9 +139,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 298
-        y: 9
-        width: 143
-        height: 177
+        y: 11
+        width: 140
+        height: 174
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -149,8 +149,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ce0dc1478662bd5409abbf67d11dc4ce
-      internalID: -1299475431
+      spriteID: 50756797853031642a19842333b29e5a
+      internalID: 156814856
       vertices: []
       indices: 
       edges: []
@@ -159,10 +159,10 @@ TextureImporter:
       name: cat_walk_3
       rect:
         serializedVersion: 2
-        x: 446
-        y: 9
-        width: 142
-        height: 178
+        x: 447
+        y: 12
+        width: 137
+        height: 170
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -170,8 +170,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec5c45006a7d7754db4fdb0978ab33ee
-      internalID: 1274064974
+      spriteID: e80c58175c0126042a8453168f2df2b1
+      internalID: 254292873
       vertices: []
       indices: 
       edges: []
@@ -180,10 +180,10 @@ TextureImporter:
       name: cat_walk_4
       rect:
         serializedVersion: 2
-        x: 592
-        y: 9
-        width: 143
-        height: 178
+        x: 595
+        y: 11
+        width: 135
+        height: 169
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,8 +191,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 932941d23e157a841a32ddedfcdce7c4
-      internalID: -1952382740
+      spriteID: fb3e0303bd403c041886db6a9287a83f
+      internalID: -835670244
       vertices: []
       indices: 
       edges: []
@@ -201,10 +201,10 @@ TextureImporter:
       name: cat_walk_5
       rect:
         serializedVersion: 2
-        x: 738
-        y: 9
-        width: 144
-        height: 178
+        x: 737
+        y: 10
+        width: 139
+        height: 169
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -212,8 +212,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b26fd11defde97646a00de297393b951
-      internalID: 1344000072
+      spriteID: aa822e07de81a324081f8776f3bb33b5
+      internalID: 1265398680
       vertices: []
       indices: 
       edges: []
@@ -222,10 +222,10 @@ TextureImporter:
       name: cat_walk_6
       rect:
         serializedVersion: 2
-        x: 886
-        y: 10
+        x: 879
+        y: 8
         width: 143
-        height: 178
+        height: 173
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -233,8 +233,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a6e845a82ea3c24786b73ef7ff0500b
-      internalID: -1866490110
+      spriteID: 7f8f7355cb818bd46a813617c53b71a8
+      internalID: 324568149
       vertices: []
       indices: 
       edges: []
@@ -250,13 +250,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      cat_walk_0: 1553954419
-      cat_walk_1: -911697987
-      cat_walk_2: -1299475431
-      cat_walk_3: 1274064974
-      cat_walk_4: -1952382740
-      cat_walk_5: 1344000072
-      cat_walk_6: -1866490110
+      cat_walk_0: 344977928
+      cat_walk_1: 202703089
+      cat_walk_2: 156814856
+      cat_walk_3: 254292873
+      cat_walk_4: -835670244
+      cat_walk_5: 1265398680
+      cat_walk_6: 324568149
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

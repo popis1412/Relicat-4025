@@ -99,9 +99,9 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // 단축키 아이템 사용
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if(Input.GetKeyDown(KeyCode.Q))
             UseItem(0, bomb, GetBombPosition());
-        if(Input.GetKeyDown(KeyCode.Alpha2))
+        if(Input.GetKeyDown(KeyCode.E))
             UseItem(1, torch, GetTorchPosition());
 
         anim.SetFloat("MoveSpeed", rb.velocity.magnitude);
@@ -263,16 +263,7 @@ public class PlayerController : MonoBehaviour
         currentHP -= damage;
 
         playerScript.LostPlayerLife(currentHP);
-
-        if(currentHP <= 0)
-        {
-            sr.color = Color.red;
-            Die();
-        }
-        else
-        {
-            StartCoroutine(DamageEffect(attacker.position));
-        }
+        StartCoroutine(DamageEffect(attacker.position));
     }
 
     // 피격 시 색깔 변화와 넉백
@@ -303,11 +294,12 @@ public class PlayerController : MonoBehaviour
     }
 
     // 사망 처리
-    void Die()
+    public void Die()
     {
         transform.position = new Vector3(15.5f, 0.5f, 0f);
         sr.color = Color.white;
         currentHP = maxHP;
+        playerScript.AddPlayerLife(currentHP);
     }
 
     // 아이템 사용 로직
@@ -319,6 +311,7 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(itemPrefab, position, Quaternion.identity);
             item.count--;
+            playerScript.Inventory.FreshSlot();
             Debug.Log($"아이템 사용: {item.itemName}, 남은 개수: {item.count}");
         }
         else

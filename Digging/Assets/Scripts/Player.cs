@@ -61,12 +61,11 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject PausePanel;
     private bool isPaused = false;
 
+    [SerializeField] PlayerController player;
+
 
     private void Awake()
     {
-        
-        
-
         // 아이템 초기화
         //for (int i = 0; i < items.Count; i++)
         //{
@@ -97,6 +96,8 @@ public class Player : MonoBehaviour
         DicPlayerHeart.Add(li_PlayerHearts[0], true);
         DicPlayerHeart.Add(li_PlayerHearts[1], true);
         DicPlayerHeart.Add(li_PlayerHearts[2], true);
+
+        player = GetComponent<PlayerController>();
 
     }
 
@@ -156,11 +157,11 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            LostPlayerLife();
+            LostPlayerLife(-1);
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
-            AddPlayerLife();
+            AddPlayerLife(1);
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -188,9 +189,9 @@ public class Player : MonoBehaviour
             Collection.collect_sum += 10;
         }
         // 잠시 추가함.
-        if(Input.GetKeyDown(KeyCode.Q))
+        if(Input.GetKeyDown(KeyCode.Alpha1))
             Inventory.AddItem(UseItems[0], 3);
-        if(Input.GetKeyDown(KeyCode.E))
+        if(Input.GetKeyDown(KeyCode.Alpha2))
             Inventory.AddItem(UseItems[1], 3);
 
         // 일시정지 esc
@@ -456,7 +457,7 @@ public class Player : MonoBehaviour
     }
 
     // 플레이어 체력 깎기
-    public void LostPlayerLife()
+    public void LostPlayerLife(int hp)
     {
         
         for (int i = li_PlayerHearts.Count-1; i >= 0; i--)
@@ -469,6 +470,7 @@ public class Player : MonoBehaviour
                 if (DicPlayerHeart[li_PlayerHearts[0]] == false)
                 {
                     // 플레이어 사망 함수 호출
+                    player.Die();
                 }
                 break;
             }
@@ -477,17 +479,20 @@ public class Player : MonoBehaviour
     }
 
     // 플레이어 체력 증가
-    public void AddPlayerLife()
+    public void AddPlayerLife(int hp)
     {
         
         for (int i = 0; i < li_PlayerHearts.Count; i++)
         {
+            int healed = 0;
+
             if (DicPlayerHeart[li_PlayerHearts[i]] == false)
             {
                 DicPlayerHeart[li_PlayerHearts[i]] = true;
                 li_PlayerHearts[i].SetActive(true);
-                
-                break;
+                healed++;
+
+                if (healed >= hp) break;
             }
         }
 
