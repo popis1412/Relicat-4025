@@ -40,16 +40,24 @@ public class PlayerController : MonoBehaviour
     public float pickdamage = 1f;
     Sprite weaponSpr;
     [SerializeField] GameObject weapon;
+    Vector3 pivot;
 
     // Damage System
-    float maxHP = 3;
-    float currentHP = 0;
+    int maxHP;
+    int currentHP = 0;
 
     // Block Detection
     private int blockLayer;
     // 모래에 플레이어가 끼었을 경우
     private const float HeadCheckRadius = 0.1f;   // Overlap 반지름
     private const float NarrowDigDistance = 0.5f; // 모래에 갇혔을 때 파괴 가능 거리
+
+    float angle;
+    float t = 0;
+
+    bool isDigging;
+
+    Animator anim;
 
     private void Awake()
     {
@@ -62,6 +70,7 @@ public class PlayerController : MonoBehaviour
         blockLayer = LayerMask.GetMask("Block");
         pickAxe = sr.sprite;
 
+        maxHP = playerScript.li_PlayerHearts.Count;
         currentHP = maxHP;
         playerSize = sr.size.y;
         bombSize = bomb.GetComponent<SpriteRenderer>().size.y;
@@ -70,6 +79,8 @@ public class PlayerController : MonoBehaviour
         weapon = FindWeapon();
         weaponSpr = weapon != null ? weapon.GetComponent<SpriteRenderer>().sprite
             : null;
+
+        anim = GetComponent<Animator>();
     }
 
     // 입력 시스템 활성화 및 입력 이벤트 등록
@@ -92,6 +103,11 @@ public class PlayerController : MonoBehaviour
             UseItem(0, bomb, GetBombPosition());
         if(Input.GetKeyDown(KeyCode.Alpha2))
             UseItem(1, torch, GetTorchPosition());
+
+        anim.SetFloat("MoveSpeed", rb.velocity.magnitude);
+        anim.SetFloat("FlySpeed", rb.velocity.y);
+        anim.SetBool("IsFlying", isFlying);
+        anim.SetBool("IsDigging", isDigging);
     }
 
     private void FixedUpdate()
@@ -99,6 +115,7 @@ public class PlayerController : MonoBehaviour
         UpdateJumpAxisSmoothly();
         HandleMovement();
         HandleDigging();
+        pivot = transform.GetChild(3).GetComponent<Transform>().position;
     }
 
     // 비행 입력을 부드럽게 적용(0 ~ 1 사이 값을 천천히 변화)
@@ -160,10 +177,35 @@ public class PlayerController : MonoBehaviour
         GameObject targetBlock = GetVaildBlockUnderMouse();
 
         if(!input.Player.Digging.IsPressed() || targetBlock == null)
-            return;
-
-        if(targetBlock.TryGetComponent(out Block block))
         {
+            isDigging = false;
+            t = 0;
+            return;
+        }
+
+        t += Time.fixedDeltaTime * 2;
+        t = Mathf.Clamp01(t);
+
+        angle = Mathf.Lerp(30, -60, t);
+        float rad = angle * Mathf.Deg2Rad;
+
+        Vector3 offset = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0f) * 0.1f;
+
+        print("offset: " + offset + "angle: " + angle + "t: " + t);
+
+        if(t >= 1)
+        {
+            print("t = 0");
+            t = 0;
+            weapon.transform.position = pivot;
+            weapon.transform.rotation = Quaternion.Euler(0f, 0f, -30f);
+        }
+        weapon.transform.position = pivot + offset;
+        weapon.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+        if (targetBlock.TryGetComponent(out Block block))
+        {
+            isDigging = true;
             block.BlockDestroy(Time.deltaTime * pickdamage, playerScript);
         }
     }
@@ -219,6 +261,8 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage, Transform attacker)
     {
         currentHP -= damage;
+
+        playerScript.LostPlayerLife(currentHP);
 
         if(currentHP <= 0)
         {
