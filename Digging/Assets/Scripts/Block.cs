@@ -78,6 +78,8 @@ public class Block : MonoBehaviour
     public float blockHealth = 3;
     float blockMaxHealth = 3;
 
+    public bool isGroundSurface = false;
+
     public int stageNum = 0;
 
     [SerializeField] SpriteRenderer spriteRenderer;
@@ -458,6 +460,11 @@ public class Block : MonoBehaviour
 
                 blocksDictionary.blockPosition.Remove(this.transform.position);
 
+
+                if (isGroundSurface)
+                {
+                    blocksDictionary.GroundSurfaceChange();
+                }
 
                 if (blocksDictionary.blockPosition.ContainsKey((Vector2)this.transform.position + new Vector2(0, 1))) //내 위에 블럭 있는지 체크
                 {

@@ -27,4 +27,16 @@ public class BlocksDictionary : MonoBehaviour
 
     }
 
+    public void GroundSurfaceChange()
+    {
+        foreach(GameObject obj in blockPosition.Values)
+        {
+            Block blockScript = obj.GetComponent<Block>();
+            if(blockScript.isGroundSurface)
+            {
+                blockScript.ChangeBlock(-1);
+            }
+        }
+    }
+
 }
