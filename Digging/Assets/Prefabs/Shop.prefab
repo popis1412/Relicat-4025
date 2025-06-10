@@ -4810,6 +4810,8 @@ MonoBehaviour:
   shop_pickLvText: {fileID: 6402720650087440402}
   shop_lightLvText: {fileID: 6307279008936568291}
   playerlight: {fileID: 0}
+  pick_damage: 0
+  lightRadius: 0
 --- !u!114 &3434556258082299497
 MonoBehaviour:
   m_ObjectHideFlags: 0
