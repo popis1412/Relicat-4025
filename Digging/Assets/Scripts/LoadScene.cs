@@ -86,7 +86,7 @@ public class LoadScene : MonoBehaviour
     void InvokeLoadMain()
     {
         MainMenu.SetActive(false);
-        SceneManager.LoadScene("csytest");
+        SceneManager.LoadScene("Main");
     }
     void InvokeLoadStory()
     {
