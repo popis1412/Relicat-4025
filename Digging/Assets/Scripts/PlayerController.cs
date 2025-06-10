@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // Component References
-    PlayerControl input;
+    public PlayerControl input;
     Rigidbody2D rb;
     Collider2D col;
     Player playerScript;
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
         blockLayer = LayerMask.GetMask("Block");
         pickAxe = sr.sprite;
 
-        maxHP = playerScript.li_PlayerHearts.Count;
+        maxHP = playerScript.li_PlayerHearts.Length;
         currentHP = maxHP;
         playerSize = sr.size.y;
         bombSize = bomb.GetComponent<SpriteRenderer>().size.y;

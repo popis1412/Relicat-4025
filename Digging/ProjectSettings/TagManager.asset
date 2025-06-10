@@ -13,6 +13,7 @@ TagManager:
   - Enemy
   - Weapon
   - Bomb
+  - Reset
   layers:
   - Default
   - TransparentFX

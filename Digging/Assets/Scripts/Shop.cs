@@ -16,13 +16,13 @@ public class Shop : MonoBehaviour
     public int shopView_idx;
     [SerializeField] private GameObject[] shopList;
 
-    [SerializeField] private TextMeshProUGUI shop_pickLvText;
-    [SerializeField] private TextMeshProUGUI shop_lightLvText;
+    public TextMeshProUGUI shop_pickLvText;
+    public TextMeshProUGUI shop_lightLvText;
 
-    [SerializeField] private Light2D playerlight;
+    public Light2D playerlight;
 
-    private float pick_damage;
-    private float lightRadius;
+    public float pick_damage;
+    public float lightRadius;
 
     private void Awake()
     {

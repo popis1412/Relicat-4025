@@ -37,6 +37,8 @@ public class Collection : MonoBehaviour
     [SerializeField] private GameObject badgeUI_Icon;
     [SerializeField] private TextMeshProUGUI badgeUI_TitleText;
 
+    public Item guessItem;
+
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -142,12 +144,12 @@ public class Collection : MonoBehaviour
         {
             li_isRelicOnTable[itemNum] = true;
             player.items[itemNum].accumulation_count += 1;
-
+            Debug.Log(player.items[itemNum].accumulation_count);
             UpdateOnTable(itemNum);
-
-            
+            collect_sum += 1;
+            Inventory.SellItem(player.items[itemNum]);
         }
-        Inventory.SellItem(player.items[itemNum]);
+        
     }
 
     public void UpdateOnTable(int itemNum)
@@ -158,7 +160,7 @@ public class Collection : MonoBehaviour
             if (li_isRelicOnTable[i] == true)
             {
                 Collection_Table[itemNum].GetComponentInChildren<SpriteRenderer>().sprite = player.items[itemNum].itemImage;
-                collect_sum += 1;
+                
             }
         }
         
