@@ -21,8 +21,8 @@ public class Shop : MonoBehaviour
 
     [SerializeField] private Light2D playerlight;
 
-    private float pick_damage;
-    private float lightRadius;
+    public float pick_damage;
+    public float lightRadius;
 
     private void Awake()
     {
