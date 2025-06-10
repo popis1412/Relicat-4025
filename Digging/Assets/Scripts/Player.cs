@@ -237,6 +237,18 @@ public class Player : MonoBehaviour
             TogglePause();
         }
 
+        //세이브
+        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            SaveSystem.Instance.Save();
+        }
+
+        //로드
+        if(Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            SaveSystem.Instance.Load();
+        }
+
     }
     // 게임 재개
     public void TogglePause()
