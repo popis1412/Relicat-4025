@@ -68,6 +68,7 @@ public class Player : MonoBehaviour
 
     // 지형 리셋
     [SerializeField] private GameObject ResetPanel;
+    [SerializeField] private GameObject SavePanel;
     private bool isNearReset;
     private bool isOnResetUI;
 
@@ -173,6 +174,8 @@ public class Player : MonoBehaviour
         LevelManager.instance.stagetargetUI.SetActive(true);
         LevelManager.instance.isRunning = true;
         player.input.Enable();
+
+        SaveSystem.Instance.Load();
     }
 
     // Update is called once per frame
@@ -184,6 +187,7 @@ public class Player : MonoBehaviour
             Interaction_Inventory();
             Interaction_F();
             GroundAutoHeal();
+            Ground_Time_Pause();
 
             if (Input.GetKeyDown(KeyCode.O))
             {
@@ -221,7 +225,7 @@ public class Player : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.L))
             {
-                Collection.collect_sum += 10;
+                Collection.player_lv += 1;
             }
             // 잠시 추가함.
             if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -286,6 +290,7 @@ public class Player : MonoBehaviour
         PausePanel.SetActive(false); // UI 숨김
         LevelManager.instance.isRunning = false;
         Invoke("InvokeGoMainMenu", 1.5f);
+
     }
     void InvokeGoMainMenu()
     {
@@ -486,6 +491,7 @@ public class Player : MonoBehaviour
             {
                 isOnResetUI = true;
                 ResetPanel.SetActive(true);
+                SavePanel.SetActive(true);
             }
             
         }
@@ -503,6 +509,7 @@ public class Player : MonoBehaviour
 
             isOnResetUI = false;
             ResetPanel.SetActive(false);
+            SavePanel.SetActive(false);
         }
         else
         {
@@ -513,6 +520,13 @@ public class Player : MonoBehaviour
     {
         isOnResetUI = false;
         ResetPanel.SetActive(false);
+        SavePanel.SetActive(false);
+    }
+
+    public void Save_Button()
+    {
+        SaveSystem.Instance.Save();
+        Debug.Log("세이브 되었습니다");
     }
 
     // 박물관 입장/퇴장 페이드 인아웃
@@ -558,6 +572,7 @@ public class Player : MonoBehaviour
                 {
                     DiePanel.SetActive(true);
                     isPaused = true;
+                    LevelManager.instance.isRunning = false;
                     //Time.timeScale = 0f; // 게임 일시정지
                     player.input.Disable();
                 }
@@ -580,6 +595,7 @@ public class Player : MonoBehaviour
             player.Die(); // 지상이동, 체력회복
             DiePanel.SetActive(false);
             isPaused = false;
+            LevelManager.instance.isRunning = true;
             //Time.timeScale = 1f; // 게임 재개
             player.input.Enable();
         }
@@ -593,11 +609,11 @@ public class Player : MonoBehaviour
     {
         DiePanel.SetActive(false);
         isPaused = false;
-        Time.timeScale = 1f; // 게임 재개
+        LevelManager.instance.isRunning = true;
+        //Time.timeScale = 1f; // 게임 재개
         AddPlayerLife(3);
 
-        //SceneManager.LoadScene("Main");
-
+        SaveSystem.Instance.Load();
         LoadScene.instance.GoMain();
     }
 
@@ -627,6 +643,18 @@ public class Player : MonoBehaviour
         if (this.gameObject.transform.position.y > 0 && li_PlayerHearts[2] != null && li_PlayerHearts[2].activeSelf == false)
         {
             AddPlayerLife(li_PlayerHearts.Length - 1);
+        }
+    }
+
+    public void Ground_Time_Pause()
+    {
+        if(this.gameObject.transform.position.y > 0)
+        {
+            LevelManager.instance.isRunning = false;
+        }
+        else
+        {
+            LevelManager.instance.isRunning = true;
         }
     }
 

@@ -109,6 +109,7 @@ public class SaveSystem : MonoBehaviour
         saveData.collectionData = new CollectionData
         {
             collect_sum = collection.collect_sum,
+            player_lv = collection.player_lv,
             li_isCollect = collection.li_isCollect,
             li_isRelicOnTable = collection.li_isRelicOnTable
         };
@@ -226,20 +227,21 @@ public class SaveSystem : MonoBehaviour
         inventory.items = CreateItemList(loaded.inventoryData.items);
         ApplyItem(inventory.money_item, loaded.inventoryData.money_item);
 
+        //플레이어 로드
+        ApplyItemList(player.items, loaded.playerData.items);
+        ApplyItemList(player.minerals, loaded.playerData.minerals);
+        ApplyItemList(player.UseItems, loaded.playerData.UseItems);
+        ApplyItemList(player.UpgradeItems, loaded.playerData.UpgradeItems);
+
         //도감 로드
         collection.collect_sum = loaded.collectionData.collect_sum;
+        collection.player_lv = loaded.collectionData.player_lv;
         collection.li_isCollect = loaded.collectionData.li_isCollect;
         collection.li_isRelicOnTable = loaded.collectionData.li_isRelicOnTable;
 
         //상점 로드
         shop.pick_damage = loaded.shopData.pick_damage;
         shop.lightRadius = loaded.shopData.lightRadius;
-
-        //플레이어 로드
-        ApplyItemList(player.items, loaded.playerData.items);
-        ApplyItemList(player.minerals, loaded.playerData.minerals);
-        ApplyItemList(player.UseItems, loaded.playerData.UseItems);
-        ApplyItemList(player.UpgradeItems, loaded.playerData.UpgradeItems);
 
         //플레이어컨트롤러 로드
         playerController.pickdamage = loaded.playerControllerData.pickDamage;
@@ -337,7 +339,7 @@ public class SaveSystem : MonoBehaviour
     private void ApplyItem(Item item, ItemData data)
     {
         item.count = data.count;
-        item.accumulation_count = data.count;
+        item.accumulation_count = data.accumulation_count;
         item.value = data.value;
         item.ishaveitem = data.ishaveitem;
         item.isalreadySell = data.isalreadySell;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using TMPro;
 
 public class LoadScene : MonoBehaviour
 {
@@ -21,6 +22,12 @@ public class LoadScene : MonoBehaviour
     public GameObject MainMenu;
 
     public bool isAlreadyWatchStory;
+
+    [SerializeField] private GameObject[] Button_List;
+    
+    [SerializeField] private TextMeshProUGUI startText;
+    [SerializeField] private TextMeshProUGUI continueText;
+
 
     private void Awake()
     {
@@ -66,6 +73,25 @@ public class LoadScene : MonoBehaviour
         m_AudioMixer.SetFloat("SE", Mathf.Log10(volume) * 20);
     }
 
+    private void Update()
+    {
+        if(isAlreadyWatchStory == true)
+        {
+            Button_List[0].GetComponent<Button>().interactable = false;
+            Button_List[1].GetComponent<Button>().interactable = true;
+            startText.color = new Color(1, 1, 1, 0.3f);
+            continueText.color = Color.white;
+
+        }
+        else if(isAlreadyWatchStory == false)
+        {
+            Button_List[0].GetComponent<Button>().interactable = true;
+            Button_List[1].GetComponent<Button>().interactable = false;
+            startText.color = Color.white;
+            continueText.color = new Color(1, 1, 1, 0.3f);
+        }
+    }
+
     // 게임시작
     public void GoMain()
     {
@@ -94,6 +120,17 @@ public class LoadScene : MonoBehaviour
         MainMenu.SetActive(false);
         SceneManager.LoadScene("Story");
     }
+    void InvokeLoadMenu()
+    {
+        MainMenu.SetActive(true);
+        SceneManager.LoadScene("Menu");
+    }
+
+    public void GoMenu()
+    {
+        FadeEffect.Instance.OnFade(FadeState.FadeInOut);
+        Invoke("InvokeLoadMenu", 1.5f);
+    }
 
     //설정
     public void OnSettingsButton()
@@ -115,7 +152,10 @@ public class LoadScene : MonoBehaviour
     // 마우스 오버 이벤트
     public void OnPointerEnter(int idx)
     {
-        li_arrowImages[idx].gameObject.SetActive(true);
+        if(Button_List[idx].GetComponent<Button>().interactable == true)
+        {
+            li_arrowImages[idx].gameObject.SetActive(true);
+        }
     }
 
     public void OnPointerExit(int idx)

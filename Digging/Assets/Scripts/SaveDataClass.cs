@@ -7,7 +7,7 @@ public class ItemData
 {
     public string itemName;
     public int count = 0;
-    public int accumulation_count = 0;
+    public int accumulation_count;
     public bool isMineral;
     public bool isRelic;
     public int value;
@@ -25,7 +25,8 @@ public class InventoryData
 [System.Serializable]
 public class CollectionData
 {
-    public int collect_sum; 
+    public int collect_sum;
+    public int player_lv;
     public bool[] li_isCollect;
     public bool[] li_isRelicOnTable;
 }
