@@ -255,6 +255,49 @@ public class SaveSystem : MonoBehaviour
 
     }
 
+    public void LoadForLoadScene()
+    {
+        if (!File.Exists(savePath))
+        {
+            print("저장된 파일이 없습니다");
+            return;
+        }
+
+
+        if (loadSceneScript == null)
+        {
+            loadSceneScript = FindObjectOfType<LoadScene>();
+            if (loadSceneScript == null)
+            {
+                print("로드씬을 참조할 수 없어 로드에 실패하였습니다");
+                return;
+            }
+        }
+
+
+        //로드 시작
+        string jsonForLoad = File.ReadAllText(savePath);
+        SaveData loaded = JsonUtility.FromJson<SaveData>(jsonForLoad);
+
+        loadSceneScript.isAlreadyWatchStory = loaded.loadSceneData.isAlreadyWatchStory;
+    }
+
+
+
+    public void DeleteSaveFile()
+    {
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            print("세이브 파일이 삭제되었습니다.");
+        }
+        else
+        {
+            print("세이브 파일이 존재하지 않습니다.");
+        }
+    }
+
+
     private List<ItemData> ConvertItemList(List<Item> itemList)
     {
         var result = new List<ItemData>();
