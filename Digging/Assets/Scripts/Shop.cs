@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
@@ -19,7 +20,7 @@ public class Shop : MonoBehaviour
     public TextMeshProUGUI shop_pickLvText;
     public TextMeshProUGUI shop_lightLvText;
 
-    public Light2D playerlight;
+    public GameObject playerlight;
 
     public float pick_damage;
     public float lightRadius;
@@ -38,7 +39,7 @@ public class Shop : MonoBehaviour
             Destroy(this.gameObject); // 중복 방지
         }
         pick_damage = playerController.pickdamage;
-        lightRadius = playerlight.pointLightOuterRadius;
+        lightRadius = playerlight.GetComponent<Light2D>().pointLightOuterRadius;
 
         Debug.Log(pick_damage);
         Debug.Log(lightRadius);
@@ -65,11 +66,11 @@ public class Shop : MonoBehaviour
         // 씬이 로드된 후 Player 다시 찾기
         player = FindObjectOfType<Player>();
         playerController = FindObjectOfType<PlayerController>();
-        playerlight = FindAnyObjectByType<Light2D>();
+        playerlight = GameObject.Find("Spot Light 2D");
         Debug.Log(playerlight.gameObject.name);
 
         playerController.pickdamage = pick_damage;
-        playerlight.pointLightOuterRadius = lightRadius;
+        playerlight.GetComponent<Light2D>().pointLightOuterRadius = lightRadius;
 
         if (player != null)
         {
@@ -201,12 +202,12 @@ public class Shop : MonoBehaviour
         {
             Inventory.money_item.count -= player.UpgradeItems[1].value;
             lightRadius += 0.1f;
-            playerlight.pointLightOuterRadius = lightRadius;
+            playerlight.GetComponent<Light2D>().pointLightOuterRadius = lightRadius;
             player.UpgradeItems[1].count++;
             shop_lightLvText.text = "레벨 : " + player.UpgradeItems[1].count;
             player.UpgradeItems[1].value += 50;
 
-            Debug.Log(playerlight.pointLightOuterRadius);
+            Debug.Log(playerlight.GetComponent<Light2D>().pointLightOuterRadius);
             Inventory.FreshSlot();
         }
     }

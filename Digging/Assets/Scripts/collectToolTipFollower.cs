@@ -45,7 +45,7 @@ public class collectToolTipFollower : MonoBehaviour
             tooltipText_list[1].text = "최초 등록 보상 : " + collection.player.items[idx].value.ToString() + "원";
             tooltipText_list[2].text = "누적 등록 보상 : " + collection.player.items[idx].duplicate_value.ToString() + "원";
             tooltipText_list[3].text = "누적 등록 개수 : " + collection.player.items[idx].accumulation_count.ToString() + "개";
-
+            
         }
         //Debug.Log(tooltipPanel.activeSelf);
     }

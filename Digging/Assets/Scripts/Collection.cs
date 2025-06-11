@@ -34,8 +34,13 @@ public class Collection : MonoBehaviour
 
     public int collect_sum;
 
-    [SerializeField] private GameObject badgeUI_Icon;
-    [SerializeField] private TextMeshProUGUI badgeUI_TitleText;
+    public int player_lv;
+    public int collect_count;
+    public bool[] is_collect_complete;
+    public GameObject badgeUI_Icon;
+    public TextMeshProUGUI badgeUI_TitleText;
+
+
 
     public Item guessItem;
 
@@ -68,7 +73,9 @@ public class Collection : MonoBehaviour
         li_isCollect = new bool[player.items.Count];
         li_isRelicOnTable = new bool[player.items.Count];
 
-
+        is_collect_complete = new bool[5];
+        player_lv = 0;
+        collect_count = 0;
         
         collectView_idx = 0;
         Switch_CollectView();
@@ -110,7 +117,7 @@ public class Collection : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogWarning($"CollectionTable[{i}] 오브젝트를 찾을 수 없습니다.");
+                        Debug.Log($"CollectionTable[{i}] 오브젝트를 찾을 수 없습니다.");
                     }
                 }
 
@@ -118,12 +125,12 @@ public class Collection : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Museum 하위에 'CollectionTable' 오브젝트가 없습니다.");
+                Debug.Log("Museum 하위에 'CollectionTable' 오브젝트가 없습니다.");
             }
         }
         else
         {
-            Debug.LogError("'Museum' 오브젝트를 찾을 수 없습니다.");
+            Debug.Log("'Museum' 오브젝트를 찾을 수 없습니다.");
         }
 
         
@@ -133,7 +140,88 @@ public class Collection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Badge_nameTag_Update();
+    }
+
+    public void Badge_nameTag_Update()
+    {
+        switch (player_lv)
+        {
+            case 0:
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[0].itemImage;
+                badgeUI_TitleText.text = "입문자";
+                break;
+            case 1:
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[1].itemImage;
+                badgeUI_TitleText.text = "초심자";
+                break;
+            case 2:
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[1].itemImage;
+                badgeUI_TitleText.text = "수집가";
+                break;
+            case 3:
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[2].itemImage;
+                badgeUI_TitleText.text = "전문가";
+                break;
+            case 4:
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[2].itemImage;
+                badgeUI_TitleText.text = "큐레이터";
+                break;
+            case 5:
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[3].itemImage;
+                badgeUI_TitleText.text = "고고학자";
+                break;
+
+        }
+    }
+
+    public void collection_Lv_Check()
+    {
+        collect_count = 0;
+        switch (player_lv)
+        {
+            case 0:
+                for (int i = 0; i < 10; i++)
+                {
+                    if(li_isRelicOnTable[i] == true)
+                    {
+                        collect_count++;
+                    }
+                }
+                if(collect_count == 10)
+                {
+                    is_collect_complete[player_lv] = true;
+                    rewardButton_List[0].GetComponent<Button>().interactable = true;
+                }
+                break;
+            case 1:
+                for (int i = 0; i < 20; i++)
+                {
+                    if (li_isRelicOnTable[i] == true)
+                    {
+                        collect_count++;
+                    }
+                }
+                if (collect_count == 20)
+                {
+                    is_collect_complete[player_lv] = true;
+                    rewardButton_List[0].GetComponent<Button>().interactable = true;
+                }
+                break;
+            case 2:
+                
+                break;
+            case 3:
+                
+                break;
+            case 4:
+                
+                break;
+            case 5:
+                
+                break;
+
+        }
     }
 
     public void Button_ResistRelic(int itemNum)
@@ -148,6 +236,8 @@ public class Collection : MonoBehaviour
             UpdateOnTable(itemNum);
             collect_sum += 1;
             Inventory.SellItem(player.items[itemNum]);
+
+            collection_Lv_Check();
         }
         
     }
@@ -253,56 +343,53 @@ public class Collection : MonoBehaviour
         
         if(idx == 0)
         {
-            if(collect_sum >= 10)
+            if (is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(badge_items[0], 1);
-                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[0].itemImage;
-                badgeUI_TitleText.text = "초심자";
+                player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
             }
             
         }
         else if (idx == 1)
         {
-            if (collect_sum >= 20)
+            if (is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(Inventory.money_item, 1000);
                 Inventory.money += 1000;
                 Inventory.FreshSlot();
-                badgeUI_TitleText.text = "수집가";
+                player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
             }
             
         }
         else if (idx == 2)
         {
-            if (collect_sum >= 30)
+            if (is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(badge_items[1], 1);
-                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[1].itemImage;
-                badgeUI_TitleText.text = "전문가";
+                player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
             }
             
         }
         else if (idx == 3)
         {
-            if (collect_sum >= 40)
+            if (is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(Inventory.money_item, 3000);
                 Inventory.money += 3000;
                 Inventory.FreshSlot();
-                badgeUI_TitleText.text = "큐레이터";
+                player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
             }
         }
         else if (idx == 4)
         {
-            if (collect_sum >= 50)
+            if (is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(badge_items[2], 1);
-                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[2].itemImage;
-                badgeUI_TitleText.text = "고고학자";
+                player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
             }
         }

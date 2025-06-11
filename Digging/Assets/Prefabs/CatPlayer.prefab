@@ -432,6 +432,7 @@ MonoBehaviour:
   PausePanel: {fileID: 0}
   DiePanel: {fileID: 0}
   ResetPanel: {fileID: 0}
+  SavePanel: {fileID: 0}
 --- !u!1 &6906579748772118797
 GameObject:
   m_ObjectHideFlags: 0
