@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI stagetimerText;
 
     private float totalTime = 300f;
-    [SerializeField] private float remainingTime;
+    public float remainingTime;
     public bool isRunning = true;
     
     void Awake()

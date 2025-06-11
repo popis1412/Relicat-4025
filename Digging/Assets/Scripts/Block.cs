@@ -100,9 +100,6 @@ public class Block : MonoBehaviour
     bool boxOpen = false;
     float boxDestroyCount = 2f;
 
-    bool isItemDrop = false;
-    int itemDropCount = 0;
-
     private void Awake()
     {
         spriteRenderer = this.GetComponent<SpriteRenderer>();
@@ -126,22 +123,16 @@ public class Block : MonoBehaviour
         }
 
         dropItemScript.setDropItem(itemType, itemCode, dropItemSprite, addEA);
-        //if (itemDropCount > 1)
-        //    itemDropCount--;
-        //else
-        //{
-        //    Destroy(this.gameObject);
-        //}
     }
     public void ChangeBlock(int newBlockType)   //블럭 교체 명령
     {
-        //-1은 무적블럭, 0은 normal, 1은 보물상자, 2는 석탄, 3은 단단한바위, 4는 유물, 5는 몬스터, 6은 모래, 7은 구리, 8은 철(은), 9는 금, 10은 루비, 11은 다이아
+        //-2는 세이브데이터에 안들어갈 무적블럭,-1은 무적블럭, 0은 normal, 1은 보물상자, 2는 석탄, 3은 단단한바위, 4는 유물, 5는 몬스터, 6은 모래, 7은 구리, 8은 철(은), 9는 금, 10은 루비, 11은 다이아
         if (blockType != 0)
             Debug.Log(transform.position + " : 잘못된 호출");
-        if (blockType != -1)
+        if (blockType != -2)
         {
             blockType = newBlockType;
-            if (newBlockType == -1)
+            if (newBlockType == -1 || newBlockType == -2)
             {
                 spriteRenderer.sprite = block_unbreakable_0;
                 blockHealth = 100;
@@ -406,7 +397,6 @@ public class Block : MonoBehaviour
                 else if (blockType == 2)
                 {
                     //석탄 부쉈을 때
-                    isItemDrop = true;
                     ItemDrop(1, 0, playerScript, 1);
                 }
                 else if (blockType == 3)
@@ -435,7 +425,6 @@ public class Block : MonoBehaviour
                 else if (blockType == 7)
                 {
                     //구리 부쉈을 때
-                    isItemDrop = true;
                     ItemDrop(1, 1, playerScript, 1);
                 }
                 else if (blockType == 8)
@@ -480,6 +469,13 @@ public class Block : MonoBehaviour
                 Destroy(this.gameObject);//무조건 이 if문에서 맨 마지막으로
             }
         }
+    }
+
+    public void BlockReload()
+    {
+        blocksDictionary.blockPosition.Remove(this.transform.position);
+
+        Destroy(this.gameObject);
     }
 
     public int DropCheck(Vector2 dropCheckPosition, int checkDropHeight) //모래 얼마나 떨어질지 계산(재귀함수)
@@ -551,8 +547,6 @@ public class Block : MonoBehaviour
                 Player playerScript = getPlayer.GetComponent<Player>();
                 int randCoal = Random.Range(1, 11);
                 int randCopper = Random.Range(1, 11);
-                //itemDropCount += randCoal;
-                //itemDropCount += randCopper;
                 
                 for (int i = 0; i < randCoal; i++)
                 {
