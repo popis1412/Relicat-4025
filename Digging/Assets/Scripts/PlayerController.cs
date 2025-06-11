@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     // Weapons
     Sprite pickAxe;
-    public float pickdamage = 6f;
+    public float pickdamage = 1f;
     Sprite weaponSpr;
     [SerializeField] GameObject weapon;
     Vector3 pivot;
@@ -95,6 +95,11 @@ public class PlayerController : MonoBehaviour
         input.Player.Jump.started += ctx => isFlying = true;
         input.Player.Jump.performed += ctx => flyInput = IsStuckInSand() ? 0f : ctx.ReadValue<float>();
         input.Player.Jump.canceled += ctx => { flyInput = 0; isFlying = false; };
+    }
+
+    private void OnDisable()
+    {
+        input.Disable();
     }
 
     private void Update()

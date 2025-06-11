@@ -87,6 +87,7 @@ public class LoadScene : MonoBehaviour
     {
         MainMenu.SetActive(false);
         SceneManager.LoadScene("Main");
+        SaveSystem.Instance.Load();
     }
     void InvokeLoadStory()
     {

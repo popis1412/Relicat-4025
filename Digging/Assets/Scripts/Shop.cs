@@ -60,6 +60,8 @@ public class Shop : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if(scene.buildIndex != 2) return;
+
         // 씬이 로드된 후 Player 다시 찾기
         player = FindObjectOfType<Player>();
         playerController = FindObjectOfType<PlayerController>();
