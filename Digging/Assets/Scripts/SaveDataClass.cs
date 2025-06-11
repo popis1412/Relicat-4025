@@ -63,6 +63,29 @@ public class LoadSceneData
 }
 
 [System.Serializable]
+public class LevelManageData
+{
+    public float remainingTime;
+}
+
+
+[System.Serializable]
+public class BlockData
+{
+    public Vector3 blockPosition;
+    public int nowBlockType;
+    public int blockType;
+    public int stageNum;
+    public float blockHealth;
+}
+
+[System.Serializable]
+public class BlocksData
+{
+    public List<BlockData> blockDatas;
+}
+
+[System.Serializable]
 public class SaveData
 {
     public InventoryData inventoryData;
@@ -71,4 +94,6 @@ public class SaveData
     public PlayerData playerData;
     public PlayerControllerData playerControllerData;
     public LoadSceneData loadSceneData;
+    public LevelManageData levelManageData;
+    public BlocksData blocksData;
 }

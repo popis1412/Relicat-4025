@@ -38,6 +38,15 @@ public class Ground : MonoBehaviour
             blockScript.stageNum = stageNum;
             blockScript.blocksDictionary = blocksDictionary;
             blockScript.effectManager = effectManager;
+        }
+    }
+
+    private void Start()
+    {
+
+        for (int i = 0; i < respawnBlcok.Length; i++)
+        {
+            Block blockScript = respawnBlcok[i].GetComponent<Block>();
             blockScript.ChangeBlock(-1);
         }
     }
