@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public Inventory Inventory;
     public Collection Collection;
     public Shop Shop;
+    [SerializeField] PlayerController player;
+
 
     public List<Item> items;
     public List<Item> minerals;
@@ -54,15 +56,20 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject RelicInfoText;
 
     // 체력
-    public List<GameObject> li_PlayerHearts = new List<GameObject>(new GameObject[3]);           //플레이어 생명 오브젝트 리스트
-    public Dictionary<GameObject, bool> DicPlayerHeart = new Dictionary<GameObject, bool>();
+    public GameObject[] li_PlayerHearts;           //플레이어 생명 오브젝트 리스트
+    public Dictionary<string, bool> DicPlayerHeart = new Dictionary<string, bool>();
 
-    // 일시정지 탭
+    // 일시정지
     [SerializeField] private GameObject PausePanel;
     private bool isPaused = false;
 
-    [SerializeField] PlayerController player;
+    // 사망
+    [SerializeField] private GameObject DiePanel;
 
+    // 지형 리셋
+    [SerializeField] private GameObject ResetPanel;
+    private bool isNearReset;
+    private bool isOnResetUI;
 
     private void Awake()
     {
@@ -92,10 +99,7 @@ public class Player : MonoBehaviour
         //    UpgradeItems[i].value = 10;
         //}
 
-        //플레이어 생명 딕셔너리에 플레이어 생명 리스트에 있는 오브젝트를 저장하고 bool 변수 지정
-        DicPlayerHeart.Add(li_PlayerHearts[0], true);
-        DicPlayerHeart.Add(li_PlayerHearts[1], true);
-        DicPlayerHeart.Add(li_PlayerHearts[2], true);
+        
 
         player = GetComponent<PlayerController>();
 
@@ -104,7 +108,6 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     private IEnumerator Start()
     {
-
         // UI 시작/도착 포지션 지정
         Inventory_StartPos = new Vector3(-200f, Screen.height / 2, 0f);
         Inventory_EndPos = new Vector3(0f, Screen.height / 2, 0f);
@@ -136,64 +139,98 @@ public class Player : MonoBehaviour
             Debug.LogError("Inventory 연결 실패: Inventory.Instance가 null입니다.");
         }
 
+
+        if (Inventory != null)
+        {
+            Transform collectionParent = Inventory.transform.Find("HealthPanel");
+            if (collectionParent != null)
+            {
+                li_PlayerHearts = new GameObject[3];
+                for (int i = 0; i < li_PlayerHearts.Length; i++)
+                {
+                    Transform child = collectionParent.Find(i.ToString());
+                    if (child != null)
+                    {
+                        li_PlayerHearts[i] = child.gameObject;
+                        DicPlayerHeart[li_PlayerHearts[i].name] = true;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"li_PlayerHearts[{i}] 오브젝트를 찾을 수 없습니다.");
+                    }
+                }
+
+            }
+        }
+
         Inventory_obj.transform.position = new Vector3(-200f, Screen.height / 2, 0f);
+        shopUIPanel.transform.position = new Vector3(2420f, Screen.height / 2, 0f);
+        CollectUIPanel.transform.position = new Vector3(2420f, Screen.height / 2, 0f);
 
         Inventory.badgePanel.gameObject.SetActive(true);
         Inventory.moneyPanel.gameObject.SetActive(true);
-        Inventory.healthPanel.gameObject.SetActive(true);
+        Inventory.healthPanel.gameObject.SetActive(true); 
+        LevelManager.instance.stagetargetUI.SetActive(true);
+        LevelManager.instance.isRunning = true;
+        player.input.Enable();
     }
 
     // Update is called once per frame
     void Update()
     {
         currentTime += Time.deltaTime;
-        Interaction_Inventory();
-        Interaction_F();
+        if(isPaused == false)
+        {
+            Interaction_Inventory();
+            Interaction_F();
+            GroundAutoHeal();
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            SceneManager.LoadScene("csytest");
-        }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                SceneManager.LoadScene("csytest");
+            }
 
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            LostPlayerLife(-1);
-        }
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            AddPlayerLife(1);
-        }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                LostPlayerLife(-1);
+            }
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                AddPlayerLife(1);
+            }
 
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            Inventory.AddItem(minerals[0], 1);
-        }
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            Inventory.AddItem(minerals[3], 1);
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            Inventory.AddItem(items[Random.Range(0,20)], 1);
-        }
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            Inventory.AddItem(items[5], 1);
-        }
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            Inventory.AddItem(items[7], 1);
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Collection.collect_sum += 10;
-        }
-        // 잠시 추가함.
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-            Inventory.AddItem(UseItems[0], 3);
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-            Inventory.AddItem(UseItems[1], 3);
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Inventory.AddItem(minerals[0], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                Inventory.AddItem(minerals[3], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                Inventory.AddItem(items[Random.Range(0, 20)], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                Inventory.AddItem(items[5], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                Inventory.AddItem(items[7], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                Collection.collect_sum += 10;
+            }
+            // 잠시 추가함.
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+                Inventory.AddItem(UseItems[0], 3);
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+                Inventory.AddItem(UseItems[1], 3);
 
+            
+        }
         // 일시정지 esc
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -220,13 +257,17 @@ public class Player : MonoBehaviour
 
         if (isPaused)
         {
-            Time.timeScale = 0f; // 게임 일시정지
+            //Time.timeScale = 0f; // 게임 일시정지
             PausePanel.SetActive(true); // UI 표시
+            player.input.Disable();
+            LevelManager.instance.isRunning = false;
         }
         else
         {
-            Time.timeScale = 1f; // 게임 재개
+            //Time.timeScale = 1f; // 게임 재개
             PausePanel.SetActive(false); // UI 숨김
+            player.input.Enable();
+            LevelManager.instance.isRunning = true;
         }
     }
 
@@ -241,9 +282,9 @@ public class Player : MonoBehaviour
     {
         FadeEffect.Instance.OnFade(FadeState.FadeInOut);
         isPaused = false;
-        Time.timeScale = 1f; // 게임 재개
+        //Time.timeScale = 1f; // 게임 재개
         PausePanel.SetActive(false); // UI 숨김
-        
+        LevelManager.instance.isRunning = false;
         Invoke("InvokeGoMainMenu", 1.5f);
     }
     void InvokeGoMainMenu()
@@ -253,6 +294,8 @@ public class Player : MonoBehaviour
         Inventory.badgePanel.SetActive(false);
         Inventory.moneyPanel.SetActive(false);
         Inventory.healthPanel.SetActive(false);
+        LevelManager.instance.stagetargetUI.SetActive(false);
+
     }
 
     // 인벤토리 상호작용
@@ -427,9 +470,6 @@ public class Player : MonoBehaviour
                 isInventoryMoving = true;
             }
 
-            
-            
-
         }
         else if (!isNearCollection && isOnCollect && !isInventoryMoving && !isCollectMoving)
         {
@@ -438,12 +478,47 @@ public class Player : MonoBehaviour
             isCollectMoving = true;
 
         }
+
+        // 리셋 상호작용
+        if (isNearReset && Input.GetKeyDown(KeyCode.F))
+        {
+            if (!isOnResetUI)
+            {
+                isOnResetUI = true;
+                ResetPanel.SetActive(true);
+            }
+            
+        }
+    }
+
+    // 지형 리셋 버튼
+    public void Reset_Ground_Button()
+    {
+        if (Inventory.money_item.count >= 100)
+        {
+            Inventory.money_item.count -= 100;
+            Inventory.FreshSlot();
+
+            LoadScene.instance.GoMain();
+
+            isOnResetUI = false;
+            ResetPanel.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("돈이 부족합니다");
+        }
+    }
+    public void Reset_Close_Button()
+    {
+        isOnResetUI = false;
+        ResetPanel.SetActive(false);
     }
 
     // 박물관 입장/퇴장 페이드 인아웃
     void InvokeInMuseum()
     {
-        gameObject.transform.position = new Vector3(50f, 0.5f, 0f);
+        gameObject.transform.position = new Vector3(250f, 0.5f, 0f);
         isInMuseum = true;
 
         if (SoundManager.Instance.BGMSoundPlay.isPlaying)
@@ -472,17 +547,19 @@ public class Player : MonoBehaviour
     public void LostPlayerLife(int hp)
     {
         
-        for (int i = li_PlayerHearts.Count-1; i >= 0; i--)
+        for (int i = li_PlayerHearts.Length-1; i >= 0; i--)
         {
-            if (DicPlayerHeart[li_PlayerHearts[i]] == true)
+            if (DicPlayerHeart[li_PlayerHearts[i].name] == true)
             {
-                DicPlayerHeart[li_PlayerHearts[i]] = false;
+                DicPlayerHeart[li_PlayerHearts[i].name] = false;
                 li_PlayerHearts[i].SetActive(false);
                 
-                if (DicPlayerHeart[li_PlayerHearts[0]] == false)
+                if (DicPlayerHeart[li_PlayerHearts[0].name] == false)
                 {
-                    // 플레이어 사망 함수 호출
-                    player.Die();
+                    DiePanel.SetActive(true);
+                    isPaused = true;
+                    //Time.timeScale = 0f; // 게임 일시정지
+                    player.input.Disable();
                 }
                 break;
             }
@@ -490,17 +567,51 @@ public class Player : MonoBehaviour
         
     }
 
+    // 리스폰 버튼
+    public void Respawn_Button()
+    {
+        // 돈이 있으면 부활
+        if(Inventory.money_item.count >= 50)
+        {
+            Inventory.money_item.count -= 50;
+            Inventory.FreshSlot();
+
+            // 플레이어 사망 함수 호출
+            player.Die(); // 지상이동, 체력회복
+            DiePanel.SetActive(false);
+            isPaused = false;
+            //Time.timeScale = 1f; // 게임 재개
+            player.input.Enable();
+        }
+        else
+        {
+            Debug.Log("돈이 부족합니다");
+        }
+    }
+
+    public void Restart_LastSave()
+    {
+        DiePanel.SetActive(false);
+        isPaused = false;
+        Time.timeScale = 1f; // 게임 재개
+        AddPlayerLife(3);
+
+        //SceneManager.LoadScene("Main");
+
+        LoadScene.instance.GoMain();
+    }
+
     // 플레이어 체력 증가
     public void AddPlayerLife(int hp)
     {
         
-        for (int i = 0; i < li_PlayerHearts.Count; i++)
+        for (int i = 0; i < li_PlayerHearts.Length; i++)
         {
             int healed = 0;
 
-            if (DicPlayerHeart[li_PlayerHearts[i]] == false)
+            if (DicPlayerHeart[li_PlayerHearts[i].name] == false)
             {
-                DicPlayerHeart[li_PlayerHearts[i]] = true;
+                DicPlayerHeart[li_PlayerHearts[i].name] = true;
                 li_PlayerHearts[i].SetActive(true);
                 healed++;
 
@@ -508,6 +619,15 @@ public class Player : MonoBehaviour
             }
         }
 
+    }
+    
+    // 지상 위 자동 체력 회복
+    public void GroundAutoHeal()
+    {
+        if (this.gameObject.transform.position.y > 0 && li_PlayerHearts[2] != null && li_PlayerHearts[2].activeSelf == false)
+        {
+            AddPlayerLife(li_PlayerHearts.Length - 1);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -542,6 +662,11 @@ public class Player : MonoBehaviour
             
             Debug.Log("진열장에 접근했습니다.");
         }
+        if (other.CompareTag("Reset"))
+        {
+            isNearReset = true;
+            Debug.Log("리셋에 접근했습니다. F 키로 상호작용.");
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -565,6 +690,11 @@ public class Player : MonoBehaviour
         {
             RelicInfoUIPanel.SetActive(false);
             Debug.Log("진열장에서 벗어났습니다.");
+        }
+        if (other.CompareTag("Reset"))
+        {
+            isNearReset = false;
+            Debug.Log("리셋에서 벗어났습니다.");
         }
     }
 

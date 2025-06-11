@@ -115,7 +115,7 @@ public class Bomb : MonoBehaviour
                     player.TakeDamage(1, transform);
             }
 
-            if(hit.gameObject.name == "torch")
+            if(hit.gameObject.name == "Torch")
             {
                 torch torch = hit.GetComponent<torch>();
                 if(torch != null)

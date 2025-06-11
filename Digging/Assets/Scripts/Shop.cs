@@ -16,10 +16,10 @@ public class Shop : MonoBehaviour
     public int shopView_idx;
     [SerializeField] private GameObject[] shopList;
 
-    [SerializeField] private TextMeshProUGUI shop_pickLvText;
-    [SerializeField] private TextMeshProUGUI shop_lightLvText;
+    public TextMeshProUGUI shop_pickLvText;
+    public TextMeshProUGUI shop_lightLvText;
 
-    [SerializeField] private Light2D playerlight;
+    public Light2D playerlight;
 
     public float pick_damage;
     public float lightRadius;
@@ -60,6 +60,8 @@ public class Shop : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if(scene.buildIndex != 2) return;
+
         // 씬이 로드된 후 Player 다시 찾기
         player = FindObjectOfType<Player>();
         playerController = FindObjectOfType<PlayerController>();
