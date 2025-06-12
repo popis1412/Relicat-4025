@@ -52,9 +52,9 @@ public class LevelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SaveSystem.Instance.DeleteSaveFile();
-        SaveSystem.Instance.Load();
         remainingTime = totalTime;
+        //SaveSystem.Instance.DeleteSaveFile();
+        SaveSystem.Instance.Load();
         originalTextColor = stagetargetNumText.color;
     }
 
