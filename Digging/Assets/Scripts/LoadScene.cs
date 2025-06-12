@@ -73,6 +73,11 @@ public class LoadScene : MonoBehaviour
         m_AudioMixer.SetFloat("SE", Mathf.Log10(volume) * 20);
     }
 
+    private void Start()
+    {
+        SaveSystem.Instance.LoadForLoadScene();
+    }
+
     private void Update()
     {
         if(isAlreadyWatchStory == true)
@@ -113,7 +118,7 @@ public class LoadScene : MonoBehaviour
     {
         MainMenu.SetActive(false);
         SceneManager.LoadScene("Main");
-        SaveSystem.Instance.Load();
+        //SaveSystem.Instance.Load();
     }
     void InvokeLoadStory()
     {

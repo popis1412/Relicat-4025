@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     private bool isNearMuseum = false;
     private bool isInMuseum = false;
     private bool isNearCollection = false;
+    private bool isActiveMuseum = false;
 
     Vector3 Collect_StartPos;
     Vector3 Collect_EndPos;
@@ -399,8 +400,9 @@ public class Player : MonoBehaviour
         if (isNearMuseum && Input.GetKeyDown(KeyCode.F))
         {
 
-            if (!isInMuseum)
+            if (!isInMuseum && isActiveMuseum == false)
             {
+                isActiveMuseum = true;
                 FadeEffect.Instance.OnFade(FadeState.FadeInOut);
                 Invoke("InvokeInMuseum", 1.5f);
                 SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[16]);
@@ -421,8 +423,9 @@ public class Player : MonoBehaviour
                 
 
             }
-            else if (isInMuseum)
+            else if (isInMuseum && isActiveMuseum == false)
             {
+                isActiveMuseum = true;
                 FadeEffect.Instance.OnFade(FadeState.FadeInOut);
                 Invoke("InvokeOutMuseum", 1.5f);
                 SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[17]);
@@ -534,6 +537,7 @@ public class Player : MonoBehaviour
     {
         gameObject.transform.position = new Vector3(250f, 0.5f, 0f);
         isInMuseum = true;
+        isActiveMuseum = false;
 
         if (SoundManager.Instance.BGMSoundPlay.isPlaying)
         {
@@ -547,6 +551,7 @@ public class Player : MonoBehaviour
     {
         gameObject.transform.position = new Vector3(18f, 0.5f, 0f);
         isInMuseum = false;
+        isActiveMuseum = false;
 
         if (SoundManager.Instance.BGMSoundPlay.isPlaying)
         {
