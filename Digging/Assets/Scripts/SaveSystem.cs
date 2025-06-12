@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 public class SaveSystem : MonoBehaviour
 {
@@ -16,6 +17,12 @@ public class SaveSystem : MonoBehaviour
     public PlayerController playerController;
 
     public LoadScene loadSceneScript;
+
+    public LevelManager levelManager;
+
+    public BlocksDictionary blocksDictionary;
+
+    [SerializeField] private GameObject blockPrefab;
 
     public static SaveSystem Instance;
     private string savePath => Application.persistentDataPath + "/SaveData.json";
@@ -95,6 +102,26 @@ public class SaveSystem : MonoBehaviour
             }
         }
 
+        if(levelManager == null)
+        {
+            levelManager = FindObjectOfType<LevelManager>();
+            if(levelManager == null)
+            {
+                print("레벨매니저를 참조할 수 없어 세이브에 실패하였습니다");
+                return;
+            }
+        }
+
+        if(blocksDictionary == null)
+        {
+            blocksDictionary = FindObjectOfType<BlocksDictionary>();
+            if(blocksDictionary == null)
+            {
+                print("블록딕셔너리를 참조할 수 없어 세이브에 실패하였습니다");
+                return;
+            }
+        }
+
         var saveData = new SaveData();
 
 
@@ -142,6 +169,18 @@ public class SaveSystem : MonoBehaviour
             isAlreadyWatchStory = loadSceneScript.isAlreadyWatchStory
         };
 
+        //레벨매니저 저장
+        saveData.levelManageData = new LevelManageData
+        {
+            remainingTime = levelManager.remainingTime
+        };
+        
+
+        //블록들 저장
+        saveData.blocksData = new BlocksData
+        {
+            blockDatas = ConvertBlockList(blocksDictionary)
+        };
 
         //저장할 파일을 json형태로 변경 및 위에서 선언한 savePath경로상에 저장
         string jsonForSave = JsonUtility.ToJson(saveData, true);
@@ -218,6 +257,25 @@ public class SaveSystem : MonoBehaviour
             }
         }
 
+        if (levelManager == null)
+        {
+            levelManager = FindObjectOfType<LevelManager>();
+            if (levelManager == null)
+            {
+                print("레벨매니저를 참조할 수 없어 세이브에 실패하였습니다");
+                return;
+            }
+        }
+
+        if (blocksDictionary == null)
+        {
+            blocksDictionary = FindObjectOfType<BlocksDictionary>();
+            if (blocksDictionary == null)
+            {
+                print("블록딕셔너리를 참조할 수 없어 세이브에 실패하였습니다");
+                return;
+            }
+        }
 
         //로드 시작
         string jsonForLoad = File.ReadAllText(savePath);
@@ -248,6 +306,46 @@ public class SaveSystem : MonoBehaviour
 
         //로드씬 로드
         loadSceneScript.isAlreadyWatchStory = loaded.loadSceneData.isAlreadyWatchStory;
+
+        //레벨매니저 로드
+        levelManager.remainingTime = loaded.levelManageData.remainingTime;
+
+        //블록들 로드
+        List<GameObject> reloadBlocks= new List<GameObject>();
+        foreach(GameObject obj in blocksDictionary.blockPosition.Values)
+        {
+            Block blockScript = obj.GetComponent<Block>();
+            if (blockScript != null)
+            {
+                if(blockScript.blockType != -2)
+                {
+                    reloadBlocks.Add(obj);
+                }
+            }
+        }
+        foreach(GameObject obj in reloadBlocks)
+        {
+            obj.GetComponent<Block>().BlockReload();
+        }
+
+        foreach(BlockData blockData in loaded.blocksData.blockDatas)
+        {
+            GameObject newBlock = Instantiate(blockPrefab);
+            Block blockScript = newBlock.GetComponent<Block>();
+
+            newBlock.transform.position = blockData.blockPosition;
+            blocksDictionary.blockPosition.Add(blockData.blockPosition, newBlock);
+            blockScript.blocksDictionary = blocksDictionary;
+            BlockBreakingEffectManager effectManager = FindObjectOfType<BlockBreakingEffectManager>();
+            if (effectManager != null)
+                blockScript.effectManager = effectManager;
+            blockScript.nowBlockType = blockData.nowBlockType;
+            blockScript.stageNum = blockData.stageNum;
+            blockScript.ChangeBlock(blockData.blockType);
+            blockScript.blockHealth = blockData.blockHealth;
+
+        }
+        
 
         //UI재갱신(아마도 도감도 갱신 넣어야할 예정)
         inventory.FreshSlot();
@@ -396,6 +494,38 @@ public class SaveSystem : MonoBehaviour
                 }
             }
         }
+
+        return result;
+    }
+
+    private List<BlockData> ConvertBlockList(BlocksDictionary blocksDictionary)
+    {
+        var result = new List<BlockData>();
+
+        foreach(GameObject obj in blocksDictionary.blockPosition.Values)
+        {
+            Block blockScript = obj.GetComponent<Block>();
+            if (blockScript != null)
+            {
+                if(blockScript.blockType != -2)
+                {
+                    result.Add(ConvertBlock(obj, blockScript));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private BlockData ConvertBlock(GameObject obj, Block blockScript)
+    {
+        var result = new BlockData();
+
+        result.blockPosition = obj.transform.position;
+        result.nowBlockType = blockScript.nowBlockType;
+        result.blockType = blockScript.blockType;
+        result.stageNum = blockScript.stageNum;
+        result.blockHealth = blockScript.blockHealth;
 
         return result;
     }

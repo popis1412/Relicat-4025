@@ -24,8 +24,8 @@ public class SetUnbreakable : MonoBehaviour
     {
         for (int i = 0; i < blocks.Length; i++)
         {
-            blocks[i].GetComponent<Block>().nowBlockType = -1;
-            blocks[i].GetComponent<Block>().ChangeBlock(-1);
+            blocks[i].GetComponent<Block>().nowBlockType = -2;
+            blocks[i].GetComponent<Block>().ChangeBlock(-2);
         }
     }
 }

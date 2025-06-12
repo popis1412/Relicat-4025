@@ -1,4 +1,4 @@
-Library: D:\Relicat-4025-Github\Relicat-4025\Digging\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
+Library: D:\Relicat-4025\Digging\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
 --platform=Windows
 --backend=burst-llvm-16
 --target=X64_SSE2
@@ -9,10 +9,11 @@ Library: D:\Relicat-4025-Github\Relicat-4025\Digging\Temp\StagingArea\Data\Plugi
 --target-framework=NetFramework
 --linker-options=PdbAltPath="Digging_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=D:\Relicat-4025-Github\Relicat-4025\Digging\Temp\Burst
+--temp-folder=D:\Relicat-4025\Digging\Temp\Burst
+--debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/2021.3.45f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=D:\Relicat-4025-Github\Relicat-4025\Digging\Library\Burst
---output=D:\Relicat-4025-Github\Relicat-4025\Digging\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=D:\Relicat-4025\Digging\Library\Burst
+--output=D:\Relicat-4025\Digging\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
@@ -38,10 +39,11 @@ Library: D:\Relicat-4025-Github\Relicat-4025\Digging\Temp\StagingArea\Data\Plugi
 --target-framework=NetFramework
 --linker-options=PdbAltPath="Digging_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=D:\Relicat-4025-Github\Relicat-4025\Digging\Temp\Burst
+--temp-folder=D:\Relicat-4025\Digging\Temp\Burst
+--debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/2021.3.45f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=D:\Relicat-4025-Github\Relicat-4025\Digging\Library\Burst
---output=D:\Relicat-4025-Github\Relicat-4025\Digging\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=D:\Relicat-4025\Digging\Library\Burst
+--output=D:\Relicat-4025\Digging\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
