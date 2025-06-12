@@ -61,6 +61,16 @@ public class PlayerController : MonoBehaviour
     Animator anim;
     [SerializeField] Animator jetpack;
 
+    public AudioSource jetpackAudioSourse;
+    private bool isplayingjetpack = false;
+
+    public AudioSource footstepAudioSourse01;
+    public AudioSource footstepAudioSourse02;
+    private bool switchStepSound = false;
+
+    public AudioSource diggingAudioSourse;
+    private bool isDigSound = false;
+
     private void Awake()
     {
         input = new PlayerControl();
@@ -108,8 +118,11 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // 단축키 아이템 사용
-        if(Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
             UseItem(0, bomb, GetBombPosition());
+        }
+            
         if(Input.GetKeyDown(KeyCode.E))
             UseItem(1, torch, GetTorchPosition());
 
@@ -118,6 +131,8 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("FlySpeed", rb.velocity.magnitude);
         anim.SetBool("IsFlying", isFlying);
         anim.SetBool("IsDigging", isDigging);
+
+        HandleDigging();
     }
 
     private void FixedUpdate()
@@ -125,7 +140,7 @@ public class PlayerController : MonoBehaviour
 
         UpdateJumpAxisSmoothly();
         HandleMovement();
-        HandleDigging();
+        
     }
 
     // 비행 입력을 부드럽게 적용(0 ~ 1 사이 값을 천천히 변화)
@@ -153,6 +168,20 @@ public class PlayerController : MonoBehaviour
         {
             float rotY = moveInput.x > 0 ? 0f : 180f;
             transform.rotation = Quaternion.Euler(0f, rotY, 0f);
+
+            if (switchStepSound && !footstepAudioSourse02.isPlaying && isGround)
+            {
+                switchStepSound = !switchStepSound;
+                footstepAudioSourse01.Play();
+                
+                
+            }
+            else if (!switchStepSound && !footstepAudioSourse01.isPlaying && isGround)
+            {
+                switchStepSound = !switchStepSound;
+                footstepAudioSourse02.Play();
+            }
+            
         }
         //print($"isFlying: {isFlying}, verticalVelocity: {verticalVelocity}");
     }
@@ -169,6 +198,7 @@ public class PlayerController : MonoBehaviour
             jetpack.speed = 1;
             verticalSpeed += flyAcceleration * flyAxis * Time.fixedDeltaTime;
             verticalSpeed = Mathf.Min(verticalSpeed, flySpeed);
+
         }
         else
         {
@@ -181,6 +211,17 @@ public class PlayerController : MonoBehaviour
         }
 
         //print(verticalSpeed);
+
+        if (isFlying && isplayingjetpack == false)
+        {
+            isplayingjetpack = true;
+            jetpackAudioSourse.Play();
+        }
+        else if(!isFlying)
+        {
+            isplayingjetpack = false;
+            jetpackAudioSourse.Stop();
+        }
 
         // 상승 중이면 상속도 우선, 아니면 중력 등 자연스러운 하강 유지
         return isFlying || rb.velocity.y > 0f ? verticalSpeed : rb.velocity.y;
@@ -200,7 +241,7 @@ public class PlayerController : MonoBehaviour
 
         pivot = transform.Find("Pivot").position;
 
-        t += Time.fixedDeltaTime * 2;
+        t += Time.fixedDeltaTime;
         t = Mathf.Clamp01(t);
 
 
@@ -226,6 +267,83 @@ public class PlayerController : MonoBehaviour
         {
             isDigging = true;
             block.BlockDestroy(Time.deltaTime * pickdamage, playerScript);
+
+            // Dig 사운드
+            // 일반 흙 블록
+            if(block.blockType == 0 ||  block.blockType == 4 || block.blockType == 5)
+            {
+                int idx = Random.Range(5, 9);
+                if(isDigging && isDigSound == false)
+                {
+                    diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[idx]);
+                    isDigSound = true;
+                }
+                if (!isDigging && diggingAudioSourse.isPlaying == true)
+                {
+                    diggingAudioSourse.Stop();
+                    isDigSound = false;
+                }
+                if (diggingAudioSourse.isPlaying == false)
+                {
+                    isDigSound = false;
+                }
+            }
+            // 광물 블록
+            if (block.blockType == 2 || block.blockType == 7 || block.blockType == 8 || block.blockType == 9 || block.blockType == 10 || block.blockType == 11)
+            {
+                if (isDigging && isDigSound == false)
+                {
+                    diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[12]);
+                    isDigSound = true;
+                }
+                if (!isDigging && diggingAudioSourse.isPlaying == true)
+                {
+                    diggingAudioSourse.Stop();
+                    isDigSound = false;
+                }
+                if (diggingAudioSourse.isPlaying == false)
+                {
+                    isDigSound = false;
+                }
+            }
+            // 바위 블록
+            if (block.blockType == 3 || block.blockType == -1)
+            {
+                int idx = Random.Range(9, 12);
+                if (isDigging && isDigSound == false)
+                {
+                    diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[idx]);
+                    isDigSound = true;
+                }
+                if (!isDigging && diggingAudioSourse.isPlaying == true)
+                {
+                    diggingAudioSourse.Stop();
+                    isDigSound = false;
+                }
+                if (diggingAudioSourse.isPlaying == false)
+                {
+                    isDigSound = false;
+                }
+            }
+            // 모래 블록
+            if (block.blockType == 6)
+            {
+                
+                if (isDigging && isDigSound == false)
+                {
+                    diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[8]);
+                    isDigSound = true;
+                }
+                if(!isDigging && diggingAudioSourse.isPlaying == true)
+                {
+                    diggingAudioSourse.Stop();
+                    isDigSound = false;
+                }
+                if (diggingAudioSourse.isPlaying == false)
+                {
+                    isDigSound = false;
+                }
+            }
         }
     }
 
@@ -280,7 +398,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage, Transform attacker)
     {
         currentHP -= damage;
-
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[27]);
         playerScript.LostPlayerLife(currentHP);
         StartCoroutine(DamageEffect(attacker.position));
     }
@@ -332,6 +450,7 @@ public class PlayerController : MonoBehaviour
             item.count--;
             playerScript.Inventory.FreshSlot();
             Debug.Log($"아이템 사용: {item.itemName}, 남은 개수: {item.count}");
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[18]);
         }
         else
         {

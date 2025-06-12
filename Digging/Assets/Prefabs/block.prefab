@@ -177,10 +177,14 @@ MonoBehaviour:
   boxCloseSprite: {fileID: 21300000, guid: b9c014df8fbd4ae4281a081c0cd835f0, type: 3}
   boxOpenSprite: {fileID: 21300000, guid: 295090e2154a2314b9288e304890a78c, type: 3}
   nowBlockType: 0
+  blockType: 0
+  blockHealth: 3
+  isGroundSurface: 0
   stageNum: 0
   spriteRenderer: {fileID: 0}
   blocksDictionary: {fileID: 0}
   effectManager: {fileID: 0}
+  DestroyAudioSourse: {fileID: 0}
 --- !u!1 &6704852269892935808
 GameObject:
   m_ObjectHideFlags: 0

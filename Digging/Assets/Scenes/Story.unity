@@ -400,7 +400,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d3442d8851c63e64aa033df01f64a859, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e2a57795b7731e6418954c9dcbf3251c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -449,9 +449,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storyScene: {fileID: 1856464193}
   storyImages:
-  - {fileID: 21300000, guid: d3442d8851c63e64aa033df01f64a859, type: 3}
-  - {fileID: 21300000, guid: 876c9ffca8fb83842952097eecb6d208, type: 3}
-  - {fileID: 21300000, guid: 4dc0b7cebe15f7a469e1c7162891b0b6, type: 3}
+  - {fileID: 21300000, guid: e2a57795b7731e6418954c9dcbf3251c, type: 3}
+  - {fileID: 21300000, guid: a9614ffdb471c5b4f96ad4e258b2f397, type: 3}
+  - {fileID: 21300000, guid: 734227beb74bb224e905c2ef1b7c63e9, type: 3}
 --- !u!4 &1984978935
 Transform:
   m_ObjectHideFlags: 0

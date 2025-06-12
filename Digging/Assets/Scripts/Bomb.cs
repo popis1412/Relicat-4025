@@ -8,7 +8,7 @@ public class Bomb : MonoBehaviour
 
     Vector3 originalScale;
     float pulseDuration = 0.5f;
-    float explosionDelay = 3f;
+    float explosionDelay = 4f;
 
     float exploSize = 2.5f;
 
@@ -89,8 +89,9 @@ public class Bomb : MonoBehaviour
         //DrawDebugBox(transform.position, explosionSize, Color.red);
 
         Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, explosionSize, 0f);
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[19]);
 
-        foreach(Collider2D hit in hits)
+        foreach (Collider2D hit in hits)
         {
             if(hit.CompareTag("Block"))
             {
@@ -104,7 +105,8 @@ public class Bomb : MonoBehaviour
             if(hit.CompareTag("Enemy"))
             {
                 Enemy enemy = hit.GetComponent<Enemy>();
-                if(enemy != null)
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[25]);
+                if (enemy != null)
                     Destroy(enemy.gameObject);
             }
 
