@@ -18,6 +18,8 @@ public class DropItem : MonoBehaviour
     float lightInnerRadius = 0.1f;
     float lightOuterRadius = 0.3f;
 
+    private bool tryOnce = false;
+
 
     void Awake()
     {
@@ -75,16 +77,20 @@ public class DropItem : MonoBehaviour
                 if(itemType == 0) //이 아이템이 유물이면
                 {
                     playerScript.Inventory.AddItem(playerScript.items[itemCode], addEA);
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[15]);
                 }
                 else if (itemType == 1) //이 아이템이 보석이면
                 {
                     playerScript.Inventory.AddItem(playerScript.minerals[itemCode], addEA);
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
                 }
                 else if(itemType == 2) // 이 아이템이 사용 아이템이라면
                 {
                     playerScript.Inventory.AddItem(playerScript.UseItems[itemCode], addEA);
                 }
                 Destroy(this.gameObject);
+
+                Debug.Log("enter");
             }
         }
     }
@@ -94,7 +100,7 @@ public class DropItem : MonoBehaviour
         if (collision.tag == "Player")
             Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), collision.GetComponent<CapsuleCollider2D>(), true);
 
-        if (collision.tag == "Player" && canTake)
+        if (collision.tag == "Player" && canTake && tryOnce == false)
         {
             Player playerScript = collision.GetComponent<Player>();
 
@@ -103,17 +109,23 @@ public class DropItem : MonoBehaviour
                 if (itemType == 0) //이 아이템이 유물이면
                 {
                     playerScript.Inventory.AddItem(playerScript.items[itemCode], addEA);
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[15]);
                 }
                 else if (itemType == 1) //이 아이템이 보석이면
                 {
                     playerScript.Inventory.AddItem(playerScript.minerals[itemCode], addEA);
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
                 }
-                else if(itemType == 2) // 이 아이템이 사용 아이템이라면
+                else if (itemType == 2) // 이 아이템이 사용 아이템이라면
                 {
                     playerScript.Inventory.AddItem(playerScript.UseItems[itemCode], addEA);
                 }
-               Destroy(this.gameObject);
+                tryOnce = true;
+                Destroy(this.gameObject);
+                
             }
+
+            Debug.Log("stay");
         }
     }
 }

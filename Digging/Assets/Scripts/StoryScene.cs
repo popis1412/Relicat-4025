@@ -9,6 +9,7 @@ public class StoryScene : MonoBehaviour
     private int storyNum;
     [SerializeField] private GameObject storyScene;
     [SerializeField] private Sprite[] storyImages;
+    private bool isActiveStroy = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,8 +21,9 @@ public class StoryScene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        if(!isActiveStroy && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
         {
+            isActiveStroy = true;
             storyNum++;
             switch (storyNum)
             {
@@ -30,11 +32,13 @@ public class StoryScene : MonoBehaviour
                     break;
 
                 case 1:
-                    storyScene.GetComponent<Image>().sprite = storyImages[1]; 
+                    FadeEffect.Instance.OnFade(FadeState.FadeInOut);
+                    Invoke("InvokeLoadStoryIntro01", 1.5f);
                     break;
 
                 case 2:
-                    storyScene.GetComponent<Image>().sprite = storyImages[2];
+                    FadeEffect.Instance.OnFade(FadeState.FadeInOut);
+                    Invoke("InvokeLoadStoryIntro02", 1.5f);
                     break;
 
                 case 3:
@@ -51,5 +55,15 @@ public class StoryScene : MonoBehaviour
     void InvokeLoadScene()
     {
         SceneManager.LoadScene(2);
+    }
+    void InvokeLoadStoryIntro01()
+    {
+        storyScene.GetComponent<Image>().sprite = storyImages[1];
+        isActiveStroy = false;
+    }
+    void InvokeLoadStoryIntro02()
+    {
+        storyScene.GetComponent<Image>().sprite = storyImages[2];
+        isActiveStroy = false;
     }
 }

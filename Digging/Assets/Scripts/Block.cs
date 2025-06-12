@@ -10,6 +10,7 @@ public class Block : MonoBehaviour
 {
     [SerializeField] GameObject relicEffect;
     GameObject actvieRelicEffect;
+    
 
     [SerializeField] GameObject dropItem;
 
@@ -75,6 +76,7 @@ public class Block : MonoBehaviour
     [SerializeField] Sprite boxOpenSprite;
 
 
+
     public int nowBlockType = 0; //다른 코드에서 blockChange를 실행했지만 실제 blockType 변동까지 느리기 때문에 다른 코드에서 blockChange를 호출함과 동시에 미리 무슨 blockType 으로 바뀔지 확인할 변수
     public int blockType = 0; 
     public float blockHealth = 3;
@@ -100,9 +102,15 @@ public class Block : MonoBehaviour
     bool boxOpen = false;
     float boxDestroyCount = 2f;
 
+    Player player;
+    PlayerController playerController;
+    
+
     private void Awake()
     {
         spriteRenderer = this.GetComponent<SpriteRenderer>();
+        player = Player.FindAnyObjectByType<Player>();
+        playerController = PlayerController.FindAnyObjectByType<PlayerController>();
     }
 
     void ItemDrop(int itemType, int itemCode, Player playerScript, int addEA) //itemType 0은 유물, 1은 광물
@@ -393,65 +401,73 @@ public class Block : MonoBehaviour
                 if (blockType == 0)
                 {
                     //일반 블럭 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[0]);
                 }
                 else if (blockType == 2)
                 {
                     //석탄 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[1]);
                     ItemDrop(1, 0, playerScript, 1);
                 }
                 else if (blockType == 3)
                 {
                     //단단한 바위 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[4]);
                 }
                 else if (blockType == 4)
                 {
                     //유물 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[2]);
                     if (actvieRelicEffect != null)
                         Destroy(actvieRelicEffect);
-                    ItemDrop(0, Random.Range(0,10), playerScript, 1);
+                    ItemDrop(0, Random.Range(0, 10), playerScript, 1);
 
                 }
                 else if (blockType == 5)
                 {
                     print("몬스터 블럭 파괴");
                     //몬스터 블럭 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[24]);
                     Instantiate(monster1, transform.position, Quaternion.identity);
                 }
                 else if (blockType == 6)
                 {
                     // 모래 부쉈을 때
-                    
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[3]);
+
                 }
                 else if (blockType == 7)
                 {
                     //구리 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[1]);
                     ItemDrop(1, 1, playerScript, 1);
                 }
                 else if (blockType == 8)
                 {
                     //철 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[1]);
                     ItemDrop(1, 2, playerScript, 1);
                 }
                 else if (blockType == 9)
                 {
                     //금 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[1]);
                     ItemDrop(1, 3, playerScript, 1);
                 }
                 else if (blockType == 10)
                 {
                     //루비 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[1]);
                     ItemDrop(1, 4, playerScript, 1);
                 }
                 else if (blockType == 11)
                 {
                     //다이아 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[1]);
                     ItemDrop(1, 5, playerScript, 1);
                 }
 
-
                 blocksDictionary.blockPosition.Remove(this.transform.position);
-
-
                 if (isGroundSurface)
                 {
                     blocksDictionary.GroundSurfaceChange();
@@ -465,11 +481,13 @@ public class Block : MonoBehaviour
                         aboveBlock.GetComponent<Block>().DropBlock(aboveBlock.GetComponent<Block>().DropCheck(this.transform.position, 0));
                     }
                 }
-                
+
                 Destroy(this.gameObject);//무조건 이 if문에서 맨 마지막으로
+                
             }
         }
     }
+
 
     public void BlockReload()
     {
@@ -542,6 +560,7 @@ public class Block : MonoBehaviour
         //보물상자 근처에 플레이어가 있는 상태에서 F키(상호작용키)를 누를시 보물상자 해제
         if(blockType == 1 && canOpenBox == true && Input.GetKeyDown(KeyCode.F))
         {
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[26]);
             if (stageNum == 1)
             {
                 Player playerScript = getPlayer.GetComponent<Player>();
