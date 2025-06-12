@@ -55,9 +55,11 @@ public class PlayerController : MonoBehaviour
     float angle;
     float t = 0;
 
-    bool isDigging;
+    bool isDigging = false;
+    bool isGround = false;
 
     Animator anim;
+    [SerializeField] Animator jetpack;
 
     private void Awake()
     {
@@ -80,8 +82,9 @@ public class PlayerController : MonoBehaviour
         weaponSpr = weapon != null ? weapon.GetComponent<SpriteRenderer>().sprite
             : null;
 
-        pivot = transform.GetChild(3).GetComponent<Transform>().position;
         anim = GetComponent<Animator>();
+
+        jetpack = transform.Find("jetpack/Anim").GetComponent<Animator>();
     }
 
     // 입력 시스템 활성화 및 입력 이벤트 등록
@@ -110,14 +113,16 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.E))
             UseItem(1, torch, GetTorchPosition());
 
+        anim.SetBool("IsGround", isGround);
         anim.SetFloat("MoveSpeed", rb.velocity.magnitude);
-        anim.SetFloat("FlySpeed", rb.velocity.y);
+        anim.SetFloat("FlySpeed", rb.velocity.magnitude);
         anim.SetBool("IsFlying", isFlying);
         anim.SetBool("IsDigging", isDigging);
     }
 
     private void FixedUpdate()
     {
+
         UpdateJumpAxisSmoothly();
         HandleMovement();
         HandleDigging();
@@ -159,6 +164,9 @@ public class PlayerController : MonoBehaviour
         {
             // 상승 중: 가속
             //print("상승 중");
+            jetpack.GetComponent<SpriteRenderer>().enabled = true;
+            jetpack.Play("Anim", -1, 0);
+            jetpack.speed = 1;
             verticalSpeed += flyAcceleration * flyAxis * Time.fixedDeltaTime;
             verticalSpeed = Mathf.Min(verticalSpeed, flySpeed);
         }
@@ -166,6 +174,8 @@ public class PlayerController : MonoBehaviour
         {
             // 입력 없음: 감속
             //print("하강 중");
+            jetpack.GetComponent<SpriteRenderer>().enabled = false;
+            jetpack.speed = 0;
             verticalSpeed -= deceleration * Time.fixedDeltaTime;
             verticalSpeed = Mathf.Max(0f, verticalSpeed);
         }
@@ -188,7 +198,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        pivot = transform.GetChild(3).GetComponent<Transform>().position;
+        pivot = transform.Find("Pivot").position;
 
         t += Time.fixedDeltaTime * 2;
         t = Mathf.Clamp01(t);
@@ -196,8 +206,6 @@ public class PlayerController : MonoBehaviour
 
         angle = Mathf.Lerp(60, -30, t);
         float rad = angle * Mathf.Deg2Rad;
-
-        
 
         Vector3 offset = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0f) * 0.1f;
 
@@ -352,4 +360,43 @@ public class PlayerController : MonoBehaviour
 
         return null;
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        foreach(ContactPoint2D contact in collision.contacts)
+        {
+            if(contact.normal.y > 0.5f)
+            {
+                if(collision.gameObject.CompareTag("Block"))
+                {
+                    isGround = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            if (contact.normal.y > 0.5f)
+            {
+                if (collision.gameObject.CompareTag("Block"))
+                {
+                    isGround = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Block"))
+        {
+            isGround = false;
+        }
+    }
+
 }
