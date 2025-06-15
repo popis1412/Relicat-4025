@@ -40,9 +40,9 @@ public class Collection : MonoBehaviour
     public GameObject badgeUI_Icon;
     public TextMeshProUGUI badgeUI_TitleText;
 
-
-
     public Item guessItem;
+
+    [SerializeField] private Button[] resistButton_List;
 
 
 #if UNITY_EDITOR
@@ -59,7 +59,7 @@ public class Collection : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneLoaded += OnSceneLoaded1;
         }
         else
         {
@@ -84,10 +84,10 @@ public class Collection : MonoBehaviour
     private void OnDestroy()
     {
         // 이벤트 제거 (중복 방지)
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded1;
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded1(Scene scene, LoadSceneMode mode)
     {
         // 씬이 로드된 후 Player 다시 찾기
         player = FindObjectOfType<Player>();
@@ -98,7 +98,7 @@ public class Collection : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("씬 전환 후 Player를 찾지 못했습니다.");
+            Debug.Log("씬 전환 후 Player를 찾지 못했습니다.");
         }
 
         GameObject museum = GameObject.Find("Museum");
@@ -141,6 +141,7 @@ public class Collection : MonoBehaviour
     void Update()
     {
         Badge_nameTag_Update();
+        ResistButtonActive();
     }
 
     public void Badge_nameTag_Update()
@@ -224,6 +225,27 @@ public class Collection : MonoBehaviour
         }
     }
 
+    public void ResistButtonActive()
+    {
+        if(player != null)
+        {
+            if (player.isInMuseum)
+            {
+                for (int i = 0; i < player.items.Count; i++)
+                {
+                    if (player.items[i].count > 0)
+                    {
+                        resistButton_List[i].interactable = true;
+                    }
+                    else
+                    {
+                        resistButton_List[i].interactable = false;
+                    }
+                }
+            }
+        }
+    }
+
     public void Button_ResistRelic(int itemNum)
     {
         
@@ -265,6 +287,7 @@ public class Collection : MonoBehaviour
             collectView_idx = 1;
         }
         Switch_CollectView();
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
     }
 
     // 상점 이동 오른쪽
@@ -276,6 +299,7 @@ public class Collection : MonoBehaviour
             collectView_idx = 0;
         }
         Switch_CollectView();
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
     }
 
 
@@ -348,6 +372,7 @@ public class Collection : MonoBehaviour
                 Inventory.ItemLog(badge_items[0], 1);
                 player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[36]);
             }
             
         }
@@ -360,6 +385,7 @@ public class Collection : MonoBehaviour
                 Inventory.FreshSlot();
                 player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[36]);
             }
             
         }
@@ -370,6 +396,7 @@ public class Collection : MonoBehaviour
                 Inventory.ItemLog(badge_items[1], 1);
                 player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[36]);
             }
             
         }
@@ -382,6 +409,7 @@ public class Collection : MonoBehaviour
                 Inventory.FreshSlot();
                 player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[36]);
             }
         }
         else if (idx == 4)
@@ -391,6 +419,7 @@ public class Collection : MonoBehaviour
                 Inventory.ItemLog(badge_items[2], 1);
                 player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[36]);
             }
         }
         else
