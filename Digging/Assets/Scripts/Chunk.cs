@@ -25,7 +25,7 @@ public class Chunk : MonoBehaviour
         {
             Block blockScript = blocks[i].GetComponent<Block>();
             blocksDictionary.blockPosition.Add(blocks[i].transform.position, blocks[i]);
-            blockScript.stageNum = stageNum;
+            blockScript.stageNum = LoadScene.instance.stage_Level;
             blockScript.blocksDictionary = blocksDictionary;
             blockScript.effectManager = effectManager;
         }
@@ -129,7 +129,7 @@ public class Chunk : MonoBehaviour
 
                 int persentage = Random.Range(1, 11);    //1~10까지 랜덤
 
-                if (stageNum == 1)
+                if (stageNum == 0)
                 {
                     if (persentage <= 5)
                     {
@@ -140,6 +140,24 @@ public class Chunk : MonoBehaviour
                     {
                         blocks[numbers[i]].GetComponent<Block>().nowBlockType = 7;
                         blocks[numbers[i]].GetComponent<Block>().ChangeBlock(7);
+                    }
+                }
+                else if(stageNum == 1)
+                {
+                    if (persentage <= 3)
+                    {
+                        blocks[numbers[i]].GetComponent<Block>().nowBlockType = 2;
+                        blocks[numbers[i]].GetComponent<Block>().ChangeBlock(2);
+                    }
+                    else if(persentage <= 6)
+                    {
+                        blocks[numbers[i]].GetComponent<Block>().nowBlockType = 7;
+                        blocks[numbers[i]].GetComponent<Block>().ChangeBlock(7);
+                    }
+                    else
+                    {
+                        blocks[numbers[i]].GetComponent<Block>().nowBlockType = 8;
+                        blocks[numbers[i]].GetComponent<Block>().ChangeBlock(8);
                     }
                 }
 
@@ -182,7 +200,7 @@ public class Chunk : MonoBehaviour
         //보석 생성 시작
         for (int i = 0; i < jewelCount; i++)
         {
-            if (stageNum == 1)
+            if (stageNum == 0)
             {
                 int persentage = Random.Range(1, 11);
                 if (persentage <= 5)
@@ -192,6 +210,22 @@ public class Chunk : MonoBehaviour
                 else
                 {
                     generateBlock(numbers, blockChangeCount, 1, 7);
+                }
+            }
+            else if(stageNum == 1)
+            {
+                int persentage = Random.Range(1, 11);
+                if (persentage <= 3)
+                {
+                    generateBlock(numbers, blockChangeCount, 1, 2);
+                }
+                else if(persentage <= 6)
+                {
+                    generateBlock(numbers, blockChangeCount, 1, 7);
+                }
+                else
+                {
+                    generateBlock(numbers, blockChangeCount, 1, 8);
                 }
             }
         }

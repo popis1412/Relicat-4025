@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UpgradeObj_02
   m_EditorClassIdentifier: 
   itemName: "\uC2DC\uC57C \uAC15\uD654"
-  itemImage: {fileID: 21300000, guid: bcfa22501a052e743bcfd1980e2c16da, type: 3}
+  itemImage: {fileID: 21300000, guid: b003d3868a7f18a42bae89961f5c6c43, type: 3}
   count: 1
   accumulation_count: 0
   isMineral: 0
