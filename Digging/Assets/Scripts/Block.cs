@@ -420,7 +420,16 @@ public class Block : MonoBehaviour
                     SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[2]);
                     if (actvieRelicEffect != null)
                         Destroy(actvieRelicEffect);
-                    ItemDrop(0, Random.Range(0, 10), playerScript, 1);
+                    if(LoadScene.instance.stage_Level == 0)
+                    {
+                        ItemDrop(0, Random.Range(0, 10), playerScript, 1);
+                    }
+                    else if(LoadScene.instance.stage_Level == 1)
+                    {
+                        ItemDrop(0, Random.Range(0, 20), playerScript, 1);
+
+                    }
+
 
                 }
                 else if (blockType == 5)
@@ -561,12 +570,13 @@ public class Block : MonoBehaviour
         if(blockType == 1 && canOpenBox == true && Input.GetKeyDown(KeyCode.F))
         {
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[26]);
-            if (stageNum == 1)
-            {
+            
                 Player playerScript = getPlayer.GetComponent<Player>();
+            if (LoadScene.instance.stage_Level == 0)
+            {
                 int randCoal = Random.Range(1, 11);
                 int randCopper = Random.Range(1, 11);
-                
+
                 for (int i = 0; i < randCoal; i++)
                 {
                     ItemDrop(1, 0, getPlayer.GetComponent<Player>(), 1);
@@ -576,10 +586,33 @@ public class Block : MonoBehaviour
                 {
                     ItemDrop(1, 1, playerScript.GetComponent<Player>(), 1);
                 }
+            }
+            else if (LoadScene.instance.stage_Level == 1)
+            {
+                int randCoal = Random.Range(1, 6);
+                int randCopper = Random.Range(1, 6);
+                int randIron = Random.Range(1, 6);
+
+                for (int i = 0; i < randCoal; i++)
+                {
+                    ItemDrop(1, 0, getPlayer.GetComponent<Player>(), 1);
+                }
+
+                for (int i = 0; i < randCopper; i++)
+                {
+                    ItemDrop(1, 1, playerScript.GetComponent<Player>(), 1);
+                }
+                for (int i = 0; i < randIron; i++)
+                {
+                    ItemDrop(1, 2, playerScript.GetComponent<Player>(), 1);
+                }
+
+            }
+
 
                 spriteRenderer.sprite = boxOpenSprite;
                 boxOpen = true;
-            }
+            
         }
 
         if(boxOpen == true)

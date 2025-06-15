@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b81c96ecd3f7b634aba59c5ff6767807, type: 3}
   m_Name: Item_relic_05
   m_EditorClassIdentifier: 
-  itemName: phone
+  itemName: "\uD578\uB4DC\uD3F0"
   itemImage: {fileID: 21300000, guid: 19240c2787e0d574e83ccb6314d7c043, type: 3}
   count: 0
   accumulation_count: 0

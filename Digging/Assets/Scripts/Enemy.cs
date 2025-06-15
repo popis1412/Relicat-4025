@@ -23,40 +23,43 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        
-        if(player != null)
+        if(LevelManager.instance.isRunning == true)
         {
-            if(timer - Time.deltaTime < 0)
+            if (player != null)
             {
-                timer = 1f;
-                if (player.transform.position.x > this.gameObject.transform.position.x)
-                    targetDirection = 1;
+                if (timer - Time.deltaTime < 0)
+                {
+                    timer = 1f;
+                    if (player.transform.position.x > this.gameObject.transform.position.x)
+                        targetDirection = 1;
+                    else
+                        targetDirection = -1;
+                }
                 else
-                    targetDirection = -1;
+                {
+                    timer -= Time.deltaTime;
+                }
+            }
+
+
+            if (rigidbody != null)
+            {
+                rigidbody.velocity = new Vector2(speed * targetDirection, rigidbody.velocity.y);
+            }
+
+            if (attackCooldown > 0)
+                attackCooldown -= Time.deltaTime;
+
+            if (targetDirection > 0)
+            {
+                this.gameObject.transform.localScale = new Vector3(-0.75f, this.gameObject.transform.localScale.y, this.gameObject.transform.localScale.z);
             }
             else
             {
-                timer -= Time.deltaTime;
+                this.gameObject.transform.localScale = new Vector3(0.75f, this.gameObject.transform.localScale.y, this.gameObject.transform.localScale.z);
             }
         }
-
-
-        if(rigidbody != null)
-        {
-            rigidbody.velocity = new Vector2(speed * targetDirection, rigidbody.velocity.y);
-        }
-
-        if (attackCooldown > 0)
-            attackCooldown -= Time.deltaTime;
-
-        if (targetDirection > 0)
-        {
-            this.gameObject.transform.localScale = new Vector3(-0.75f, this.gameObject.transform.localScale.y, this.gameObject.transform.localScale.z);
-        }
-        else
-        {
-            this.gameObject.transform.localScale = new Vector3(0.75f, this.gameObject.transform.localScale.y, this.gameObject.transform.localScale.z);
-        }
+        
     }
 
     public void EnemyDie() //플레이어or폭탄이 호출해서 적을 죽이는 함수

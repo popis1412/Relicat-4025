@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b81c96ecd3f7b634aba59c5ff6767807, type: 3}
   m_Name: Item_mineral_06
   m_EditorClassIdentifier: 
-  itemName: diamond
+  itemName: "\uB2E4\uC774\uC544"
   itemImage: {fileID: 21300000, guid: 82743c74b23150f4f992d3fce2220573, type: 3}
   count: 0
   accumulation_count: 0
   isMineral: 1
+  isRelic: 0
   rarity: 2
   value: 300
   duplicate_value: 0

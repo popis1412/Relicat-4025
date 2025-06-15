@@ -14,6 +14,8 @@ public class Bomb : MonoBehaviour
 
     float elapsed = 0f;
 
+    private bool isAlreadyDamaged = false;
+
     void Awake()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -112,9 +114,14 @@ public class Bomb : MonoBehaviour
 
             if(hit.CompareTag("Player"))
             {
+                
                 PlayerController player = hit.GetComponent<PlayerController>();
-                if(player != null)
+                if(player != null && isAlreadyDamaged == false)
+                {
                     player.TakeDamage(1, transform);
+                    isAlreadyDamaged = true;
+                }
+                    
             }
 
             if(hit.gameObject.name == "Torch")

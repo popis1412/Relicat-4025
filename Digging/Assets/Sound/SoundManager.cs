@@ -39,7 +39,7 @@ public class SoundManager : MonoBehaviour
     private void OnSceneChanged(Scene currentScene, Scene nextScene)
     {
         
-        if (nextScene.name == "Main")
+        if (nextScene.name == "Main" || nextScene.name == "Main 1")
         {
             // BGM이 재생 중인 경우 멈춤
             if (BGMSoundPlay.isPlaying)

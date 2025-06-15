@@ -60,6 +60,7 @@ public class PlayerControllerData
 public class LoadSceneData
 {
     public bool isAlreadyWatchStory = false;
+    public int stage_Level = 0;
 }
 
 [System.Serializable]

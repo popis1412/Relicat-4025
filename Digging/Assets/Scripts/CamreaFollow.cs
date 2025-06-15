@@ -26,7 +26,15 @@ public class CamreaFollow : MonoBehaviour
     private void Start()
     {
         // 맵 정보
-        _mapSize = new MapData.MapSizeIsometric(new Vector3(15f, 0.5f, 0f), 31f, 44f, 1f, 1f);
+        if(LoadScene.instance.stage_Level == 0)
+        {
+            _mapSize = new MapData.MapSizeIsometric(new Vector3(15f, 0.5f, 0f), 31f, 44f, 1f, 1f);
+        }
+        else if(LoadScene.instance.stage_Level == 1)
+        {
+            _mapSize = new MapData.MapSizeIsometric(new Vector3(15f, 0.5f, 0f), 51f, 84f, 1f, 1f);
+        }
+        
 
         // 카메라 화면 절반 크기 계산
         Camera cam = Camera.main;
@@ -40,22 +48,46 @@ public class CamreaFollow : MonoBehaviour
         Vector3 desiredPos = target.position + posOffset;
         Vector3 targetCameraPos;
 
-        if (target.position.x > 45f)
+        if(LoadScene.instance.stage_Level == 0)
         {
-            // 조건 만족 시 Clamp 무시하고 자유 이동
-            targetCameraPos = desiredPos;
+            if (target.position.x > 45f)
+            {
+                // 조건 만족 시 Clamp 무시하고 자유 이동
+                targetCameraPos = desiredPos;
+            }
+            else
+            {
+                float MaxY = 0.5f - skySize / 2f;
+                // Clamp 적용된 카메라 위치 계산
+                float clampedX = Mathf.Clamp(desiredPos.x, _mapSize.MinX + camWidth, _mapSize.MaxX - camWidth);
+                // 현재 카메라가 바닥과 배경의 절반만 보이도록 설정되어 있어, 절반으로 나눔.
+                float clampedY = Mathf.Clamp(desiredPos.y, (_mapSize.MaxY + camHeight) * -1, MaxY + camHeight / 2f);
+                targetCameraPos = new Vector3(clampedX, clampedY, desiredPos.z);
+            }
+            // 부드러운 이동
+            transform.position = Vector3.SmoothDamp(transform.position, targetCameraPos, ref velocity, smooth);
         }
-        else
+        else if(LoadScene.instance.stage_Level == 1)
         {
-            float MaxY = 0.5f - skySize / 2f;
-            // Clamp 적용된 카메라 위치 계산
-            float clampedX = Mathf.Clamp(desiredPos.x, _mapSize.MinX + camWidth, _mapSize.MaxX - camWidth);
-            // 현재 카메라가 바닥과 배경의 절반만 보이도록 설정되어 있어, 절반으로 나눔.
-            float clampedY = Mathf.Clamp(desiredPos.y, (_mapSize.MaxY + camHeight) * -1, MaxY + camHeight / 2f );    
-            targetCameraPos = new Vector3(clampedX, clampedY, desiredPos.z);
+            if (target.position.x > 55f)
+            {
+                // 조건 만족 시 Clamp 무시하고 자유 이동
+                targetCameraPos = desiredPos;
+            }
+            else
+            {
+                float MaxY = 0.5f - skySize / 2f;
+                // Clamp 적용된 카메라 위치 계산
+                float clampedX = Mathf.Clamp(desiredPos.x, _mapSize.MinX + camWidth, _mapSize.MaxX - camWidth);
+                // 현재 카메라가 바닥과 배경의 절반만 보이도록 설정되어 있어, 절반으로 나눔.
+                float clampedY = Mathf.Clamp(desiredPos.y, (_mapSize.MaxY + camHeight) * -1, MaxY + camHeight / 2f);
+                targetCameraPos = new Vector3(clampedX, clampedY, desiredPos.z);
+            }
+            // 부드러운 이동
+            transform.position = Vector3.SmoothDamp(transform.position, targetCameraPos, ref velocity, smooth);
         }
+        
 
-        // 부드러운 이동
-        transform.position = Vector3.SmoothDamp(transform.position, targetCameraPos, ref velocity, smooth);
+        
     }
 }

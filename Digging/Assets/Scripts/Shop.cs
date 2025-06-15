@@ -18,7 +18,9 @@ public class Shop : MonoBehaviour
     [SerializeField] private GameObject[] shopList;
 
     public TextMeshProUGUI shop_pickLvText;
+    public TextMeshProUGUI shop_pickUpdateText;
     public TextMeshProUGUI shop_lightLvText;
+    public TextMeshProUGUI shop_lightUpdateText;
 
     public GameObject playerlight;
 
@@ -32,7 +34,7 @@ public class Shop : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
 
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneLoaded += OnSceneLoaded2;
         }
         else
         {
@@ -49,36 +51,36 @@ public class Shop : MonoBehaviour
     {
         shopView_idx = 0;
         Switch_ShopView();
-
         
     }
 
     private void OnDestroy()
     {
         // 이벤트 제거 (중복 방지)
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded2;
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded2(Scene scene, LoadSceneMode mode)
     {
-        if(scene.buildIndex != 2) return;
+        //if(scene.buildIndex != 2 || scene.buildIndex != 3) return;
 
         // 씬이 로드된 후 Player 다시 찾기
         player = FindObjectOfType<Player>();
         playerController = FindObjectOfType<PlayerController>();
         playerlight = GameObject.Find("Spot Light 2D");
-        Debug.Log(playerlight.gameObject.name);
+        //Debug.Log(playerlight.gameObject.name);
 
-        playerController.pickdamage = pick_damage;
-        playerlight.GetComponent<Light2D>().pointLightOuterRadius = lightRadius;
+        
 
         if (player != null)
         {
             Debug.Log("씬 전환 후 Player 연결 완료: " + player.name);
+            playerController.pickdamage = pick_damage;
+            playerlight.GetComponent<Light2D>().pointLightOuterRadius = lightRadius;
         }
         else
         {
-            Debug.LogWarning("씬 전환 후 Player를 찾지 못했습니다.");
+            Debug.Log("씬 전환 후 Player를 찾지 못했습니다.");
         }
     }
 
@@ -91,6 +93,8 @@ public class Shop : MonoBehaviour
             shopView_idx = 2;
         }
         Switch_ShopView();
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
+
     }
 
     // 상점 이동 오른쪽
@@ -102,6 +106,8 @@ public class Shop : MonoBehaviour
             shopView_idx = 0;
         }
         Switch_ShopView();
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
+
     }
 
     // 상점 구분 0 : 판매 / 1 : 구매 / 2 : 업그레이드
@@ -131,27 +137,27 @@ public class Shop : MonoBehaviour
     // 광물 판매 버튼
     public void Button_Sell_Mineral_Coal()
     {
-        Inventory.SellItem(player.minerals[0]);
+        Inventory.SellAllItem(player.minerals[0]);
     }
     public void Button_Sell_Mineral_Copper()
     {
-        Inventory.SellItem(player.minerals[1]);
+        Inventory.SellAllItem(player.minerals[1]);
     }
     public void Button_Sell_Mineral_Iron()
     {
-        Inventory.SellItem(player.minerals[2]);
+        Inventory.SellAllItem(player.minerals[2]);
     }
     public void Button_Sell_Mineral_Gold()
     {
-        Inventory.SellItem(player.minerals[3]);
+        Inventory.SellAllItem(player.minerals[3]);
     }
     public void Button_Sell_Mineral_Ruby()
     {
-        Inventory.SellItem(player.minerals[4]);
+        Inventory.SellAllItem(player.minerals[4]);
     }
     public void Button_Sell_Mineral_Diamond()
     {
-        Inventory.SellItem(player.minerals[5]);
+        Inventory.SellAllItem(player.minerals[5]);
     }
 
     public void Button_All_Sell_Mineral_Coal()
@@ -167,8 +173,10 @@ public class Shop : MonoBehaviour
         {
             Inventory.money_item.count -= player.UseItems[0].value;
             Inventory.AddItem(player.UseItems[0], 1);
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
+
         }
-        
+
     }
     public void Button_Buy_Item_Torch()
     {
@@ -176,6 +184,8 @@ public class Shop : MonoBehaviour
         {
             Inventory.money_item.count -= player.UseItems[1].value;
             Inventory.AddItem(player.UseItems[1], 1);
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
+
         }
 
     }
@@ -191,9 +201,12 @@ public class Shop : MonoBehaviour
             player.UpgradeItems[0].count++;
             shop_pickLvText.text = "레벨 : " + player.UpgradeItems[0].count;
             player.UpgradeItems[0].value += 10;
+            shop_pickUpdateText.text = "-" + player.UpgradeItems[0].value.ToString();
 
             Debug.Log(playerController.pickdamage);
             Inventory.FreshSlot();
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
         }
     }
     public void Button_Upgrade_EyeLight()
@@ -206,9 +219,13 @@ public class Shop : MonoBehaviour
             player.UpgradeItems[1].count++;
             shop_lightLvText.text = "레벨 : " + player.UpgradeItems[1].count;
             player.UpgradeItems[1].value += 50;
+            shop_lightUpdateText.text = "-" + player.UpgradeItems[1].value.ToString();
 
             Debug.Log(playerlight.GetComponent<Light2D>().pointLightOuterRadius);
             Inventory.FreshSlot();
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
         }
     }
 

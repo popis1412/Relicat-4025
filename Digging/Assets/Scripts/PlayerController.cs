@@ -132,15 +132,16 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("IsFlying", isFlying);
         anim.SetBool("IsDigging", isDigging);
 
-        HandleDigging();
+        
     }
 
     private void FixedUpdate()
     {
-
+        HandleDigging();
         UpdateJumpAxisSmoothly();
         HandleMovement();
         
+            
     }
 
     // 비행 입력을 부드럽게 적용(0 ~ 1 사이 값을 천천히 변화)
@@ -241,7 +242,7 @@ public class PlayerController : MonoBehaviour
 
         pivot = transform.Find("Pivot").position;
 
-        t += Time.fixedDeltaTime;
+        t += Time.fixedDeltaTime * 4f;
         t = Mathf.Clamp01(t);
 
 
@@ -250,7 +251,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 offset = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0f) * 0.1f;
 
-        print("offset: " + offset + "angle: " + angle + "t: " + t );
+        //print("offset: " + offset + "angle: " + angle + "t: " + t );
         
 
         if (t >= 1)
@@ -444,13 +445,26 @@ public class PlayerController : MonoBehaviour
     {
         var item = playerScript.UseItems[index];
 
-        if(item != null && item.count > 0)
+        if(item != null && item.count > 0 && isGround)
         {
             Instantiate(itemPrefab, position, Quaternion.identity);
             item.count--;
             playerScript.Inventory.FreshSlot();
             Debug.Log($"아이템 사용: {item.itemName}, 남은 개수: {item.count}");
-            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[18]);
+            if(index == 0)
+            {
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[18]);
+            }
+            else if(index == 1)
+            {
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[14]);
+            }
+            if(item.count <= 0)
+            {
+                item.count = 0;
+                playerScript.Inventory.SellItem(item);
+            }
+            
         }
         else
         {

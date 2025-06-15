@@ -54,16 +54,23 @@ public class StoryScene : MonoBehaviour
 
     void InvokeLoadScene()
     {
+        Invoke("invokeMore", 1.5f);
         SceneManager.LoadScene(2);
     }
     void InvokeLoadStoryIntro01()
     {
         storyScene.GetComponent<Image>().sprite = storyImages[1];
-        isActiveStroy = false;
+        
+        Invoke("invokeMore", 1.5f);
     }
     void InvokeLoadStoryIntro02()
     {
         storyScene.GetComponent<Image>().sprite = storyImages[2];
+        Invoke("invokeMore", 1.5f);
+    }
+
+    void invokeMore()
+    {
         isActiveStroy = false;
     }
 }

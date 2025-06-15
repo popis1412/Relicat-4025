@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b81c96ecd3f7b634aba59c5ff6767807, type: 3}
   m_Name: Item_relic_10
   m_EditorClassIdentifier: 
-  itemName: poketwatch
+  itemName: "\uD68C\uC911\uC2DC\uACC4"
   itemImage: {fileID: 21300000, guid: 7197a94a79eacdf4e86fb382e36b061b, type: 3}
   count: 0
   accumulation_count: 0

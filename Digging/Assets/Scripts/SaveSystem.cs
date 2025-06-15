@@ -166,8 +166,9 @@ public class SaveSystem : MonoBehaviour
         //로드씬데이터 저장
         saveData.loadSceneData = new LoadSceneData
         {
-            isAlreadyWatchStory = loadSceneScript.isAlreadyWatchStory
-        };
+            isAlreadyWatchStory = loadSceneScript.isAlreadyWatchStory,
+            stage_Level = loadSceneScript.stage_Level
+};
 
         //레벨매니저 저장
         saveData.levelManageData = new LevelManageData
@@ -306,6 +307,7 @@ public class SaveSystem : MonoBehaviour
 
         //로드씬 로드
         loadSceneScript.isAlreadyWatchStory = loaded.loadSceneData.isAlreadyWatchStory;
+        loadSceneScript.stage_Level = loaded.loadSceneData.stage_Level;
 
         //레벨매니저 로드
         levelManager.remainingTime = loaded.levelManageData.remainingTime;
@@ -380,6 +382,7 @@ public class SaveSystem : MonoBehaviour
         SaveData loaded = JsonUtility.FromJson<SaveData>(jsonForLoad);
 
         loadSceneScript.isAlreadyWatchStory = loaded.loadSceneData.isAlreadyWatchStory;
+        loadSceneScript.stage_Level = loaded.loadSceneData.stage_Level;
     }
 
 
