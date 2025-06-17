@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class Player : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class Player : MonoBehaviour
     public Inventory Inventory;
     public Collection Collection;
     public Shop Shop;
-    [SerializeField] PlayerController player;
+    public PlayerController player;
 
 
     public List<Item> items;
@@ -20,7 +21,7 @@ public class Player : MonoBehaviour
     public List<Item> UpgradeItems;
 
     // 인벤토리
-    [SerializeField] private GameObject Inventory_obj;
+    public GameObject Inventory_obj;
     Vector3 Inventory_StartPos;
     Vector3 Inventory_EndPos;
     float currentTime = 0f;
@@ -39,9 +40,9 @@ public class Player : MonoBehaviour
     private bool isOnShop = false;
 
     // 박물관
-    [SerializeField] private GameObject CollectUIPanel; // 도감 UI 패널
+    public GameObject CollectUIPanel; // 도감 UI 패널
     private bool isNearMuseum = false;
-    private bool isInMuseum = false;
+    public bool isInMuseum = false;
     private bool isNearCollection = false;
     private bool isActiveMuseum = false;
 
@@ -49,6 +50,9 @@ public class Player : MonoBehaviour
     Vector3 Collect_EndPos;
     private bool isCollectMoving = false;
     private bool isOnCollect = false;
+
+    // 돌아가기 안내판
+    private bool isNearReturnMuseum = false;
 
     // 진열장
     [SerializeField] private GameObject RelicInfoUIPanel; // 진열장 설명 UI 패널
@@ -62,7 +66,7 @@ public class Player : MonoBehaviour
 
     // 일시정지
     [SerializeField] private GameObject PausePanel;
-    private bool isPaused = false;
+    public bool isPaused = false;
 
     // 사망
     [SerializeField] private GameObject DiePanel;
@@ -72,6 +76,9 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject SavePanel;
     private bool isNearReset;
     private bool isOnResetUI;
+    
+
+    private string savePath => Application.persistentDataPath + "/SaveData.json";
 
     private void Awake()
     {
@@ -155,6 +162,7 @@ public class Player : MonoBehaviour
                     {
                         li_PlayerHearts[i] = child.gameObject;
                         DicPlayerHeart[li_PlayerHearts[i].name] = true;
+                        li_PlayerHearts[i].SetActive(true);
                     }
                     else
                     {
@@ -169,14 +177,42 @@ public class Player : MonoBehaviour
         shopUIPanel.transform.position = new Vector3(2420f, Screen.height / 2, 0f);
         CollectUIPanel.transform.position = new Vector3(2420f, Screen.height / 2, 0f);
 
+        Inventory_obj.SetActive(true);
+        CollectUIPanel.SetActive(true);
         Inventory.badgePanel.gameObject.SetActive(true);
         Inventory.moneyPanel.gameObject.SetActive(true);
         Inventory.healthPanel.gameObject.SetActive(true); 
         LevelManager.instance.stagetargetUI.SetActive(true);
+        LevelManager.instance.guide_Button.SetActive(true);
+        LevelManager.instance.pause_Button.SetActive(true);
         LevelManager.instance.isRunning = true;
+
         player.input.Enable();
 
-        SaveSystem.Instance.Load();
+        if (LevelManager.instance.isClickReset)
+        {
+            LevelManager.instance.isClickReset = false;
+        }
+        else if(LevelManager.instance.isStageClear)
+        {
+            LevelManager.instance.isStageClear = false;
+        }
+        else
+        {
+            SaveSystem.Instance.Load();
+        }
+        
+
+        if(LoadScene.instance.isUseStart == true)
+        {
+            LevelManager.instance.GuidePanel.SetActive(true);
+            LevelManager.instance.guideView_idx = 0;
+            LevelManager.instance.isOnGuide = true;
+            LevelManager.instance.Switch_GuideView();
+            LevelManager.instance.left_guideButton.SetActive(false);
+            LevelManager.instance.right_guideButton.SetActive(true);
+            LoadScene.instance.isUseStart = false;
+        }
     }
 
     // Update is called once per frame
@@ -187,13 +223,8 @@ public class Player : MonoBehaviour
         {
             Interaction_Inventory();
             Interaction_F();
-            GroundAutoHeal();
+            //GroundAutoHeal();
             Ground_Time_Pause();
-
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                SceneManager.LoadScene("csytest");
-            }
 
             if (Input.GetKeyDown(KeyCode.G))
             {
@@ -240,6 +271,8 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePause();
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
+
         }
 
         //세이브
@@ -254,8 +287,29 @@ public class Player : MonoBehaviour
             SaveSystem.Instance.Load();
         }
 
+        // 세이브 삭제
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Reset_SaveFile_and_GoMenu();
+        }
     }
-    // 게임 재개
+
+    public void Reset_SaveFile_and_GoMenu()
+    {
+        SaveSystem.Instance.DeleteSaveFile();
+        LoadScene.instance.isAlreadyWatchStory = false;
+        LevelManager.instance.remainingTime = LevelManager.instance.totalTime_1;
+        LevelManager.instance.Restart_Go_Menu_Button();
+        Inventory_obj.SetActive(false);
+        Inventory.badgePanel.SetActive(false);
+        Inventory.moneyPanel.SetActive(false);
+        Inventory.healthPanel.SetActive(false);
+        LevelManager.instance.stagetargetUI.SetActive(false);
+        LevelManager.instance.isOnEnding = false;
+        LoadScene.instance.stage_Level = 0;
+    }
+
+    // 게임 일시정지 / 재개
     public void TogglePause()
     {
         isPaused = !isPaused;
@@ -266,6 +320,8 @@ public class Player : MonoBehaviour
             PausePanel.SetActive(true); // UI 표시
             player.input.Disable();
             LevelManager.instance.isRunning = false;
+            this.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
+            this.gameObject.GetComponent<Rigidbody2D>().constraints |= RigidbodyConstraints2D.FreezePositionY;
         }
         else
         {
@@ -273,6 +329,9 @@ public class Player : MonoBehaviour
             PausePanel.SetActive(false); // UI 숨김
             player.input.Enable();
             LevelManager.instance.isRunning = true;
+            this.gameObject.GetComponent<Rigidbody2D>().gravityScale = 1;
+            this.gameObject.GetComponent<Rigidbody2D>().constraints &= ~RigidbodyConstraints2D.FreezePositionY;
+            //SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
         }
     }
 
@@ -280,6 +339,8 @@ public class Player : MonoBehaviour
     public void SettingButton()
     {
         LoadScene.instance.settingsPanel.SetActive(true);
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
+
     }
 
     // 메인메뉴 이동
@@ -290,17 +351,25 @@ public class Player : MonoBehaviour
         //Time.timeScale = 1f; // 게임 재개
         PausePanel.SetActive(false); // UI 숨김
         LevelManager.instance.isRunning = false;
+        if (!File.Exists(savePath))
+        {
+            LevelManager.instance.ResetGame();
+        }
         Invoke("InvokeGoMainMenu", 1.5f);
-
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
     void InvokeGoMainMenu()
     {
         SceneManager.LoadScene("Menu");
         LoadScene.instance.MainMenu.SetActive(true);
+        Inventory_obj.SetActive(false);
         Inventory.badgePanel.SetActive(false);
         Inventory.moneyPanel.SetActive(false);
         Inventory.healthPanel.SetActive(false);
         LevelManager.instance.stagetargetUI.SetActive(false);
+        LevelManager.instance.guide_Button.SetActive(false);
+        LevelManager.instance.pause_Button.SetActive(false);
+
 
     }
 
@@ -311,6 +380,7 @@ public class Player : MonoBehaviour
         {
             currentTime = 0f;
             isInventoryMoving = true;
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
         }
 
         // 인벤토리 UI 이동 애니메이션
@@ -374,10 +444,13 @@ public class Player : MonoBehaviour
         if (isNearShop && Input.GetKeyDown(KeyCode.F) && !isInventoryMoving && !isShopMoving)
         {
             currentTime = 0f;
-
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
             if (isOnInventory && !isOnShop)
             {
                 isShopMoving = true;
+
+                Shop.shop_pickLvText.text = "레벨 : " + UpgradeItems[0].count;
+                Shop.shop_lightLvText.text = "레벨 : " + UpgradeItems[1].count;
 
             }
             else
@@ -433,6 +506,14 @@ public class Player : MonoBehaviour
             }
 
         }
+
+        // 박물관 입구 되돌아가기
+        if (isNearReturnMuseum && Input.GetKeyDown(KeyCode.F))
+        {
+            FadeEffect.Instance.OnFade(FadeState.FadeInOut);
+            Invoke("InvokeInMuseum", 1.5f);
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
+        }
         
         // 도감 상호작용
 
@@ -466,7 +547,7 @@ public class Player : MonoBehaviour
         if (isNearCollection && Input.GetKeyDown(KeyCode.F) && !isInventoryMoving && !isCollectMoving)
         {
             currentTime = 0f;
-
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
             if (isOnInventory && !isOnCollect)
             {
                 isCollectMoving = true;
@@ -495,6 +576,7 @@ public class Player : MonoBehaviour
                 isOnResetUI = true;
                 ResetPanel.SetActive(true);
                 SavePanel.SetActive(true);
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
             }
             
         }
@@ -507,12 +589,15 @@ public class Player : MonoBehaviour
         {
             Inventory.money_item.count -= 100;
             Inventory.FreshSlot();
+            //SaveSystem.Instance.Save();
 
             LoadScene.instance.GoMain();
 
             isOnResetUI = false;
             ResetPanel.SetActive(false);
             SavePanel.SetActive(false);
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[35]);
+            LevelManager.instance.isClickReset = true;
         }
         else
         {
@@ -524,12 +609,17 @@ public class Player : MonoBehaviour
         isOnResetUI = false;
         ResetPanel.SetActive(false);
         SavePanel.SetActive(false);
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
+
     }
 
     public void Save_Button()
     {
         SaveSystem.Instance.Save();
+        GroundAutoHeal();
         Debug.Log("세이브 되었습니다");
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[34]);
+
     }
 
     // 박물관 입장/퇴장 페이드 인아웃
@@ -618,7 +708,16 @@ public class Player : MonoBehaviour
         //Time.timeScale = 1f; // 게임 재개
         AddPlayerLife(3);
 
-        SaveSystem.Instance.Load();
+        
+        if (!File.Exists(savePath))
+        {
+            LevelManager.instance.ResetGame();
+        }
+        else
+        {
+            SaveSystem.Instance.Load();
+        }
+
         LoadScene.instance.GoMain();
     }
 
@@ -700,6 +799,11 @@ public class Player : MonoBehaviour
             isNearReset = true;
             Debug.Log("리셋에 접근했습니다. F 키로 상호작용.");
         }
+        if (other.CompareTag("ReturnMuseum"))
+        {
+            isNearReturnMuseum = true;
+            Debug.Log("리턴에 접근했습니다. F 키로 상호작용.");
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -728,6 +832,11 @@ public class Player : MonoBehaviour
         {
             isNearReset = false;
             Debug.Log("리셋에서 벗어났습니다.");
+        }
+        if (other.CompareTag("ReturnMuseum"))
+        {
+            isNearReturnMuseum = false;
+            Debug.Log("리턴에서 벗어났습니다.");
         }
     }
 

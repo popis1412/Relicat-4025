@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b81c96ecd3f7b634aba59c5ff6767807, type: 3}
   m_Name: Item_relic_13
   m_EditorClassIdentifier: 
-  itemName: key
+  itemName: "\uC5F4\uC1E0"
   itemImage: {fileID: 21300000, guid: 883e7f5997b34aa4a8f99194662b83b8, type: 3}
   count: 0
   accumulation_count: 0

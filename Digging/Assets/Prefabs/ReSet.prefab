@@ -76,12 +76,12 @@ SpriteRenderer:
   m_SortingLayerID: 756493957
   m_SortingLayer: 1
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 8551da941bd639747b6ebcff61147128, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 88f1913ee4298ed44bc6a3ecfde89495, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.72, y: 0.78}
+  m_Size: {x: 1.47, y: 1.82}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -104,8 +104,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.72, y: 0.78}
-    newSize: {x: 1.72, y: 0.78}
+    oldSize: {x: 1.47, y: 1.82}
+    newSize: {x: 1.47, y: 1.82}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -149,7 +149,7 @@ PrefabInstance:
     - target: {fileID: 5948310009752690545, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: c253befb134eeae4ebe8c6b677714bbf, type: 2}
+      objectReference: {fileID: 11400000, guid: 782b4d6eae7de854e933ed759c5f4cd8, type: 2}
     - target: {fileID: 5948310009752690545, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
       propertyPath: m_fontSizeBase
       value: 50
@@ -157,10 +157,14 @@ PrefabInstance:
     - target: {fileID: 5948310009752690545, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -7175697804980590748, guid: c253befb134eeae4ebe8c6b677714bbf, type: 2}
+      objectReference: {fileID: -8597691139731406771, guid: 782b4d6eae7de854e933ed759c5f4cd8, type: 2}
     - target: {fileID: 5948310009752690545, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5948310010870285460, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5948310010870285481, guid: 0f6ea848d4a788c4cb70e4dbe757f570, type: 3}
       propertyPath: m_Name
