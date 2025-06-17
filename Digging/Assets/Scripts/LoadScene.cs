@@ -22,12 +22,18 @@ public class LoadScene : MonoBehaviour
     public GameObject MainMenu;
 
     public bool isAlreadyWatchStory;
+    public bool isUseStart;
 
     [SerializeField] private GameObject[] Button_List;
     
     [SerializeField] private TextMeshProUGUI startText;
     [SerializeField] private TextMeshProUGUI continueText;
 
+    [SerializeField] private Texture2D cursorTex;
+
+
+    // 레벨
+    public int stage_Level = 1;
 
     private void Awake()
     {
@@ -44,6 +50,8 @@ public class LoadScene : MonoBehaviour
         m_MusicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
         m_MusicBGMSlider.onValueChanged.AddListener(SetMusicVolume);
         m_MusicSFXSlider.onValueChanged.AddListener(SetSFXVolume);
+
+        Cursor.SetCursor(cursorTex, new Vector2(20f, 70f), CursorMode.ForceSoftware);
     }
     public static LoadScene Instance
     {
@@ -75,6 +83,7 @@ public class LoadScene : MonoBehaviour
 
     private void Start()
     {
+        //SaveSystem.Instance.DeleteSaveFile();
         SaveSystem.Instance.LoadForLoadScene();
     }
 
@@ -95,6 +104,17 @@ public class LoadScene : MonoBehaviour
             startText.color = Color.white;
             continueText.color = new Color(1, 1, 1, 0.3f);
         }
+        //세이브
+        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            SaveSystem.Instance.Save();
+        }
+
+        //로드
+        if (Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            SaveSystem.Instance.Load();
+        }
     }
 
     // 게임시작
@@ -103,6 +123,7 @@ public class LoadScene : MonoBehaviour
         FadeEffect.Instance.OnFade(FadeState.FadeInOut);
         if (isAlreadyWatchStory == false)
         {
+            isUseStart = true;
             isAlreadyWatchStory = true;
             Invoke("InvokeLoadStory", 1.5f);
         }
@@ -110,14 +131,20 @@ public class LoadScene : MonoBehaviour
         {
             Invoke("InvokeLoadMain", 1.5f);
         }
-        
-        
-        
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
     void InvokeLoadMain()
     {
         MainMenu.SetActive(false);
-        SceneManager.LoadScene("Main");
+        if(stage_Level == 0)
+        {
+            SceneManager.LoadScene("Main");
+        }
+        else if(stage_Level == 1)
+        {
+            SceneManager.LoadScene("Main 1");
+        }
+
         //SaveSystem.Instance.Load();
     }
     void InvokeLoadStory()
@@ -130,22 +157,36 @@ public class LoadScene : MonoBehaviour
         MainMenu.SetActive(true);
         SceneManager.LoadScene("Menu");
     }
+    void InvokeLoadEnding()
+    {
+        SceneManager.LoadScene("Ending");
+    }
 
+    // 메인타이틀로
     public void GoMenu()
     {
         FadeEffect.Instance.OnFade(FadeState.FadeInOut);
         Invoke("InvokeLoadMenu", 1.5f);
     }
 
+    // 엔딩 스토리
+    public void GoEnding()
+    {
+        FadeEffect.Instance.OnFade(FadeState.FadeInOut);
+        Invoke("InvokeLoadEnding", 1.5f);
+    }
+
     //설정
     public void OnSettingsButton()
     {
         settingsPanel.SetActive(true);
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
 
     public void OnBackButton()
     {
         settingsPanel.SetActive(false);
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
 
     // 게임종료

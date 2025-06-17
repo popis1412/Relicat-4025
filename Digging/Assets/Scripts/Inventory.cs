@@ -96,7 +96,7 @@ public class Inventory : MonoBehaviour
             childtext.text = "";
         }
 
-        money_text.text = money_item.count.ToString();
+        money_text.text = money_item.count.ToString() + " 냥";
 
     }
 
@@ -182,36 +182,46 @@ public class Inventory : MonoBehaviour
         {
             if (items[i].itemName == _item.itemName)
             {
-                items[i].count--;
-                if (items[i].isMineral == true)
-                {
-                    money_item.count += _item.value;
-                    ItemLog(money_item, _item.value);
-                }
-                else if(items[i].isalreadySell == false)
-                {
-                    money_item.count += _item.value;
-                    items[i].isalreadySell = true;
-                    ItemLog(money_item, _item.value);
-                }
-                else
-                {
-                    money_item.count += _item.duplicate_value;
-                    ItemLog(money_item, _item.duplicate_value);
-                }
-                
                 if (items[i].count <= 0)
                 {
                     items[i].count = 0;
                     items.RemoveAt(i);
                 }
+                else
+                {
+                    items[i].count--;
+                    if (items[i].isMineral == true)
+                    {
+                        money_item.count += _item.value;
+                        ItemLog(money_item, _item.value);
+                    }
+                    else if (items[i].isalreadySell == false)
+                    {
+                        money_item.count += _item.value;
+                        items[i].isalreadySell = true;
+                        ItemLog(money_item, _item.value);
+                    }
+                    else
+                    {
+                        money_item.count += _item.duplicate_value;
+                        ItemLog(money_item, _item.duplicate_value);
+                    }
+                    if (items[i].count <= 0)
+                    {
+                        items[i].count = 0;
+                        items.RemoveAt(i);
+                    }
+                }
+                   
+                
                 Debug.Log(money_item.count);
 
-                
 
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[32]);
                 break; // 아이템은 유일하다고 가정
             }
         }
+        
 
         FreshSlot(); // 리스트 변경 후 UI 갱신
     }
@@ -226,20 +236,43 @@ public class Inventory : MonoBehaviour
                 int idx = items[i].count;
                 for (int j = 0; j < idx; j++)
                 {
-                    items[i].count--;
-
                     if (items[i].count <= 0)
                     {
                         items[i].count = 0;
                         items.RemoveAt(i);
                     }
-                    money += _item.value;
+                    else
+                    {
+                        items[i].count--;
+                        if (items[i].isMineral == true)
+                        {
+                            money_item.count += _item.value;
+                            ItemLog(money_item, _item.value);
+                        }
+                        else if (items[i].isalreadySell == false)
+                        {
+                            money_item.count += _item.value;
+                            items[i].isalreadySell = true;
+                            ItemLog(money_item, _item.value);
+                        }
+                        else
+                        {
+                            money_item.count += _item.duplicate_value;
+                            ItemLog(money_item, _item.duplicate_value);
+                        }
+                        if (items[i].count <= 0)
+                        {
+                            items[i].count = 0;
+                            items.RemoveAt(i);
+                        }
+                    }
                 }
-                
-                Debug.Log(money);
+                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[32]);
+                Debug.Log(money_item.count);
                 break; // 아이템은 유일하다고 가정
             }
         }
+        
 
         FreshSlot(); // 리스트 변경 후 UI 갱신
     }
@@ -259,8 +292,9 @@ public class Inventory : MonoBehaviour
             }
             else if (_item == money_item)
             {
-                dupleMoneyLog += addEA;
+                
                 getItem_EA.text = "X " + (dupleMoneyLog + addEA).ToString();
+                dupleMoneyLog += addEA;
             }
             else
             {
@@ -295,10 +329,17 @@ public class Inventory : MonoBehaviour
             {
                 getItem_Name.text = _item.itemName;
             }
-            
+
+            if(_item == money_item)
+            {
+                dupleMoneyLog += addEA;
+            }
+            else
+            {
+                dupleMoneyLog = 0;
+            }
             getItem_EA.text = "X " + addEA.ToString();
 
-            dupleMoneyLog = 0;
             dupleLog = 0;
         }
 
@@ -312,6 +353,8 @@ public class Inventory : MonoBehaviour
     private void closeItemLog()
     {
         getItem_LogPanel.SetActive(false);
+        getItem_Name.text = "";
+        getItem_EA.text = "";
         dupleLog = 0;
         dupleMoneyLog = 0;
     }
