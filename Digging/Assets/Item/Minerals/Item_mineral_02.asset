@@ -21,7 +21,7 @@ MonoBehaviour:
   rarity: 1
   value: 8
   duplicate_value: 0
-  ishaveitem: 1
+  ishaveitem: 0
   isalreadySell: 0
   Info: "\uC8FC\uD669\uBE5B \uB3D9\uAE00\uD55C \uB3CC\uBA69\uC774! \uD587\uBE5B \uC544\uB798\uC120
     \uB530\uB73B\uD558\uACE0 \uBC88\uB4E4\uBC88\uB4E4\uD574\uC11C \uACC4\uC18D \uD565\uACE0
