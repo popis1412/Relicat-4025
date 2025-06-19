@@ -211,13 +211,14 @@ public class Inventory : MonoBehaviour
                         items[i].count = 0;
                         items.RemoveAt(i);
                     }
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[32]);
                 }
                    
                 
                 Debug.Log(money_item.count);
 
 
-                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[32]);
+                
                 break; // 아이템은 유일하다고 가정
             }
         }

@@ -2169,7 +2169,7 @@ MonoBehaviour:
   - {fileID: 935216036}
   startText: {fileID: 871728728}
   continueText: {fileID: 2005017330}
-  cursorTex: {fileID: 2800000, guid: 8022ab52dd5c4a449a1bcfcd53cc5da4, type: 3}
+  cursorTex: {fileID: 2800000, guid: 2532b15862c10b048be09b341a3d2b03, type: 3}
   stage_Level: 0
 --- !u!4 &838931424
 Transform:
