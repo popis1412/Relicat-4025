@@ -389,7 +389,7 @@ public class LevelManager : MonoBehaviour
         collection.collect_sum = 0;
 
         shop.pick_damage = 6;
-        shop.lightRadius = 1.5f;
+        shop.lightRadius = 2f;
         shop.playerlight.GetComponent<Light2D>().pointLightOuterRadius = shop.lightRadius;
         shop.shop_pickLvText.text = "레벨 : 1";
         shop.shop_lightLvText.text = "레벨 : 1";
@@ -454,7 +454,7 @@ public class LevelManager : MonoBehaviour
         collection.collect_sum = 0;
 
         shop.pick_damage = 6;
-        shop.lightRadius = 1.5f;
+        shop.lightRadius = 2f;
         shop.playerlight.GetComponent<Light2D>().pointLightOuterRadius = shop.lightRadius;
         shop.shop_pickLvText.text = "레벨 : 1";
         shop.shop_lightLvText.text = "레벨 : 1";
@@ -526,7 +526,7 @@ public class LevelManager : MonoBehaviour
         collection.collect_sum = 0;
 
         shop.pick_damage = 6;
-        shop.lightRadius = 1.5f;
+        shop.lightRadius = 2f;
         shop.playerlight.GetComponent<Light2D>().pointLightOuterRadius = shop.lightRadius;
         shop.shop_pickLvText.text = "레벨 : 1";
         shop.shop_lightLvText.text = "레벨 : 1";
@@ -564,6 +564,7 @@ public class LevelManager : MonoBehaviour
         {
             GuidePanel.SetActive(false);
             isOnGuide = false;
+            
         }
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
     }
