@@ -108,7 +108,7 @@ Transform:
   m_GameObject: {fileID: 3057011070943476779}
   m_LocalRotation: {x: 0, y: 0, z: -0.258819, w: 0.9659259}
   m_LocalPosition: {x: 0.381, y: -0.17176536, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3083855431188750818}
@@ -155,7 +155,7 @@ SpriteRenderer:
   m_SortingLayerID: 124320615
   m_SortingLayer: 4
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: bcfa22501a052e743bcfd1980e2c16da, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 33e66442f93d2bf4baa70b03d73b66b8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -430,6 +430,7 @@ MonoBehaviour:
   Inventory_obj: {fileID: 0}
   shopUIPanel: {fileID: 0}
   CollectUIPanel: {fileID: 0}
+  isInMuseum: 0
   RelicInfoUIPanel: {fileID: 0}
   RelicInfoImage: {fileID: 0}
   RelicInfoName: {fileID: 0}

@@ -212,6 +212,8 @@ public class Player : MonoBehaviour
             LevelManager.instance.left_guideButton.SetActive(false);
             LevelManager.instance.right_guideButton.SetActive(true);
             LoadScene.instance.isUseStart = false;
+            Inventory.AddItem(UseItems[0], 3);
+            Inventory.AddItem(UseItems[1], 10);
         }
     }
 
