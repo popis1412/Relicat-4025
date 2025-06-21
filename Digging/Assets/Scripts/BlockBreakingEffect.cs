@@ -15,6 +15,8 @@ public class BlockBreakingEffect : MonoBehaviour
 
     float count = 0;
 
+    int nowColorType = 0;
+
     public void ParticlePlay()
     {
         if(!ps1.isPlaying)
@@ -72,5 +74,55 @@ public class BlockBreakingEffect : MonoBehaviour
             }
         }
 
+    }
+
+
+    public void changeColor(int blockType)
+    {
+        if (nowColorType != blockType)
+        {
+            nowColorType = blockType;
+            if(blockType == 3) //단단한 바위
+            {
+                Color color = new Color(128f / 255f, 128f / 255f, 128f / 255f, 1f);
+                var main = ps1.main;
+                main.startColor = color;
+                main = ps2.main;
+                main.startColor = color;
+                main = ps3.main;
+                main.startColor = color;
+            }
+            else if (blockType == 6) //모래
+            {
+                Color color = new Color(1f, 204f / 255f, 153f / 255f, 1f);
+                var main = ps1.main;
+                main.startColor = color;
+                main = ps2.main;
+                main.startColor = color;
+                main = ps3.main;
+                main.startColor = color;
+            }
+            else if (blockType == -1 || blockType == -2) //안 부서지는거
+            {
+                Color color = new Color(0f, 0f, 0f, 1f);
+                var main = ps1.main;
+                main.startColor = color;
+                main = ps2.main;
+                main.startColor = color;
+                main = ps3.main;
+                main.startColor = color;
+            }
+            else
+            {
+                Color color = new Color(164f / 255f, 111f / 255f, 4f / 255f, 1f);
+                var main = ps1.main;
+                main.startColor = color;
+                main = ps2.main;
+                main.startColor = color;
+                main = ps3.main;
+                main.startColor = color;
+
+            }
+        }
     }
 }

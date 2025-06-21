@@ -86,6 +86,13 @@ public class BlocksData
     public List<BlockData> blockDatas;
 }
 
+
+[System.Serializable]
+public class EnemyData
+{
+    public List<Vector2> EnemyDatas;
+}
+
 [System.Serializable]
 public class SaveData
 {
@@ -97,4 +104,5 @@ public class SaveData
     public LoadSceneData loadSceneData;
     public LevelManageData levelManageData;
     public BlocksData blocksData;
+    public EnemyData enemyData;
 }
