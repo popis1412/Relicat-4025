@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] GameObject player;
     Rigidbody2D rigidbody;
 
     int targetDirection = 1;
@@ -18,30 +17,12 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         rigidbody = this.gameObject.GetComponent<Rigidbody2D>();
-        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()
     {
         if(LevelManager.instance.isRunning == true)
         {
-            if (player != null)
-            {
-                if (timer - Time.deltaTime < 0)
-                {
-                    timer = 1f;
-                    if (player.transform.position.x > this.gameObject.transform.position.x)
-                        targetDirection = 1;
-                    else
-                        targetDirection = -1;
-                }
-                else
-                {
-                    timer -= Time.deltaTime;
-                }
-            }
-
-
             if (rigidbody != null)
             {
                 rigidbody.velocity = new Vector2(speed * targetDirection, rigidbody.velocity.y);
@@ -72,7 +53,7 @@ public class Enemy : MonoBehaviour
     {
         PlayerController playerScript = collision.GetComponent<PlayerController>();
 
-        if(collision.tag == "Player")
+        if (collision.tag == "Player" || collision.tag == "Enemy")
             Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), collision.GetComponent<CapsuleCollider2D>(), true);
 
         if(playerScript != null && attackCooldown <= 0)
@@ -88,7 +69,7 @@ public class Enemy : MonoBehaviour
     {
         PlayerController playerScript = collision.GetComponent<PlayerController>();
 
-        if (collision.tag == "Player")
+        if (collision.tag == "Player" || collision.tag == "Enemy")
             Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), collision.GetComponent<CapsuleCollider2D>(), true);
 
         if (playerScript != null && attackCooldown <= 0)
