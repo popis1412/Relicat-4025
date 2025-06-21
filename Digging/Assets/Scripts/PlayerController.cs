@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public PlayerControl input;
     Rigidbody2D rb;
     Collider2D col;
-    Player playerScript;
+    [SerializeField] Player playerScript;
     SpriteRenderer sr;
 
     // Movement
@@ -421,12 +421,14 @@ public class PlayerController : MonoBehaviour
 
         while(elapsed < duration)
         {
-            transform.position = Vector3.Lerp(start, end, elapsed / duration);
+            Vector2 nextPos = Vector2.Lerp(start, end, elapsed / duration);
+            rb.MovePosition(nextPos);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.position = end;
+        rb.MovePosition(end);
+
         yield return new WaitForSeconds(0.5f);
         sr.color = Color.white;
     }
