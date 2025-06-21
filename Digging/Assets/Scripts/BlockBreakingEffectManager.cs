@@ -32,7 +32,7 @@ public class BlockBreakingEffectManager : MonoBehaviour
         }
     }
 
-    public void CallBreakingEffect(GameObject callingBlock)
+    public void CallBreakingEffect(GameObject callingBlock, int blockType)
     {
         int callParticleIndex = -1;
         bool isAlreadyCalled = false;
@@ -72,13 +72,14 @@ public class BlockBreakingEffectManager : MonoBehaviour
             {
                 breakingEffectPool[callParticleIndex].transform.position = callingBlock.transform.position;
                 effectPoolScript.callingBlock = callingBlock;
+                effectPoolScript.changeColor(blockType);
                 effectPoolScript.ParticlePlay();
             }
 
         }
     }
 
-    public void CallBreakEffect(GameObject callingBlock)
+    public void CallBreakEffect(GameObject callingBlock, int blockType)
     {
 
         int callParticleIndex = -1;
@@ -99,6 +100,7 @@ public class BlockBreakingEffectManager : MonoBehaviour
             
             breakEffectPool[callParticleIndex].transform.position = callingBlock.transform.position;
             effectPoolScript.callingBlock = callingBlock;
+            effectPoolScript.changeColor(blockType);
             effectPoolScript.ParticlePlay();
 
         }

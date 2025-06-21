@@ -817,6 +817,7 @@ MonoBehaviour:
   levelManager: {fileID: 0}
   blocksDictionary: {fileID: 0}
   blockPrefab: {fileID: 1812071150501119636, guid: 24de2b6a8c516fa41946146131bdb262, type: 3}
+  enemyPrefab1: {fileID: 7607264377076006493, guid: ffa88da670edaeb459bc8f4f0d4202de, type: 3}
 --- !u!4 &538256527
 Transform:
   m_ObjectHideFlags: 0

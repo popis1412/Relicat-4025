@@ -23,9 +23,11 @@ public class SaveSystem : MonoBehaviour
     public BlocksDictionary blocksDictionary;
 
     [SerializeField] private GameObject blockPrefab;
+    [SerializeField] private GameObject enemyPrefab1;
 
     public static SaveSystem Instance;
     private string savePath => Application.persistentDataPath + "/SaveData.json";
+
 
     private void Awake()
     {
@@ -122,6 +124,7 @@ public class SaveSystem : MonoBehaviour
             }
         }
 
+
         var saveData = new SaveData();
 
 
@@ -182,6 +185,23 @@ public class SaveSystem : MonoBehaviour
         {
             blockDatas = ConvertBlockList(blocksDictionary)
         };
+
+        //몬스터정보 저장
+        Enemy[] enemys = FindObjectsOfType<Enemy>();
+        if (enemys.Length != 0)
+        {
+            List<Vector2> enemyPosition = new List<Vector2>();
+            foreach (Enemy enemy in enemys)
+            {
+                GameObject obj = enemy.gameObject;
+                enemyPosition.Add(obj.transform.position);
+            }
+
+            saveData.enemyData = new EnemyData
+            {
+                EnemyDatas = enemyPosition,
+            };
+        }
 
         //저장할 파일을 json형태로 변경 및 위에서 선언한 savePath경로상에 저장
         string jsonForSave = JsonUtility.ToJson(saveData, true);
@@ -346,6 +366,19 @@ public class SaveSystem : MonoBehaviour
             blockScript.ChangeBlock(blockData.blockType);
             blockScript.blockHealth = blockData.blockHealth;
 
+        }
+
+        //몬스터들 로드
+        Enemy[] enemys = FindObjectsOfType<Enemy>();
+        for (int i = enemys.Length - 1; i >= 0; i--)
+            enemys[i].EnemyDie();
+
+        if (loaded.enemyData.EnemyDatas.Count > 0)
+        {
+            foreach(Vector2 enemyPos in loaded.enemyData.EnemyDatas)
+            {
+                Instantiate(enemyPrefab1, enemyPos, Quaternion.identity);
+            }
         }
         
 
