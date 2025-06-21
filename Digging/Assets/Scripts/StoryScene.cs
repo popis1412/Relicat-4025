@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Spine.Unity;
 
 public class StoryScene : MonoBehaviour
 {
     private int storyNum;
     [SerializeField] private GameObject storyScene;
     [SerializeField] private Sprite[] storyImages;
-    private bool isActiveStroy = false;
+    private bool isActiveStroy = true;
+
+    [SerializeField] private SkeletonAnimation storyAni;
+    [SerializeField] private SkeletonDataAsset[] storyDataAssets;
 
     // Start is called before the first frame update
     void Start()
     {
         storyNum = 0;
-        storyScene.GetComponent<Image>().sprite = storyImages[0];
+        storyAni.skeletonDataAsset = storyDataAssets[0];
+        storyAni.Initialize(true);
+        storyAni.AnimationState.SetAnimation(0, "scene", false);
+        Invoke("invokeMore", 6f);
     }
 
     // Update is called once per frame
@@ -28,7 +35,8 @@ public class StoryScene : MonoBehaviour
             switch (storyNum)
             {
                 case 0:
-                    storyScene.GetComponent<Image>().sprite = storyImages[0];
+                    storyAni.skeletonDataAsset = storyDataAssets[0];
+                    Invoke("invokeMore", 6f);
                     break;
 
                 case 1:
@@ -59,14 +67,17 @@ public class StoryScene : MonoBehaviour
     }
     void InvokeLoadStoryIntro01()
     {
-        storyScene.GetComponent<Image>().sprite = storyImages[1];
-        
+        storyAni.skeletonDataAsset = storyDataAssets[1];
+        storyAni.Initialize(true);
+        storyAni.AnimationState.SetAnimation(0, "scene", false);
         Invoke("invokeMore", 1.5f);
     }
     void InvokeLoadStoryIntro02()
     {
-        storyScene.GetComponent<Image>().sprite = storyImages[2];
-        Invoke("invokeMore", 1.5f);
+        storyAni.skeletonDataAsset = storyDataAssets[2];
+        storyAni.Initialize(true);
+        storyAni.AnimationState.SetAnimation(0, "scene", false);
+        Invoke("invokeMore", 5f);
     }
 
     void invokeMore()
