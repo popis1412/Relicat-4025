@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704f8b9034c57b641b18587947f362d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relicEffect: {fileID: 5099109402161310600, guid: 981735d29b52e7641ad03093bce8609a, type: 3}
+  relicEffect: {fileID: 1965937476717315258, guid: d42c1c791b82e7a4e8adf2cc57f94f3a, type: 3}
   dropItem: {fileID: 5480586821343649714, guid: 202c5e0557af70e4aaf46a08c4f977b3, type: 3}
   monster1: {fileID: 7607264377076006493, guid: ffa88da670edaeb459bc8f4f0d4202de, type: 3}
   block_Normal_0: {fileID: 21300000, guid: 65023ee168a12c447a36c79744bc962d, type: 3}
@@ -184,7 +184,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   blocksDictionary: {fileID: 0}
   effectManager: {fileID: 0}
-  DestroyAudioSourse: {fileID: 0}
 --- !u!1 &6704852269892935808
 GameObject:
   m_ObjectHideFlags: 0

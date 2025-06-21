@@ -11,6 +11,8 @@ public class DropItem : MonoBehaviour
     public int addEA; //아이템 개수
     Rigidbody2D rigidbody;
 
+    [SerializeField] GameObject relicEffect;
+
     float count = 0;
     bool canTake = false;
 
@@ -28,10 +30,15 @@ public class DropItem : MonoBehaviour
     }
     void Start()
     {
-        print("생성");
         float x = Random.Range(-1, 1);
         float y = Random.Range(2, 3);
         rigidbody.velocity = new Vector2(x, y);
+
+        if (itemType == 0)
+        {
+            relicEffect.SetActive(true);
+        }
+
     }
 
     // Update is called once per frame

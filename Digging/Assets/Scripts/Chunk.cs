@@ -13,10 +13,10 @@ public class Chunk : MonoBehaviour
     [SerializeField] int jewelWithHardBlockCount = 2;//생성할 보석+단단한블럭 개수
     [SerializeField] int jewelCount = 8;    //생성할 보석 개수
     [SerializeField] int sandCount = 10; // 생성할 모래 개수
-    [SerializeField] int relicBlockCount = 1;   //생성할 유물블럭 개수
+    [SerializeField] int relicBlockCount = 2;   //생성할 유물블럭 개수
     [SerializeField] int hardBlockCount = 7;    //생성할 단단한블럭 개수
     [SerializeField] int unbreakableCount = 3;  //생성할 안부서지는블럭 개수
-    [SerializeField] int monsterBlockCount = 1;  //생성할 안부서지는블럭 개수
+    [SerializeField] int monsterBlockCount = 3;  //생성할 몬스터블럭 개수
 
 
     public void AppendBlocksDictionary()
