@@ -39,6 +39,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: IsFlying
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsGround
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5333753926658522678}
   m_Solo: 0
@@ -316,6 +319,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: IsFlying
     m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: IsGround
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 9022643326211427905}
   m_Solo: 0
@@ -560,9 +566,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: IsFlying
     m_EventTreshold: 0
-  - m_ConditionMode: 4
-    m_ConditionEvent: FlySpeed
-    m_EventTreshold: 1
   - m_ConditionMode: 1
     m_ConditionEvent: IsGround
     m_EventTreshold: 0
