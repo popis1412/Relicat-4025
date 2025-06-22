@@ -260,6 +260,7 @@ public class Collection : MonoBehaviour
             Inventory.SellItem(player.items[itemNum]);
 
             collection_Lv_Check();
+            Inventory.LogMessage("등록 되었습니다.");
         }
         
     }
