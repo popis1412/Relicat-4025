@@ -176,6 +176,10 @@ public class Shop : MonoBehaviour
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
 
         }
+        else
+        {
+            Inventory.LogMessage("돈이 부족합니다");
+        }
 
     }
     public void Button_Buy_Item_Torch()
@@ -186,6 +190,10 @@ public class Shop : MonoBehaviour
             Inventory.AddItem(player.UseItems[1], 1);
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
 
+        }
+        else
+        {
+            Inventory.LogMessage("돈이 부족합니다");
         }
 
     }
@@ -208,6 +216,10 @@ public class Shop : MonoBehaviour
 
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
         }
+        else
+        {
+            Inventory.LogMessage("돈이 부족합니다");
+        }
     }
     public void Button_Upgrade_EyeLight()
     {
@@ -226,6 +238,10 @@ public class Shop : MonoBehaviour
 
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
 
+        }
+        else
+        {
+            Inventory.LogMessage("돈이 부족합니다");
         }
     }
 

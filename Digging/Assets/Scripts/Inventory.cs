@@ -37,6 +37,9 @@ public class Inventory : MonoBehaviour
     public GameObject moneyPanel;
     public GameObject healthPanel;
 
+    [SerializeField] private GameObject logMessage_Panel;
+    [SerializeField] private TextMeshProUGUI logText;
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -317,10 +320,12 @@ public class Inventory : MonoBehaviour
                         if(collection.li_isRelicOnTable[i] == false)
                         {
                             getItem_Name.text = "???";
+                            LogMessage("???" + "À»(¸¦) È¹µæÇÏ¿´½À´Ï´Ù.");
                         }
                         else
                         {
                             getItem_Name.text = _item.itemName;
+                            LogMessage(_item.itemName + "À»(¸¦) È¹µæÇÏ¿´½À´Ï´Ù.");
                         }
                     }
                 }
@@ -358,5 +363,20 @@ public class Inventory : MonoBehaviour
         getItem_EA.text = "";
         dupleLog = 0;
         dupleMoneyLog = 0;
+    }
+
+    public void LogMessage(string log)
+    {
+        logText.text = log;
+
+        logMessage_Panel.SetActive(true);
+
+        CancelInvoke("closeLogMessage");
+        Invoke("closeLogMessage", 3f);
+    }
+    private void closeLogMessage()
+    {
+        logMessage_Panel.SetActive(false);
+        logText.text = "";
     }
 }
