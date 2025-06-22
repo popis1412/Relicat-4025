@@ -71,6 +71,8 @@ public class PlayerController : MonoBehaviour
     public AudioSource diggingAudioSourse;
     private bool isDigSound = false;
 
+    private GameObject jetpackEffect; // 이펙트 오브젝트
+
     private void Awake()
     {
         input = new PlayerControl();
@@ -113,6 +115,11 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         input.Disable();
+    }
+
+    private void Start()
+    {
+        jetpackEffect = GameObject.Find("Ef_Jetpack");
     }
 
     private void Update()
@@ -195,6 +202,7 @@ public class PlayerController : MonoBehaviour
             // 상승 중: 가속
             //print("상승 중");
             jetpack.GetComponent<SpriteRenderer>().enabled = true;
+            jetpackEffect.SetActive(true);
             jetpack.Play("Anim", -1, 0);
             jetpack.speed = 1;
             verticalSpeed += flyAcceleration * flyAxis * Time.fixedDeltaTime;
@@ -206,7 +214,8 @@ public class PlayerController : MonoBehaviour
             // 입력 없음: 감속
             //print("하강 중");
             jetpack.GetComponent<SpriteRenderer>().enabled = false;
-            jetpack.speed = 0;
+            jetpackEffect.SetActive(false);
+            jetpack.speed = 0; 
             verticalSpeed -= deceleration * Time.fixedDeltaTime;
             verticalSpeed = Mathf.Max(0f, verticalSpeed);
         }
