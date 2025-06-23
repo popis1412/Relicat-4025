@@ -214,6 +214,7 @@ public class Player : MonoBehaviour
             LoadScene.instance.isUseStart = false;
             Inventory.AddItem(UseItems[0], 3);
             Inventory.AddItem(UseItems[1], 10);
+            SaveSystem.Instance.Save();
         }
     }
 
@@ -603,7 +604,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            Debug.Log("돈이 부족합니다");
+            Inventory.LogMessage("돈이 부족합니다");
         }
     }
     public void Reset_Close_Button()
@@ -619,7 +620,7 @@ public class Player : MonoBehaviour
     {
         SaveSystem.Instance.Save();
         GroundAutoHeal();
-        Debug.Log("세이브 되었습니다");
+        Inventory.LogMessage("세이브 되었습니다");
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[34]);
 
     }
