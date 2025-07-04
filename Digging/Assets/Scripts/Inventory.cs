@@ -320,7 +320,7 @@ public class Inventory : MonoBehaviour
                         if(collection.li_isRelicOnTable[i] == false)
                         {
                             getItem_Name.text = "???";
-                            LogMessage("???" + "을(를) 획득하였습니다.");
+                            LogMessage("???" + "을(를) 획득하였습니다." + "\n박물관에 등록하여 목표를 달성하세요!");
                         }
                         else
                         {

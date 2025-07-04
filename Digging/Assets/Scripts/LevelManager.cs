@@ -106,6 +106,8 @@ public class LevelManager : MonoBehaviour
         originalTimerTextColor = stagetimerText.color;
 
         guideView_idx = 0;
+        Guide_list[0].SetActive(true);
+
     }
     private void OnDestroy()
     {
@@ -612,6 +614,8 @@ public class LevelManager : MonoBehaviour
                 Guide_list[6].SetActive(false);
                 Guide_list[7].SetActive(false);
                 Guide_list[8].SetActive(false);
+                Guide_list[9].SetActive(false);
+
                 break;
             case 1:
                 Guide_list[0].SetActive(false);
@@ -623,6 +627,8 @@ public class LevelManager : MonoBehaviour
                 Guide_list[6].SetActive(false);
                 Guide_list[7].SetActive(false);
                 Guide_list[8].SetActive(false);
+                Guide_list[9].SetActive(false);
+
                 break;
             case 2:
                 Guide_list[0].SetActive(false);
@@ -634,6 +640,8 @@ public class LevelManager : MonoBehaviour
                 Guide_list[6].SetActive(false);
                 Guide_list[7].SetActive(false);
                 Guide_list[8].SetActive(false);
+                Guide_list[9].SetActive(false);
+
                 break;
             case 3:
                 Guide_list[0].SetActive(false);
@@ -645,6 +653,8 @@ public class LevelManager : MonoBehaviour
                 Guide_list[6].SetActive(false);
                 Guide_list[7].SetActive(false);
                 Guide_list[8].SetActive(false);
+                Guide_list[9].SetActive(false);
+
                 break;
             case 4:
                 Guide_list[0].SetActive(false);
@@ -656,6 +666,8 @@ public class LevelManager : MonoBehaviour
                 Guide_list[6].SetActive(false);
                 Guide_list[7].SetActive(false);
                 Guide_list[8].SetActive(false);
+                Guide_list[9].SetActive(false);
+
                 break;
             case 5:
                 Guide_list[0].SetActive(false);
@@ -667,6 +679,8 @@ public class LevelManager : MonoBehaviour
                 Guide_list[6].SetActive(false);
                 Guide_list[7].SetActive(false);
                 Guide_list[8].SetActive(false);
+                Guide_list[9].SetActive(false);
+
                 break;
             case 6:
                 Guide_list[0].SetActive(false);
@@ -678,6 +692,8 @@ public class LevelManager : MonoBehaviour
                 Guide_list[6].SetActive(true);
                 Guide_list[7].SetActive(false);
                 Guide_list[8].SetActive(false);
+                Guide_list[9].SetActive(false);
+
                 break;
             case 7:
                 Guide_list[0].SetActive(false);
@@ -689,6 +705,8 @@ public class LevelManager : MonoBehaviour
                 Guide_list[6].SetActive(false);
                 Guide_list[7].SetActive(true);
                 Guide_list[8].SetActive(false);
+                Guide_list[9].SetActive(false);
+
                 break;
             case 8:
                 Guide_list[0].SetActive(false);
@@ -700,6 +718,21 @@ public class LevelManager : MonoBehaviour
                 Guide_list[6].SetActive(false);
                 Guide_list[7].SetActive(false);
                 Guide_list[8].SetActive(true);
+                Guide_list[9].SetActive(false);
+
+                break;
+            case 9:
+                Guide_list[0].SetActive(false);
+                Guide_list[1].SetActive(false);
+                Guide_list[2].SetActive(false);
+                Guide_list[3].SetActive(false);
+                Guide_list[4].SetActive(false);
+                Guide_list[5].SetActive(false);
+                Guide_list[6].SetActive(false);
+                Guide_list[7].SetActive(false);
+                Guide_list[8].SetActive(false);
+                Guide_list[9].SetActive(true);
+
                 break;
 
         }
