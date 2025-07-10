@@ -51,34 +51,42 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlayerController playerScript = collision.GetComponent<PlayerController>();
-
-        if (collision.tag == "Player" || collision.tag == "Enemy")
+        if (collision.tag == "Player")
+        {
             Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), collision.GetComponent<CapsuleCollider2D>(), true);
 
-        if(playerScript != null && attackCooldown <= 0)
-        {
-            attackCooldown = 1f;
+            PlayerController playerScript = collision.GetComponent<PlayerController>();
+            if(playerScript != null && attackCooldown <= 0)
+            {
+                attackCooldown = 1f;
 
-            //플레이어가 대미지 입는 함수 호출 필요
-            playerScript.TakeDamage(damage, transform);
+                //플레이어가 대미지 입는 함수 호출 필요
+                playerScript.TakeDamage(damage, transform);
+            }
         }
+        else if(collision.tag == "Enemy")
+            Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), collision.GetComponent<CircleCollider2D>(), true);
+
+        
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        PlayerController playerScript = collision.GetComponent<PlayerController>();
-
-        if (collision.tag == "Player" || collision.tag == "Enemy")
+        if(collision.tag == "Player")
+        {
             Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), collision.GetComponent<CapsuleCollider2D>(), true);
 
-        if (playerScript != null && attackCooldown <= 0)
-        {
-            attackCooldown = 1f;
+            PlayerController playerScript = collision.GetComponent<PlayerController>();
+            if(playerScript != null && attackCooldown <= 0)
+            {
+                attackCooldown = 1f;
 
-            //플레이어가 대미지 입는 함수 호출 필요
-            playerScript.TakeDamage(damage, transform);
+                //플레이어가 대미지 입는 함수 호출 필요
+                playerScript.TakeDamage(damage, transform);
+            }
         }
+        else if(collision.tag == "Enemy")
+            Physics2D.IgnoreCollision(GetComponent<CircleCollider2D>(), collision.GetComponent<CircleCollider2D>(), true);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

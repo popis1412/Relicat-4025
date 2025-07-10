@@ -1,5 +1,12 @@
-﻿using System.Collections;
+﻿using JetBrains.Annotations;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 
 public class PlayerController : MonoBehaviour
@@ -50,7 +57,7 @@ public class PlayerController : MonoBehaviour
     private int blockLayer;
     // 모래에 플레이어가 끼었을 경우
     private const float HeadCheckRadius = 0.1f;   // Overlap 반지름
-    private const float NarrowDigDistance = 0.5f; // 모래에 갇혔을 때 파괴 가능 거리
+    private float NarrowDigDistance = 0.5f; // 모래에 갇혔을 때 파괴 가능 거리
 
     float angle;
     float t = 0;
@@ -72,6 +79,25 @@ public class PlayerController : MonoBehaviour
     private bool isDigSound = false;
 
     private GameObject jetpackEffect; // 이펙트 오브젝트
+
+
+    // 콜라이더 제어용 이벤트 선언
+    public static event Action OnSandEnter;
+    public static event Action OnSandExit;
+    private bool isInSand = false; // 이전 모래 상태 저장
+
+    public BlocksDictionary blocksDictionary;
+    private GameObject sandPos;
+
+    GameObject block;
+
+    RaycastHit2D hit;
+
+    public bool left { get; private set; }
+    public bool right { get; private set; }
+    public bool up { get; private set; }
+    public bool down { get; private set; }
+    public int range;
 
     private void Awake()
     {
@@ -97,6 +123,8 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
 
         jetpack = transform.Find("jetpack/Anim").GetComponent<Animator>();
+
+        blocksDictionary = GameObject.Find("BlocksDictionary").GetComponent<BlocksDictionary>();
     }
 
     // 입력 시스템 활성화 및 입력 이벤트 등록
@@ -124,6 +152,12 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        UpdateSandStatus();
+        HandleDigging();
+
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        hit = Physics2D.Raycast(mousePos, Vector2.zero);
+
         // 단축키 아이템 사용
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -138,17 +172,36 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("FlySpeed", rb.velocity.magnitude);
         anim.SetBool("IsFlying", isFlying);
         anim.SetBool("IsDigging", isDigging);
+    }
 
-        
+    private void UpdateSandStatus()
+    {
+        isInSand = IsStuckInSand();
+        if(isInSand)
+        {
+            Debug.Log("플레이어가 모래에 갇혔습니다!");
+            col.enabled = false;
+            Vector2 targetPos = sandPos.transform.position;
+            rb.gravityScale = 0;
+            transform.position = targetPos;
+            // 필요한 후처리: 예) 애니메이션 재생, 이동 종료 이벤트 등
+            
+            anim.SetBool("SandTrap", true);
+
+        }
+        else
+        {
+            Debug.Log("플레이어가 모래에서 벗어났습니다!");
+            rb.gravityScale = 1;
+            col.enabled = true;
+            anim.SetBool("SandTrap", false);
+        }
     }
 
     private void FixedUpdate()
     {
-        HandleDigging();
         UpdateJumpAxisSmoothly();
         HandleMovement();
-        
-            
     }
 
     // 비행 입력을 부드럽게 적용(0 ~ 1 사이 값을 천천히 변화)
@@ -240,13 +293,103 @@ public class PlayerController : MonoBehaviour
     // 클릭한 블록 파괴 처리
     private void HandleDigging()
     {
-        GameObject targetBlock = GetVaildBlockUnderMouse();
+        List<GameObject> targetBlocks = GetVaildBlocksUnderMouse(hit);
 
-        if(!input.Player.Digging.IsPressed() || targetBlock == null)
+        if(targetBlocks == null || targetBlocks.Count == 0 || !input.Player.Digging.IsPressed())
         {
             isDigging = false;
             t = 0;
             return;
+        }
+
+        foreach(var targetBlock in targetBlocks)
+        {
+            if(targetBlock == null) continue;
+
+            print($"타겟 블록: {targetBlock.transform.position}");
+
+            if(targetBlock.TryGetComponent(out Block block))
+            {
+                isDigging = true;
+                block.BlockDestroy(Time.deltaTime * pickdamage, playerScript);
+
+                //// Dig 사운드
+                //// 일반 흙 블록
+                if(block.blockType == 0 || block.blockType == 4 || block.blockType == 5)
+                {
+                    int idx = UnityEngine.Random.Range(5, 9);
+                    if(isDigging && isDigSound == false)
+                    {
+                        diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[idx]);
+                        isDigSound = true;
+                    }
+                    if(!isDigging && diggingAudioSourse.isPlaying == true)
+                    {
+                        diggingAudioSourse.Stop();
+                        isDigSound = false;
+                    }
+                    if(diggingAudioSourse.isPlaying == false)
+                    {
+                        isDigSound = false;
+                    }
+                }
+                // 광물 블록
+                if(block.blockType == 2 || block.blockType == 7 || block.blockType == 8 || block.blockType == 9 || block.blockType == 10 || block.blockType == 11)
+                {
+                    if(isDigging && isDigSound == false)
+                    {
+                        diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[12]);
+                        isDigSound = true;
+                    }
+                    if(!isDigging && diggingAudioSourse.isPlaying == true)
+                    {
+                        diggingAudioSourse.Stop();
+                        isDigSound = false;
+                    }
+                    if(diggingAudioSourse.isPlaying == false)
+                    {
+                        isDigSound = false;
+                    }
+                }
+                // 바위 블록
+                if(block.blockType == 3 || block.blockType == -1)
+                {
+                    int idx = UnityEngine.Random.Range(9, 12);
+                    if(isDigging && isDigSound == false)
+                    {
+                        diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[idx]);
+                        isDigSound = true;
+                    }
+                    if(!isDigging && diggingAudioSourse.isPlaying == true)
+                    {
+                        diggingAudioSourse.Stop();
+                        isDigSound = false;
+                    }
+                    if(diggingAudioSourse.isPlaying == false)
+                    {
+                        isDigSound = false;
+                    }
+                }
+                // 모래 블록
+                if(block.blockType == 6)
+                {
+
+                    if(isDigging && isDigSound == false)
+                    {
+                        diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[8]);
+                        isDigSound = true;
+                    }
+                    if(!isDigging && diggingAudioSourse.isPlaying == true)
+                    {
+                        diggingAudioSourse.Stop();
+                        isDigSound = false;
+                    }
+                    if(diggingAudioSourse.isPlaying == false)
+                    {
+                        isDigSound = false;
+                    }
+                }
+            }
         }
 
         pivot = transform.Find("Pivot").position;
@@ -272,135 +415,182 @@ public class PlayerController : MonoBehaviour
         }
         weapon.transform.position = pivot + offset;
         weapon.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-
-        if (targetBlock.TryGetComponent(out Block block))
-        {
-            isDigging = true;
-            block.BlockDestroy(Time.deltaTime * pickdamage, playerScript);
-
-            // Dig 사운드
-            // 일반 흙 블록
-            if(block.blockType == 0 ||  block.blockType == 4 || block.blockType == 5)
-            {
-                int idx = Random.Range(5, 9);
-                if(isDigging && isDigSound == false)
-                {
-                    diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[idx]);
-                    isDigSound = true;
-                }
-                if (!isDigging && diggingAudioSourse.isPlaying == true)
-                {
-                    diggingAudioSourse.Stop();
-                    isDigSound = false;
-                }
-                if (diggingAudioSourse.isPlaying == false)
-                {
-                    isDigSound = false;
-                }
-            }
-            // 광물 블록
-            if (block.blockType == 2 || block.blockType == 7 || block.blockType == 8 || block.blockType == 9 || block.blockType == 10 || block.blockType == 11)
-            {
-                if (isDigging && isDigSound == false)
-                {
-                    diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[12]);
-                    isDigSound = true;
-                }
-                if (!isDigging && diggingAudioSourse.isPlaying == true)
-                {
-                    diggingAudioSourse.Stop();
-                    isDigSound = false;
-                }
-                if (diggingAudioSourse.isPlaying == false)
-                {
-                    isDigSound = false;
-                }
-            }
-            // 바위 블록
-            if (block.blockType == 3 || block.blockType == -1)
-            {
-                int idx = Random.Range(9, 12);
-                if (isDigging && isDigSound == false)
-                {
-                    diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[idx]);
-                    isDigSound = true;
-                }
-                if (!isDigging && diggingAudioSourse.isPlaying == true)
-                {
-                    diggingAudioSourse.Stop();
-                    isDigSound = false;
-                }
-                if (diggingAudioSourse.isPlaying == false)
-                {
-                    isDigSound = false;
-                }
-            }
-            // 모래 블록
-            if (block.blockType == 6)
-            {
-                
-                if (isDigging && isDigSound == false)
-                {
-                    diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[8]);
-                    isDigSound = true;
-                }
-                if(!isDigging && diggingAudioSourse.isPlaying == true)
-                {
-                    diggingAudioSourse.Stop();
-                    isDigSound = false;
-                }
-                if (diggingAudioSourse.isPlaying == false)
-                {
-                    isDigSound = false;
-                }
-            }
-        }
     }
 
     // 마우스 위치 기준으로 파괴 가능한 블록 반환
-    private GameObject GetVaildBlockUnderMouse()
+    private List<GameObject> GetVaildBlocksUnderMouse(RaycastHit2D hit)
     {
-        // 마우스 레이저
-        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
-
-        // 콜라이더가 없(배경, 빈 화면)거나 블록인 경우만 캐기
         if(hit.collider == null || !hit.collider.CompareTag("Block"))
             return null;
 
-        Vector2 playerPos = new (transform.position.x, transform.position.y);
-        Vector2 hitPos = new (hit.transform.position.x, hit.transform.position.y);
+        Vector2 playerPos = transform.position;
+        Vector2 clickBlockPos = hit.transform.position;
 
-        // 캐기 거리
-        float distance = Mathf.Sqrt(Mathf.Pow(hitPos.x - playerPos.x, 2) + Mathf.Pow(hitPos.y - playerPos.y, 2));
+        Vector2Int playerGrid = new(
+            Mathf.FloorToInt(playerPos.x),
+            Mathf.FloorToInt(playerPos.y)
+        );
+        Vector2Int blockGrid = new(
+            Mathf.FloorToInt(clickBlockPos.x),
+            Mathf.FloorToInt(clickBlockPos.y)
+        );
 
-        // 캐릭터 기준 블록을 캘 수 있는 최대 거리
-        float digDistance = IsStuckInSand() ?
-            NarrowDigDistance :     // 모래만 캘 수 있는 범위(0.5)
-            1.5f / transform.localScale.x;
+        int dx = blockGrid.x - playerGrid.x;
+        int dy = blockGrid.y - playerGrid.y;
 
-        return distance < digDistance ? hit.collider.gameObject : null;
+        if(IsStuckInSand())
+        {
+            if(dx == 0 && dy == 0)
+            {
+                return new List<GameObject> { sandPos };
+            }
+            else
+            {
+                return null;
+            }
+        }
 
-        //print($"block Distance: {DigDistance}, Character Distance: {distance}");
+        var blocksDict = hit.collider.GetComponent<Block>().blocksDictionary;
+
+        return CanDigBlocks(playerPos, clickBlockPos, blocksDict);
     }
+
+    private struct DirectionSet
+    {
+        public Vector2 direction;
+        public bool isDiagonal;
+        public float snap;
+        public float gridStep;
+
+        public DirectionSet(Vector2 dir, bool diagonal, float snapVal, float gridStepVal)
+        {
+            direction = dir;
+            isDiagonal = diagonal;
+            snap = snapVal;
+            gridStep = gridStepVal;
+        }
+    }
+
+    private List<GameObject> CanDigBlocks(Vector2 playerPos, Vector2 blockPos, BlocksDictionary blocksDict)
+    {
+        List<GameObject> diggableBlocks = new();
+
+        Vector2 basePos = new(Mathf.Floor(playerPos.x), Mathf.Floor(playerPos.y));
+        Vector2 offset = blockPos - basePos;
+
+        List<DirectionSet> directionSets = new();
+
+        for(int r = 0; r < range; r++)
+        {
+            float snap = 0.5f + r;
+            float gridStep = snap + 1f;
+
+            directionSets.Add(new DirectionSet(new Vector2(-snap, 0.5f), false, snap, gridStep));     // Left
+            directionSets.Add(new DirectionSet(new Vector2(gridStep, 0.5f), false, snap, gridStep));  // Right
+            directionSets.Add(new DirectionSet(new Vector2(0.5f, gridStep), false, snap, gridStep));  // Up
+            directionSets.Add(new DirectionSet(new Vector2(0.5f, -snap), false, snap, gridStep));     // Down
+
+            directionSets.Add(new DirectionSet(new Vector2(-snap, gridStep), true, snap, gridStep));   // Left-Up
+            directionSets.Add(new DirectionSet(new Vector2(gridStep, gridStep), true, snap, gridStep));// Right-Up
+            directionSets.Add(new DirectionSet(new Vector2(-snap, -snap), true, snap, gridStep));      // Left-Down
+            directionSets.Add(new DirectionSet(new Vector2(gridStep, -snap), true, snap, gridStep));   // Right-Down
+        }
+
+        // offset이 1칸 거리인 경우만 처리 (snap == 0.5 인 경우만 처리)
+        bool foundAdjacent = false;
+        DirectionSet adjacentDirSet = default;
+
+        foreach(var dirSet in directionSets)
+        {
+            if(dirSet.snap == 0.5f && offset == dirSet.direction)
+            {
+                foundAdjacent = true;
+                adjacentDirSet = dirSet;
+                break;
+            }
+        }
+
+        if(!foundAdjacent)
+        {
+            // 1칸 거리 블록이 아니면 캘 수 없음
+            return diggableBlocks;
+        }
+
+        // 1칸 거리인 blockPos 기준으로 range만큼 블록 캘 수 있게 처리
+        float snapAdj = adjacentDirSet.snap;
+        float gridStepAdj = adjacentDirSet.gridStep;
+
+        if(!adjacentDirSet.isDiagonal)
+        {
+            Vector2 stepDir = adjacentDirSet.direction - new Vector2(0.5f, 0.5f); // 방향 유도
+
+            for(int step = 0; step < range; step++)
+            {
+                Vector2 digPos = blockPos + stepDir * step;
+
+                if(blocksDict.blockPosition.TryGetValue(digPos, out GameObject block))
+                    diggableBlocks.Add(block);
+            }
+        }
+        else
+        {
+            // 대각선 차단 (1칸 거리 기준)
+            bool left = blocksDict.blockPosition.ContainsKey(basePos + new Vector2(-0.5f, 0.5f));
+            bool right = blocksDict.blockPosition.ContainsKey(basePos + new Vector2(1.5f, 0.5f));
+            bool up = blocksDict.blockPosition.ContainsKey(basePos + new Vector2(0.5f, 1.5f));
+            bool down = blocksDict.blockPosition.ContainsKey(basePos + new Vector2(0.5f, -0.5f));
+
+            bool blocked =
+                (adjacentDirSet.direction == new Vector2(-snapAdj, gridStepAdj) && (left && up)) ||
+                (adjacentDirSet.direction == new Vector2(gridStepAdj, gridStepAdj) && (right && up)) ||
+                (adjacentDirSet.direction == new Vector2(-snapAdj, -snapAdj) && (left && down)) ||
+                (adjacentDirSet.direction == new Vector2(gridStepAdj, -snapAdj) && (right && down));
+
+            if(!blocked)
+            {
+                if(blocksDict.blockPosition.TryGetValue(blockPos, out GameObject block))
+                    diggableBlocks.Add(block);
+            }
+        }
+
+        foreach(GameObject block in diggableBlocks)
+            Debug.Log("캘 수 있는 블럭의 위치: " + block.transform.position);
+
+        return diggableBlocks;
+    }
+
 
     // 모래에 갇혔는지 판별
     private bool IsStuckInSand()
     {
-        // 머리 위 오버랩 감지
-        Vector2 headCheckPosition = (Vector2)transform.position + new Vector2(0, HeadCheckRadius);
+        float snap = 0.5f;
+        float gridStep = snap + 1f;
+        Vector2 playerPos = transform.position;
 
-        // 캐릭터도 감지되기 때문에 Layer를 Block으로 해 놓아야 함.
-        Collider2D hit = Physics2D.OverlapCircle(headCheckPosition, HeadCheckRadius, blockLayer);
+        Vector2 basePos = new(Mathf.Floor(playerPos.x), Mathf.Floor(playerPos.y));
+        Vector2 pos = basePos + new Vector2(snap, snap);    // 15 + 0.5 = 15.5, 0 + 0.5 = 0.5, -1 + 0.5 = -0.5
 
-        if(hit == null)
-            return false;
+        print($"Sand | Pos: {pos}, playerPos: {playerPos}, snap: {snap}");
 
-        if(hit.TryGetComponent(out Block block) && block.blockType == 6)
+        GameObject posBlockObj = null;
+        Block posBlock = null;
+
+        // 현재 위치 블럭 체크
+        if(blocksDictionary.blockPosition.TryGetValue(pos, out GameObject foundPosBlock))
         {
-            return block.blocksDictionary.blockPosition.ContainsKey(block.transform.position);
+            posBlockObj = foundPosBlock;
+            posBlock = posBlockObj.GetComponent<Block>();
+            print("모래 블럭 찾음 " + posBlock.transform.position);
+
+            if(posBlock != null && posBlock.blockType == 6)
+            {
+                sandPos = posBlockObj;
+                return true;
+            }
         }
 
+        // 아무 조건도 만족하지 않을 경우
+        sandPos = null;
         return false;
     }
 
@@ -542,5 +732,4 @@ public class PlayerController : MonoBehaviour
             isGround = false;
         }
     }
-
 }
