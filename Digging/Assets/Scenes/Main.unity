@@ -3201,6 +3201,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 659209129543600043, guid: 5896e598125a416449e8a02209dcc244, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2335372743775407003, guid: 5896e598125a416449e8a02209dcc244, type: 3}
       propertyPath: m_Name
       value: Ground (1)
@@ -6405,10 +6409,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2139434991, guid: 08a18df032f1e0840950df68dfd80107, type: 3}
-      propertyPath: m_PointLightOuterRadius
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 3083855431188750818, guid: 08a18df032f1e0840950df68dfd80107, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -6457,6 +6457,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3083855431188750830, guid: 08a18df032f1e0840950df68dfd80107, type: 3}
+      propertyPath: blocksDictionary
+      value: 
+      objectReference: {fileID: 437677733}
     - target: {fileID: 8837250057457837262, guid: 08a18df032f1e0840950df68dfd80107, type: 3}
       propertyPath: Shop
       value: 
