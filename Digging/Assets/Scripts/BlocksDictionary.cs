@@ -8,6 +8,8 @@ public class BlocksDictionary : MonoBehaviour
     [SerializeField] GameObject[] chunks;
     [SerializeField] GameObject[] grounds;
     [SerializeField] GameObject[] unbreakables;
+    [SerializeField] MiniMap minimap;
+    MapImage mapImage;
 
     private void Awake()
     {
@@ -27,6 +29,11 @@ public class BlocksDictionary : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        mapImage = minimap.mapImage;
+    }
+
     public void GroundSurfaceChange()
     {
         foreach(GameObject obj in blockPosition.Values)
@@ -37,6 +44,22 @@ public class BlocksDictionary : MonoBehaviour
                 blockScript.ChangeBlock(-1);
             }
         }
+    }
+
+    public void DestroyBlock(GameObject obj)
+    {
+        if(blockPosition.ContainsKey(obj.transform.position))
+        {
+            blockPosition.Remove(obj.transform.position);
+        }
+        mapImage.DrawSquare(Mathf.RoundToInt(obj.transform.position.x - 0.5f), Mathf.RoundToInt(obj.transform.position.y - 0.5f), Color.yellow);
+    }
+
+    public void DropSandBlock(GameObject obj, Vector2 objPos)
+    {
+        blockPosition.Add(objPos, obj);
+        print($"지워주기로 한 좌표는 ({objPos}), 전달한 좌표는 ({Mathf.RoundToInt(objPos.x - 0.5f)},{Mathf.RoundToInt(objPos.y - 0.5f)})");
+        mapImage.EraseSquare(Mathf.RoundToInt(objPos.x - 0.5f), Mathf.RoundToInt(objPos.y - 0.5f));
     }
 
 }
