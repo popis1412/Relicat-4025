@@ -476,7 +476,7 @@ public class Block : MonoBehaviour
                     ItemDrop(1, 5, playerScript, 1);
                 }
 
-                blocksDictionary.blockPosition.Remove(this.transform.position);
+                blocksDictionary.DestroyBlock(this.gameObject);
                 if (isGroundSurface)
                 {
                     blocksDictionary.GroundSurfaceChange();
@@ -529,7 +529,7 @@ public class Block : MonoBehaviour
         }
 
         targetDropPosition = (Vector2)this.transform.position - new Vector2(0, dropHeight); //어디까지 떨어져야하는지 확인
-        blocksDictionary.blockPosition.Remove(this.transform.position); //이 블럭은 이제 움직여야 하니 딕셔너리에서 임의로 제거
+        blocksDictionary.DestroyBlock(this.gameObject); //이 블럭은 이제 움직여야 하니 딕셔너리에서 임의로 제거
 
         isDropping = true; //떨어트리는게 눈에 보여야 하기 때문에 떨어트리라는 변수를 체크하고 Update()가 알아서 떨어트리게 함
     }
@@ -550,7 +550,7 @@ public class Block : MonoBehaviour
                 this.transform.position = targetDropPosition;
                 isDropping = false;
                 currentDropSpeed = 0f;
-                blocksDictionary.blockPosition.Add(this.transform.position, this.gameObject);
+                blocksDictionary.DropSandBlock(this.gameObject, this.transform.position); 
             }
             else
             {
@@ -610,8 +610,9 @@ public class Block : MonoBehaviour
             }
 
 
-                spriteRenderer.sprite = boxOpenSprite;
-                boxOpen = true;
+            spriteRenderer.sprite = boxOpenSprite;
+            boxOpen = true;
+            canOpenBox = false;
             
         }
 
