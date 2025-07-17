@@ -236,7 +236,8 @@ public class Block : MonoBehaviour
             effectManager.CallBreakingEffect(this.gameObject, blockType);
             if (blockHealth - blockDamage > 0)  //블럭에 대미지 주기
             {
-                blockHealth -= blockDamage;
+                if(blockType >= 0)
+                    blockHealth -= blockDamage;
 
                 if (blockHealth < blockMaxHealth && blockHealth >= blockMaxHealth / 4 * 3) //블럭 체력이 3분의 1 이하일 때
                 {
@@ -567,7 +568,7 @@ public class Block : MonoBehaviour
         }
 
         //보물상자 근처에 플레이어가 있는 상태에서 F키(상호작용키)를 누를시 보물상자 해제
-        if(blockType == 1 && canOpenBox == true && Input.GetKeyDown(KeyCode.F))
+        if (blockType == 1 && boxOpen == false && canOpenBox == true && Input.GetKeyDown(KeyCode.F))
         {
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[26]);
             
@@ -609,11 +610,8 @@ public class Block : MonoBehaviour
 
             }
 
-
             spriteRenderer.sprite = boxOpenSprite;
             boxOpen = true;
-            canOpenBox = false;
-            
         }
 
         if(boxOpen == true)
