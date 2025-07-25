@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using System.Linq;
 
 public class SaveSystem : MonoBehaviour
 {
@@ -337,40 +338,71 @@ public class SaveSystem : MonoBehaviour
         levelManager.remainingTime = loaded.levelManageData.remainingTime;
 
         //블록들 로드
-        List<GameObject> reloadBlocks= new List<GameObject>();
-        foreach(GameObject obj in blocksDictionary.blockPosition.Values)
+        HashSet<Vector2> loadedBlockPos = new HashSet<Vector2>(loaded.blocksData.blockDatas.Select(data => new Vector2(data.blockPosition.x, data.blockPosition.y)));
+
+        List<GameObject> blocksToRemove = new List<GameObject>();
+        foreach(var pair in blocksDictionary.blockPosition)
         {
+            Vector2 pos = pair.Key;
+            GameObject obj = pair.Value;
             Block blockScript = obj.GetComponent<Block>();
-            if (blockScript != null)
+            if(blockScript != null)
             {
-                if(blockScript.blockType != -2)
+                if (blockScript.blockType != -2 && !loadedBlockPos.Contains(pos))
                 {
-                    reloadBlocks.Add(obj);
+                    blocksToRemove.Add(obj);
                 }
             }
         }
-        foreach(GameObject obj in reloadBlocks)
+        foreach (GameObject obj in blocksToRemove)
         {
-            obj.GetComponent<Block>().BlockReload();
+            Block blockScript = obj.GetComponent<Block>();
+            if(blockScript != null)
+            {
+                blockScript.BlockRemove();
+            }    
         }
 
-        foreach(BlockData blockData in loaded.blocksData.blockDatas)
+        foreach (BlockData blockData in loaded.blocksData.blockDatas)
         {
-            GameObject newBlock = Instantiate(blockPrefab);
-            Block blockScript = newBlock.GetComponent<Block>();
+            GameObject obj;
+            if (blocksDictionary.blockPosition.ContainsKey(blockData.blockPosition))
+            {
+                obj = blocksDictionary.blockPosition[blockData.blockPosition];
+                if (obj != null)
+                {
+                    Block blockScript = obj.GetComponent<Block>();
 
-            newBlock.transform.position = blockData.blockPosition;
-            blocksDictionary.blockPosition.Add(blockData.blockPosition, newBlock);
-            blockScript.blocksDictionary = blocksDictionary;
-            BlockBreakingEffectManager effectManager = FindObjectOfType<BlockBreakingEffectManager>();
-            if (effectManager != null)
-                blockScript.effectManager = effectManager;
-            blockScript.nowBlockType = blockData.nowBlockType;
-            blockScript.stageNum = blockData.stageNum;
-            blockScript.ChangeBlock(blockData.blockType);
-            blockScript.blockHealth = blockData.blockHealth;
-
+                    if (blockScript != null)
+                    {
+                        blockScript.nowBlockType = blockData.nowBlockType;
+                        blockScript.stageNum = blockData.stageNum;
+                        blockScript.ChangeBlock(blockData.blockType);
+                        blockScript.blockHealth = blockData.blockHealth;
+                    }
+                }
+            }
+            else
+                print($"잘못된 키 ({blockData.blockPosition})");
         }
+
+        //foreach (BlockData blockData in loaded.blocksData.blockDatas)
+        //{
+        //    GameObject newBlock = Instantiate(blockPrefab);
+        //    Block blockScript = newBlock.GetComponent<Block>();
+
+        //    newBlock.transform.position = blockData.blockPosition;
+        //    blocksDictionary.blockPosition.Add(blockData.blockPosition, newBlock);
+        //    blockScript.blocksDictionary = blocksDictionary;
+        //    BlockBreakingEffectManager effectManager = FindObjectOfType<BlockBreakingEffectManager>();
+        //    if (effectManager != null)
+        //        blockScript.effectManager = effectManager;
+        //    blockScript.nowBlockType = blockData.nowBlockType;
+        //    blockScript.stageNum = blockData.stageNum;
+        //    blockScript.ChangeBlock(blockData.blockType);
+        //    blockScript.blockHealth = blockData.blockHealth;
+
+        //}
 
         //몬스터들 로드
         Enemy[] enemys = FindObjectsOfType<Enemy>();
