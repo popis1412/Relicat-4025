@@ -160,10 +160,14 @@ public class SaveSystem : MonoBehaviour
             UpgradeItems = ConvertItemList(player.UpgradeItems)
         };
 
+        Tool tool = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Tool>();
+
+
         //플레이어컨트롤러 저장
-        saveData.playerControllerData = new PlayerControllerData
+        saveData.weaponData = new WeaponsData
         {
-            pickDamage = playerController.pickdamage
+
+            //pickDamage = playerController.pickdamage
         };
 
         //로드씬데이터 저장
@@ -323,7 +327,7 @@ public class SaveSystem : MonoBehaviour
         shop.lightRadius = loaded.shopData.lightRadius;
 
         //플레이어컨트롤러 로드
-        playerController.pickdamage = loaded.playerControllerData.pickDamage;
+        //playerController.pickdamage = loaded.playerControllerData.pickDamage;
 
         //로드씬 로드
         loadSceneScript.isAlreadyWatchStory = loaded.loadSceneData.isAlreadyWatchStory;

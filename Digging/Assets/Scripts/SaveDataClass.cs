@@ -50,11 +50,10 @@ public class PlayerData
 
 
 [System.Serializable]
-public class PlayerControllerData
+public class WeaponsData
 {
-    public float pickDamage = 6f;
+    public List<WeaponsData> ownedWeapons;
 }
-
 
 [System.Serializable]
 public class LoadSceneData
@@ -100,7 +99,7 @@ public class SaveData
     public CollectionData collectionData;
     public ShopData shopData;
     public PlayerData playerData;
-    public PlayerControllerData playerControllerData;
+    public WeaponsData weaponData;
     public LoadSceneData loadSceneData;
     public LevelManageData levelManageData;
     public BlocksData blocksData;

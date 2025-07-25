@@ -262,11 +262,15 @@ public class Player : MonoBehaviour
             {
                 Collection.player_lv += 1;
             }
+
             // 잠시 추가함.
             if (Input.GetKeyDown(KeyCode.Alpha1))
                 Inventory.AddItem(UseItems[0], 3);
             if (Input.GetKeyDown(KeyCode.Alpha2))
                 Inventory.AddItem(UseItems[1], 3);
+
+            if(Input.GetKeyDown(KeyCode.R))
+                QuitSlot.Instance.TryAddItem(UseItems[2], Inventory, 1);
 
             
         }

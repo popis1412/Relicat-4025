@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
+using static Tool;
 
 
 public class PlayerController : MonoBehaviour
@@ -43,9 +44,8 @@ public class PlayerController : MonoBehaviour
     float torchSize;
 
     // Weapons
-    Sprite pickAxe;
     public float pickdamage = 1f;
-    Sprite weaponSpr;
+
     [SerializeField] GameObject weapon;
     Vector3 pivot;
 
@@ -90,6 +90,7 @@ public class PlayerController : MonoBehaviour
     private GameObject sandPos;
 
     GameObject block;
+    Tool tool;
 
     RaycastHit2D hit;
 
@@ -106,9 +107,9 @@ public class PlayerController : MonoBehaviour
         col = GetComponent<CapsuleCollider2D>();
         sr = GetComponent<SpriteRenderer>();
         playerScript = GetComponent<Player>();
+        tool = FindObjectOfType<Tool>();
 
         blockLayer = LayerMask.GetMask("Block");
-        pickAxe = sr.sprite;
 
         maxHP = playerScript.li_PlayerHearts.Length;
         currentHP = maxHP;
@@ -117,8 +118,6 @@ public class PlayerController : MonoBehaviour
         torchSize = torch.GetComponent<SpriteRenderer>().size.y;
 
         weapon = FindWeapon();
-        weaponSpr = weapon != null ? weapon.GetComponent<SpriteRenderer>().sprite
-            : null;
 
         anim = GetComponent<Animator>();
 
@@ -154,6 +153,7 @@ public class PlayerController : MonoBehaviour
     {
         UpdateSandStatus();
         HandleDigging();
+        HandleWeaponSwitch();
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         hit = Physics2D.Raycast(mousePos, Vector2.zero);
@@ -165,13 +165,33 @@ public class PlayerController : MonoBehaviour
         }
             
         if(Input.GetKeyDown(KeyCode.E))
+        {
             UseItem(1, torch, GetTorchPosition());
+        }
 
         anim.SetBool("IsGround", isGround);
         anim.SetFloat("MoveSpeed", rb.velocity.magnitude);
         anim.SetFloat("FlySpeed", rb.velocity.magnitude);
         anim.SetBool("IsFlying", isFlying);
         anim.SetBool("IsDigging", isDigging);
+    }
+
+    private void HandleWeaponSwitch()
+    {
+        if(Input.GetMouseButtonDown(1)) // 마우스 우클릭
+        {
+            // 현재 Pickaxe면 Drill로, Drill이면 Pickaxe로 전환
+            if(tool.currentToolImage == ToolImage.Pickaxe)
+            {
+                tool.ChangeTool(ToolImage.Drill);
+                Debug.Log("[PlayerController] 무기 변경: Drill");
+            }
+            else
+            {
+                tool.ChangeTool(ToolImage.Pickaxe);
+                Debug.Log("[PlayerController] 무기 변경: Pickaxe");
+            }
+        }
     }
 
     private void UpdateSandStatus()
@@ -311,7 +331,13 @@ public class PlayerController : MonoBehaviour
             if(targetBlock.TryGetComponent(out Block block))
             {
                 isDigging = true;
-                block.BlockDestroy(Time.deltaTime * pickdamage, playerScript);
+                // 해당 무기에 맞는 함수를 출력
+                WeaponBase currentWeapon = tool.GetCurrentWeapon();
+                if(currentWeapon != null)
+                {
+                    currentWeapon.Digging(block, playerScript);
+                    Debug.Log($"[PlayerController] {tool.currentToolImage}로 블록 파괴 시도");
+                }
 
                 //// Dig 사운드
                 //// 일반 흙 블록
@@ -665,7 +691,7 @@ public class PlayerController : MonoBehaviour
                 item.count = 0;
                 playerScript.Inventory.SellItem(item);
             }
-            
+
         }
         else
         {
@@ -679,7 +705,6 @@ public class PlayerController : MonoBehaviour
     // 횃불 생성 위치 계산
     private Vector3 GetTorchPosition()
     {
-        weaponSpr = torch.GetComponent<SpriteRenderer>().sprite;
         return new Vector3(Mathf.Round(transform.position.x - 0.5f) + 0.5f, transform.position.y - (playerSize - torchSize));
     }
 
