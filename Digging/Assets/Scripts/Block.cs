@@ -135,11 +135,18 @@ public class Block : MonoBehaviour
     public void ChangeBlock(int newBlockType)   //블럭 교체 명령
     {
         //-2는 세이브데이터에 안들어갈 무적블럭,-1은 무적블럭, 0은 normal, 1은 보물상자, 2는 석탄, 3은 단단한바위, 4는 유물, 5는 몬스터, 6은 모래, 7은 구리, 8은 철(은), 9는 금, 10은 루비, 11은 다이아
-        if (blockType != 0)
-            Debug.Log(transform.position + " : 잘못된 호출");
+        //if (blockType != 0)
+        //    Debug.Log(transform.position + " : 잘못된 호출");
         if (blockType != -2)
         {
             blockType = newBlockType;
+
+            if(actvieRelicEffect != null)
+            {
+                Destroy(actvieRelicEffect);
+                actvieRelicEffect = null;
+            }
+
             if (newBlockType == -1 || newBlockType == -2)
             {
                 spriteRenderer.sprite = block_unbreakable_0;
@@ -499,7 +506,7 @@ public class Block : MonoBehaviour
     }
 
 
-    public void BlockReload()
+    public void BlockRemove()
     {
         blocksDictionary.blockPosition.Remove(this.transform.position);
 
