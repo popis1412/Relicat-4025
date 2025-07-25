@@ -1,3 +1,4 @@
+using Assets.Scripts.Weapon;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,6 +9,9 @@ using UnityEngine.SceneManagement;
 
 public class Shop : MonoBehaviour
 {
+    [SerializeField] private WeaponData drillData;  // 무기 구매 시 데이터 넣기
+    [SerializeField] private WeaponData pickaxeData;
+
     public static Shop instance;
 
     public Inventory Inventory;
@@ -205,13 +209,20 @@ public class Shop : MonoBehaviour
         {
             Inventory.money_item.count -= player.UpgradeItems[0].value;
             pick_damage += 0.4f;
-            playerController.pickdamage = pick_damage;
+            WeaponBase weapon = player.GetComponentInChildren<WeaponBase>();
+            
+            if(weapon != null && weapon is Pickaxe)
+            {
+                weapon.DigSpeed = pick_damage; 
+            }
+
+            //playerController.pickdamage = pick_damage;
             player.UpgradeItems[0].count++;
             shop_pickLvText.text = "레벨 : " + player.UpgradeItems[0].count;
             player.UpgradeItems[0].value += 10;
             shop_pickUpdateText.text = "-" + player.UpgradeItems[0].value.ToString();
 
-            Debug.Log(playerController.pickdamage);
+            Debug.Log("해당 무기의 데미지: " + weapon.DigSpeed);
             Inventory.FreshSlot();
 
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);

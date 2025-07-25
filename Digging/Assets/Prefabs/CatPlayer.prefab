@@ -92,6 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 573297793211744211}
   - component: {fileID: 9061234234504050687}
+  - component: {fileID: 594270108718324734}
   m_Layer: 0
   m_Name: pick
   m_TagString: Weapon
@@ -166,6 +167,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &594270108718324734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3057011070943476779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 914b52b7f13958646b82e55fe89fa354, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentToolImage: 3
+  torchSprite: {fileID: 21300000, guid: c8d53b7b29f8da941900fc219337123a, type: 3}
+  bombSprite: {fileID: 21300000, guid: a412b562d829d354482edfc24a3963c3, type: 3}
+  drillSprite: {fileID: 21300000, guid: 94ac1683cef03e74d89eb5ccc040f78d, type: 3}
+  pickaxeSprite: {fileID: 21300000, guid: 33e66442f93d2bf4baa70b03d73b66b8, type: 3}
 --- !u!1 &3083855431188750820
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,7 +355,7 @@ MonoBehaviour:
   footstepAudioSourse02: {fileID: 7679143946750363700}
   diggingAudioSourse: {fileID: 4966691661893793933}
   blocksDictionary: {fileID: 0}
-  range: 2
+  range: 1
 --- !u!50 &3083855431188750829
 Rigidbody2D:
   serializedVersion: 4
@@ -427,6 +445,7 @@ MonoBehaviour:
   UseItems:
   - {fileID: 11400000, guid: b22ee3248dd1b6b49a3658d1621bc4d4, type: 2}
   - {fileID: 11400000, guid: 6eaecb1d8351a794fbb8351b200080c8, type: 2}
+  - {fileID: 11400000, guid: 5e565adfddd801c438d7558ad616b2f8, type: 2}
   UpgradeItems:
   - {fileID: 11400000, guid: d599f05a85872824395c767f8d0ebae8, type: 2}
   - {fileID: 11400000, guid: 04eb4ca36868e9849ac4682c0132c428, type: 2}
