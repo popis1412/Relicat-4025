@@ -122,8 +122,8 @@ namespace Spine.Unity.Editor {
 			const string DEFAULT_PHYSICS_ROTATION_INHERITANCE_KEY = "SPINE_DEFAULT_PHYSICS_ROTATION_INHERITANCE";
 			public static float defaultPhysicsRotationInheritance = SpinePreferences.DEFAULT_DEFAULT_PHYSICS_ROTATION_INHERITANCE;
 
-			const string SHOW_HIERARCHY_ICONS_KEY = "SPINE_SHOW_HIERARCHY_ICONS";
-			public static bool showHierarchyIcons = SpinePreferences.DEFAULT_SHOW_HIERARCHY_ICONS;
+			const string SHOW_HIERARCHYitemImageS_KEY = "SPINE_SHOW_HIERARCHYitemImageS";
+			public static bool showHierarchyIcons = SpinePreferences.DEFAULT_SHOW_HIERARCHYitemImageS;
 
 			const string RELOAD_AFTER_PLAYMODE_KEY = "SPINE_RELOAD_AFTER_PLAYMODE";
 			public static bool reloadAfterPlayMode = SpinePreferences.DEFAULT_RELOAD_AFTER_PLAYMODE;
@@ -174,8 +174,8 @@ namespace Spine.Unity.Editor {
 
 			public const float DEFAULT_MIPMAPBIAS = SpinePreferences.DEFAULT_MIPMAPBIAS;
 
-			public const string SCENE_ICONS_SCALE_KEY = "SPINE_SCENE_ICONS_SCALE";
-			public static float handleScale = SpinePreferences.DEFAULT_SCENE_ICONS_SCALE;
+			public const string SCENEitemImageS_SCALE_KEY = "SPINE_SCENEitemImageS_SCALE";
+			public static float handleScale = SpinePreferences.DEFAULT_SCENEitemImageS_SCALE;
 
 			const string AUTO_RELOAD_SCENESKELETONS_KEY = "SPINE_AUTO_RELOAD_SCENESKELETONS";
 			public static bool autoReloadSceneSkeletons = SpinePreferences.DEFAULT_AUTO_RELOAD_SCENESKELETONS;
@@ -203,7 +203,7 @@ namespace Spine.Unity.Editor {
 				defaultPhysicsPositionInheritance.y = EditorPrefs.GetFloat(DEFAULT_PHYSICS_POSITION_INHERITANCE_Y_KEY, SpinePreferences.DEFAULT_DEFAULT_PHYSICS_POSITION_INHERITANCE.y);
 				defaultPhysicsRotationInheritance = EditorPrefs.GetFloat(DEFAULT_PHYSICS_ROTATION_INHERITANCE_KEY, SpinePreferences.DEFAULT_DEFAULT_PHYSICS_ROTATION_INHERITANCE);
 				defaultShader = EditorPrefs.GetString(DEFAULT_SHADER_KEY, SpinePreferences.DEFAULT_DEFAULT_SHADER);
-				showHierarchyIcons = EditorPrefs.GetBool(SHOW_HIERARCHY_ICONS_KEY, SpinePreferences.DEFAULT_SHOW_HIERARCHY_ICONS);
+				showHierarchyIcons = EditorPrefs.GetBool(SHOW_HIERARCHYitemImageS_KEY, SpinePreferences.DEFAULT_SHOW_HIERARCHYitemImageS);
 				reloadAfterPlayMode = EditorPrefs.GetBool(RELOAD_AFTER_PLAYMODE_KEY, SpinePreferences.DEFAULT_RELOAD_AFTER_PLAYMODE);
 				setTextureImporterSettings = EditorPrefs.GetBool(SET_TEXTUREIMPORTER_SETTINGS_KEY, SpinePreferences.DEFAULT_SET_TEXTUREIMPORTER_SETTINGS);
 				textureSettingsReference = EditorPrefs.GetString(TEXTURE_SETTINGS_REFERENCE_KEY, SpinePreferences.DEFAULT_TEXTURE_SETTINGS_REFERENCE);
@@ -218,7 +218,7 @@ namespace Spine.Unity.Editor {
 				skeletonDataAssetNoFileError = EditorPrefs.GetBool(SKELETONDATA_ASSET_NO_FILE_ERROR_KEY, SpinePreferences.DEFAULT_SKELETONDATA_ASSET_NO_FILE_ERROR);
 				timelineDefaultMixDuration = EditorPrefs.GetBool(TIMELINE_DEFAULT_MIX_DURATION_KEY, SpinePreferences.DEFAULT_TIMELINE_DEFAULT_MIX_DURATION);
 				timelineUseBlendDuration = EditorPrefs.GetBool(TIMELINE_USE_BLEND_DURATION_KEY, SpinePreferences.DEFAULT_TIMELINE_USE_BLEND_DURATION);
-				handleScale = EditorPrefs.GetFloat(SCENE_ICONS_SCALE_KEY, SpinePreferences.DEFAULT_SCENE_ICONS_SCALE);
+				handleScale = EditorPrefs.GetFloat(SCENEitemImageS_SCALE_KEY, SpinePreferences.DEFAULT_SCENEitemImageS_SCALE);
 				preferencesLoaded = true;
 			}
 
@@ -232,7 +232,7 @@ namespace Spine.Unity.Editor {
 				newPreferences.defaultPhysicsPositionInheritance.y = EditorPrefs.GetFloat(DEFAULT_PHYSICS_POSITION_INHERITANCE_Y_KEY, SpinePreferences.DEFAULT_DEFAULT_PHYSICS_POSITION_INHERITANCE.y);
 				newPreferences.defaultPhysicsRotationInheritance = EditorPrefs.GetFloat(DEFAULT_PHYSICS_ROTATION_INHERITANCE_KEY, SpinePreferences.DEFAULT_DEFAULT_PHYSICS_ROTATION_INHERITANCE);
 				newPreferences.defaultShader = EditorPrefs.GetString(DEFAULT_SHADER_KEY, SpinePreferences.DEFAULT_DEFAULT_SHADER);
-				newPreferences.showHierarchyIcons = EditorPrefs.GetBool(SHOW_HIERARCHY_ICONS_KEY, SpinePreferences.DEFAULT_SHOW_HIERARCHY_ICONS);
+				newPreferences.showHierarchyIcons = EditorPrefs.GetBool(SHOW_HIERARCHYitemImageS_KEY, SpinePreferences.DEFAULT_SHOW_HIERARCHYitemImageS);
 				newPreferences.reloadAfterPlayMode = EditorPrefs.GetBool(RELOAD_AFTER_PLAYMODE_KEY, SpinePreferences.DEFAULT_RELOAD_AFTER_PLAYMODE);
 				newPreferences.setTextureImporterSettings = EditorPrefs.GetBool(SET_TEXTUREIMPORTER_SETTINGS_KEY, SpinePreferences.DEFAULT_SET_TEXTUREIMPORTER_SETTINGS);
 				newPreferences.textureSettingsReference = EditorPrefs.GetString(TEXTURE_SETTINGS_REFERENCE_KEY, SpinePreferences.DEFAULT_TEXTURE_SETTINGS_REFERENCE);
@@ -244,7 +244,7 @@ namespace Spine.Unity.Editor {
 				newPreferences.skeletonDataAssetNoFileError = EditorPrefs.GetBool(SKELETONDATA_ASSET_NO_FILE_ERROR_KEY, SpinePreferences.DEFAULT_SKELETONDATA_ASSET_NO_FILE_ERROR);
 				newPreferences.timelineDefaultMixDuration = EditorPrefs.GetBool(TIMELINE_DEFAULT_MIX_DURATION_KEY, SpinePreferences.DEFAULT_TIMELINE_DEFAULT_MIX_DURATION);
 				newPreferences.timelineUseBlendDuration = EditorPrefs.GetBool(TIMELINE_USE_BLEND_DURATION_KEY, SpinePreferences.DEFAULT_TIMELINE_USE_BLEND_DURATION);
-				newPreferences.handleScale = EditorPrefs.GetFloat(SCENE_ICONS_SCALE_KEY, SpinePreferences.DEFAULT_SCENE_ICONS_SCALE);
+				newPreferences.handleScale = EditorPrefs.GetFloat(SCENEitemImageS_SCALE_KEY, SpinePreferences.DEFAULT_SCENEitemImageS_SCALE);
 			}
 
 			public static void SaveToEditorPrefs (SpinePreferences preferences) {
@@ -256,7 +256,7 @@ namespace Spine.Unity.Editor {
 				EditorPrefs.SetFloat(DEFAULT_PHYSICS_POSITION_INHERITANCE_Y_KEY, preferences.defaultPhysicsPositionInheritance.y);
 				EditorPrefs.SetFloat(DEFAULT_PHYSICS_ROTATION_INHERITANCE_KEY, preferences.defaultPhysicsRotationInheritance);
 				EditorPrefs.SetString(DEFAULT_SHADER_KEY, preferences.defaultShader);
-				EditorPrefs.SetBool(SHOW_HIERARCHY_ICONS_KEY, preferences.showHierarchyIcons);
+				EditorPrefs.SetBool(SHOW_HIERARCHYitemImageS_KEY, preferences.showHierarchyIcons);
 				EditorPrefs.SetBool(RELOAD_AFTER_PLAYMODE_KEY, preferences.reloadAfterPlayMode);
 				EditorPrefs.SetBool(SET_TEXTUREIMPORTER_SETTINGS_KEY, preferences.setTextureImporterSettings);
 				EditorPrefs.SetString(TEXTURE_SETTINGS_REFERENCE_KEY, preferences.textureSettingsReference);
@@ -268,7 +268,7 @@ namespace Spine.Unity.Editor {
 				EditorPrefs.SetBool(SKELETONDATA_ASSET_NO_FILE_ERROR_KEY, preferences.skeletonDataAssetNoFileError);
 				EditorPrefs.SetBool(TIMELINE_DEFAULT_MIX_DURATION_KEY, preferences.timelineDefaultMixDuration);
 				EditorPrefs.SetBool(TIMELINE_USE_BLEND_DURATION_KEY, preferences.timelineUseBlendDuration);
-				EditorPrefs.SetFloat(SCENE_ICONS_SCALE_KEY, preferences.handleScale);
+				EditorPrefs.SetFloat(SCENEitemImageS_SCALE_KEY, preferences.handleScale);
 			}
 #endif
 
@@ -280,7 +280,7 @@ namespace Spine.Unity.Editor {
 				EditorGUI.BeginChangeCheck();
 				showHierarchyIcons = EditorGUILayout.Toggle(new GUIContent("Show Hierarchy Icons", "Show relevant icons on GameObjects with Spine Components on them. Disable this if you have large, complex scenes."), showHierarchyIcons);
 				if (EditorGUI.EndChangeCheck()) {
-					EditorPrefs.SetBool(SHOW_HIERARCHY_ICONS_KEY, showHierarchyIcons);
+					EditorPrefs.SetBool(SHOW_HIERARCHYitemImageS_KEY, showHierarchyIcons);
 #if NEWPLAYMODECALLBACKS
 					HierarchyHandler.IconsOnPlaymodeStateChanged(PlayModeStateChange.EnteredEditMode);
 #else
@@ -380,7 +380,7 @@ namespace Spine.Unity.Editor {
 					handleScale = EditorGUILayout.Slider("Editor Bone Scale", handleScale, 0.01f, 2f);
 					handleScale = Mathf.Max(0.01f, handleScale);
 					if (EditorGUI.EndChangeCheck()) {
-						EditorPrefs.SetFloat(SCENE_ICONS_SCALE_KEY, handleScale);
+						EditorPrefs.SetFloat(SCENEitemImageS_SCALE_KEY, handleScale);
 						SceneView.RepaintAll();
 					}
 				}

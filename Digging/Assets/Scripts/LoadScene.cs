@@ -51,7 +51,7 @@ public class LoadScene : MonoBehaviour
         m_MusicBGMSlider.onValueChanged.AddListener(SetMusicVolume);
         m_MusicSFXSlider.onValueChanged.AddListener(SetSFXVolume);
 
-        //Cursor.SetCursor(cursorTex, new Vector2(30f, 100f), CursorMode.ForceSoftware);
+        Cursor.SetCursor(cursorTex, new Vector2(30f, 100f), CursorMode.ForceSoftware);
     }
     public static LoadScene Instance
     {

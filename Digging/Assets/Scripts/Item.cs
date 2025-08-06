@@ -1,14 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
+
+public enum ItemType
+{
+    Null,
+    Bomb,
+    Teleport,
+    Torch
+}
 
 [CreateAssetMenu]
 public class Item : ScriptableObject
 {
     public string itemName;
+    public ItemType type;
     public Sprite itemImage;
     public int count = 0;
+    public int stackLimit = 0;  // 아이템 갯수 제한
     public int accumulation_count = 0;
     public bool isMineral;
     public bool isRelic;

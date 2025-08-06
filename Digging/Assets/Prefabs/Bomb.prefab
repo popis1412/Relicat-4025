@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: -6350205965067757881}
   - component: {fileID: 5311162085091574957}
   - component: {fileID: 5439326300129544355}
-  m_Layer: 0
+  - component: {fileID: 900337959401433580}
+  m_Layer: 20
   m_Name: Bomb
   m_TagString: Bomb
   m_Icon: {fileID: 0}
@@ -100,7 +101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerScript: {fileID: 0}
-  effect: {fileID: 435367063723209871, guid: fe22f705c3ce1714ab21be8e308d94ee, type: 3}
+  exploSize: {x: 3, y: 1}
+  diagonalXMultiplier: 1.5
+  diagonalYMultiplier: 1
 --- !u!50 &5311162085091574957
 Rigidbody2D:
   serializedVersion: 4
@@ -121,7 +124,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &5439326300129544355
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -148,3 +151,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.58, y: 0.565}
   m_EdgeRadius: 0
+--- !u!95 &900337959401433580
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4969225968171647812}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 54c641ac2cf9f3149844d1500731f13a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

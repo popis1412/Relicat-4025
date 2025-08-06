@@ -32,7 +32,7 @@
 #endif
 
 #if UNITY_2021_2_OR_NEWER
-#define PUBLIC_SET_ICON_FOR_OBJECT
+#define PUBLIC_SETitemImage_FOR_OBJECT
 #endif
 
 using System.Reflection;
@@ -149,7 +149,7 @@ namespace Spine.Unity.Editor {
 					icon = Icons.constraintNib;
 					break;
 				}
-#if PUBLIC_SET_ICON_FOR_OBJECT
+#if PUBLIC_SETitemImage_FOR_OBJECT
 			EditorGUIUtility.SetIconForObject(boneComponent.gameObject, icon);
 #else
 			typeof(EditorGUIUtility).InvokeMember("SetIconForObject", BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.NonPublic, null, null, new object[2] {

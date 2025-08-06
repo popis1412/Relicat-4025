@@ -62,6 +62,7 @@ public class DropItem : MonoBehaviour
 
 
     }
+
     public void setDropItem(int newItemType, int newItemCode, Sprite renderSprite, int newAddEA)
     {
         itemType = newItemType;

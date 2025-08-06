@@ -14275,7 +14275,7 @@ MonoBehaviour:
   player_lv: 0
   collect_count: 0
   is_collect_complete: 
-  badgeUI_Icon: {fileID: 0}
+  badgeUIitemImage: {fileID: 1397091824024625357}
   badgeUI_TitleText: {fileID: 0}
   guessItem: {fileID: 11400000, guid: 156dc59a3d4b34a40b8c8d8b79446fb5, type: 2}
   resistButton_List:
