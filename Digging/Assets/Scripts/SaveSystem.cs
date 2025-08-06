@@ -416,14 +416,13 @@ public class SaveSystem : MonoBehaviour
                 Instantiate(enemyPrefab1, enemyPos, Quaternion.identity);
             }
         }
-        
+
 
         //UI재갱신(아마도 도감도 갱신 넣어야할 예정)
+        //SlotManager.Instance.InitializeQuickSlotsFromInventroy();
+        SlotManager.Instance.InitFillSlot();
         inventory.FreshSlot();
         print("로드완료");
-
-
-
     }
 
     public void LoadForLoadScene()

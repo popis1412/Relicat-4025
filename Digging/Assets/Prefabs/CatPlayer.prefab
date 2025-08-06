@@ -161,7 +161,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 1.24, y: 1.21}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -179,11 +179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914b52b7f13958646b82e55fe89fa354, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentToolImage: 3
-  torchSprite: {fileID: 21300000, guid: c8d53b7b29f8da941900fc219337123a, type: 3}
-  bombSprite: {fileID: 21300000, guid: a412b562d829d354482edfc24a3963c3, type: 3}
-  drillSprite: {fileID: 21300000, guid: 94ac1683cef03e74d89eb5ccc040f78d, type: 3}
-  pickaxeSprite: {fileID: 21300000, guid: 33e66442f93d2bf4baa70b03d73b66b8, type: 3}
+  currentWeaponType: 1
+  sprite: {fileID: 0}
 --- !u!1 &3083855431188750820
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,7 +218,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.713, z: 0}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 573297793211744211}
   - {fileID: 2139434990}
@@ -340,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f48e9ea25044254e964ff6a745a4b74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerScript: {fileID: 0}
+  playerScript: {fileID: 8837250057457837262}
   moveSpeed: 5
   flyAcceleration: 10
   flySpeed: 8
@@ -348,14 +345,13 @@ MonoBehaviour:
   bomb: {fileID: 4969225968171647812, guid: f3306ce703067ce4897be033e57626c9, type: 3}
   torch: {fileID: 7803309434280011547, guid: 9129e7242d2181c408a505f1fa9bb0b7, type: 3}
   pickdamage: 6
-  weapon: {fileID: 0}
-  jetpack: {fileID: 0}
+  isDie: 0
+  jetpack: {fileID: 3999598315526630206}
   jetpackAudioSourse: {fileID: 5702219944978232760}
   footstepAudioSourse01: {fileID: 3612227909773941091}
   footstepAudioSourse02: {fileID: 7679143946750363700}
-  diggingAudioSourse: {fileID: 4966691661893793933}
   blocksDictionary: {fileID: 0}
-  range: 1
+  range: {x: 1, y: 1}
 --- !u!50 &3083855431188750829
 Rigidbody2D:
   serializedVersion: 4
@@ -444,11 +440,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c45bc71b91c010e40a237e2962b4277f, type: 2}
   UseItems:
   - {fileID: 11400000, guid: b22ee3248dd1b6b49a3658d1621bc4d4, type: 2}
+  - {fileID: 11400000, guid: dcb855d8e859b3742a3a8472852fc517, type: 2}
   - {fileID: 11400000, guid: 6eaecb1d8351a794fbb8351b200080c8, type: 2}
-  - {fileID: 11400000, guid: 5e565adfddd801c438d7558ad616b2f8, type: 2}
+  - {fileID: 11400000, guid: 0bb4c7cd6399f9d429dd5ec633bffd12, type: 2}
   UpgradeItems:
   - {fileID: 11400000, guid: d599f05a85872824395c767f8d0ebae8, type: 2}
   - {fileID: 11400000, guid: 04eb4ca36868e9849ac4682c0132c428, type: 2}
+  Weapons:
+  - {fileID: 11400000, guid: eebb90fd5e3e8584ab5253b09ec89b28, type: 2}
+  - {fileID: 11400000, guid: df38aa2cc144da048afdc9f1cec26f26, type: 2}
   Inventory_obj: {fileID: 0}
   shopUIPanel: {fileID: 0}
   CollectUIPanel: {fileID: 0}

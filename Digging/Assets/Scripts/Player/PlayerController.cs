@@ -46,9 +46,6 @@ public class PlayerController : MonoBehaviour
     // Weapons
     public float pickdamage = 1f;
 
-    [SerializeField] GameObject weapon;
-    Vector3 pivot;
-
     // Damage System
     int maxHP;
     int currentHP = 0;
@@ -61,6 +58,8 @@ public class PlayerController : MonoBehaviour
 
     float angle;
     float t = 0;
+
+    public bool isDie = false;
 
     bool isDigging = false;
     bool isGround = false;
@@ -75,7 +74,7 @@ public class PlayerController : MonoBehaviour
     public AudioSource footstepAudioSourse02;
     private bool switchStepSound = false;
 
-    public AudioSource diggingAudioSourse;
+    
     private bool isDigSound = false;
 
     private GameObject jetpackEffect; // 이펙트 오브젝트
@@ -98,10 +97,12 @@ public class PlayerController : MonoBehaviour
     public bool right { get; private set; }
     public bool up { get; private set; }
     public bool down { get; private set; }
-    public int range;
+
+    public Vector2 range = Vector2.one;
 
     private void Awake()
     {
+        isDie = false;
         input = new PlayerControl();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
@@ -116,8 +117,6 @@ public class PlayerController : MonoBehaviour
         playerSize = sr.size.y;
         bombSize = bomb.GetComponent<SpriteRenderer>().size.y;
         torchSize = torch.GetComponent<SpriteRenderer>().size.y;
-
-        weapon = FindWeapon();
 
         anim = GetComponent<Animator>();
 
@@ -152,21 +151,40 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         UpdateSandStatus();
-        HandleDigging();
-        HandleWeaponSwitch();
 
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        hit = Physics2D.Raycast(mousePos, Vector2.zero);
+        // 좌클릭 - 곡괭이 자동 장착 + 사용
+        if(Input.GetMouseButton(0))
+        {
+            SlotManager.Instance.EquipWeaponByType(WeaponType.Pickaxe);
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            tool.UseWeapon(mouseWorldPos, playerScript);
+        }
+
+        // 우클릭 - 드릴 자동 장착 + 사용
+        if(Input.GetMouseButton(1))
+        {
+            SlotManager.Instance.EquipWeaponByType(WeaponType.Drill);
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            tool?.UseWeapon(mouseWorldPos, playerScript);
+        }
 
         // 단축키 아이템 사용
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            UseItem(0, bomb, GetBombPosition());
+            SlotManager.Instance.EquipItemByType(ItemType.Bomb);
+            tool?.UseItem();
         }
             
         if(Input.GetKeyDown(KeyCode.E))
         {
-            UseItem(1, torch, GetTorchPosition());
+            SlotManager.Instance.EquipItemByType(ItemType.Torch);
+            tool?.UseItem();
+        }
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            SlotManager.Instance.EquipItemByType(ItemType.Teleport);
+            tool?.UseItem();
         }
 
         anim.SetBool("IsGround", isGround);
@@ -174,24 +192,6 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("FlySpeed", rb.velocity.magnitude);
         anim.SetBool("IsFlying", isFlying);
         anim.SetBool("IsDigging", isDigging);
-    }
-
-    private void HandleWeaponSwitch()
-    {
-        if(Input.GetMouseButtonDown(1)) // 마우스 우클릭
-        {
-            // 현재 Pickaxe면 Drill로, Drill이면 Pickaxe로 전환
-            if(tool.currentToolImage == ToolImage.Pickaxe)
-            {
-                tool.ChangeTool(ToolImage.Drill);
-                Debug.Log("[PlayerController] 무기 변경: Drill");
-            }
-            else
-            {
-                tool.ChangeTool(ToolImage.Pickaxe);
-                Debug.Log("[PlayerController] 무기 변경: Pickaxe");
-            }
-        }
     }
 
     private void UpdateSandStatus()
@@ -247,8 +247,9 @@ public class PlayerController : MonoBehaviour
 
         if(moveInput.x != 0)
         {
-            float rotY = moveInput.x > 0 ? 0f : 180f;
-            transform.rotation = Quaternion.Euler(0f, rotY, 0f);
+            Vector3 newScale = transform.localScale;
+            newScale.x = moveInput.x > 0 ? 0.9f : -0.9f;
+            transform.localScale = newScale;
 
             if (switchStepSound && !footstepAudioSourse02.isPlaying && isGround)
             {
@@ -310,141 +311,8 @@ public class PlayerController : MonoBehaviour
         return isFlying || rb.velocity.y > 0f ? verticalSpeed : rb.velocity.y;
     }
 
-    // 클릭한 블록 파괴 처리
-    private void HandleDigging()
-    {
-        List<GameObject> targetBlocks = GetVaildBlocksUnderMouse(hit);
-
-        if(targetBlocks == null || targetBlocks.Count == 0 || !input.Player.Digging.IsPressed())
-        {
-            isDigging = false;
-            t = 0;
-            return;
-        }
-
-        foreach(var targetBlock in targetBlocks)
-        {
-            if(targetBlock == null) continue;
-
-            print($"타겟 블록: {targetBlock.transform.position}");
-
-            if(targetBlock.TryGetComponent(out Block block))
-            {
-                isDigging = true;
-                // 해당 무기에 맞는 함수를 출력
-                WeaponBase currentWeapon = tool.GetCurrentWeapon();
-                if(currentWeapon != null)
-                {
-                    currentWeapon.Digging(block, playerScript);
-                    Debug.Log($"[PlayerController] {tool.currentToolImage}로 블록 파괴 시도");
-                }
-
-                //// Dig 사운드
-                //// 일반 흙 블록
-                if(block.blockType == 0 || block.blockType == 4 || block.blockType == 5)
-                {
-                    int idx = UnityEngine.Random.Range(5, 9);
-                    if(isDigging && isDigSound == false)
-                    {
-                        diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[idx]);
-                        isDigSound = true;
-                    }
-                    if(!isDigging && diggingAudioSourse.isPlaying == true)
-                    {
-                        diggingAudioSourse.Stop();
-                        isDigSound = false;
-                    }
-                    if(diggingAudioSourse.isPlaying == false)
-                    {
-                        isDigSound = false;
-                    }
-                }
-                // 광물 블록
-                if(block.blockType == 2 || block.blockType == 7 || block.blockType == 8 || block.blockType == 9 || block.blockType == 10 || block.blockType == 11)
-                {
-                    if(isDigging && isDigSound == false)
-                    {
-                        diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[12]);
-                        isDigSound = true;
-                    }
-                    if(!isDigging && diggingAudioSourse.isPlaying == true)
-                    {
-                        diggingAudioSourse.Stop();
-                        isDigSound = false;
-                    }
-                    if(diggingAudioSourse.isPlaying == false)
-                    {
-                        isDigSound = false;
-                    }
-                }
-                // 바위 블록
-                if(block.blockType == 3 || block.blockType == -1)
-                {
-                    int idx = UnityEngine.Random.Range(9, 12);
-                    if(isDigging && isDigSound == false)
-                    {
-                        diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[idx]);
-                        isDigSound = true;
-                    }
-                    if(!isDigging && diggingAudioSourse.isPlaying == true)
-                    {
-                        diggingAudioSourse.Stop();
-                        isDigSound = false;
-                    }
-                    if(diggingAudioSourse.isPlaying == false)
-                    {
-                        isDigSound = false;
-                    }
-                }
-                // 모래 블록
-                if(block.blockType == 6)
-                {
-
-                    if(isDigging && isDigSound == false)
-                    {
-                        diggingAudioSourse.PlayOneShot(SoundManager.Instance.SFXSounds[8]);
-                        isDigSound = true;
-                    }
-                    if(!isDigging && diggingAudioSourse.isPlaying == true)
-                    {
-                        diggingAudioSourse.Stop();
-                        isDigSound = false;
-                    }
-                    if(diggingAudioSourse.isPlaying == false)
-                    {
-                        isDigSound = false;
-                    }
-                }
-            }
-        }
-
-        pivot = transform.Find("Pivot").position;
-
-        t += Time.fixedDeltaTime * 4f;
-        t = Mathf.Clamp01(t);
-
-
-        angle = Mathf.Lerp(60, -30, t);
-        float rad = angle * Mathf.Deg2Rad;
-
-        Vector3 offset = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0f) * 0.1f;
-
-        //print("offset: " + offset + "angle: " + angle + "t: " + t );
-        
-
-        if (t >= 1)
-        {
-            print("t = 0");
-            t = 0;
-            weapon.transform.position = pivot;
-            weapon.transform.rotation = Quaternion.Euler(0f, 0f, -30f);
-        }
-        weapon.transform.position = pivot + offset;
-        weapon.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-    }
-
     // 마우스 위치 기준으로 파괴 가능한 블록 반환
-    private List<GameObject> GetVaildBlocksUnderMouse(RaycastHit2D hit)
+    public List<GameObject> GetVaildBlocksUnderMouse(RaycastHit2D hit)
     {
         if(hit.collider == null || !hit.collider.CompareTag("Block"))
             return null;
@@ -478,113 +346,9 @@ public class PlayerController : MonoBehaviour
 
         var blocksDict = hit.collider.GetComponent<Block>().blocksDictionary;
 
-        return CanDigBlocks(playerPos, clickBlockPos, blocksDict);
+        //return CanDigBlocks(playerPos, clickBlockPos, blocksDict, range);
+        return null;
     }
-
-    private struct DirectionSet
-    {
-        public Vector2 direction;
-        public bool isDiagonal;
-        public float snap;
-        public float gridStep;
-
-        public DirectionSet(Vector2 dir, bool diagonal, float snapVal, float gridStepVal)
-        {
-            direction = dir;
-            isDiagonal = diagonal;
-            snap = snapVal;
-            gridStep = gridStepVal;
-        }
-    }
-
-    private List<GameObject> CanDigBlocks(Vector2 playerPos, Vector2 blockPos, BlocksDictionary blocksDict)
-    {
-        List<GameObject> diggableBlocks = new();
-
-        Vector2 basePos = new(Mathf.Floor(playerPos.x), Mathf.Floor(playerPos.y));
-        Vector2 offset = blockPos - basePos;
-
-        List<DirectionSet> directionSets = new();
-
-        for(int r = 0; r < range; r++)
-        {
-            float snap = 0.5f + r;
-            float gridStep = snap + 1f;
-
-            directionSets.Add(new DirectionSet(new Vector2(-snap, 0.5f), false, snap, gridStep));     // Left
-            directionSets.Add(new DirectionSet(new Vector2(gridStep, 0.5f), false, snap, gridStep));  // Right
-            directionSets.Add(new DirectionSet(new Vector2(0.5f, gridStep), false, snap, gridStep));  // Up
-            directionSets.Add(new DirectionSet(new Vector2(0.5f, -snap), false, snap, gridStep));     // Down
-
-            directionSets.Add(new DirectionSet(new Vector2(-snap, gridStep), true, snap, gridStep));   // Left-Up
-            directionSets.Add(new DirectionSet(new Vector2(gridStep, gridStep), true, snap, gridStep));// Right-Up
-            directionSets.Add(new DirectionSet(new Vector2(-snap, -snap), true, snap, gridStep));      // Left-Down
-            directionSets.Add(new DirectionSet(new Vector2(gridStep, -snap), true, snap, gridStep));   // Right-Down
-        }
-
-        // offset이 1칸 거리인 경우만 처리 (snap == 0.5 인 경우만 처리)
-        bool foundAdjacent = false;
-        DirectionSet adjacentDirSet = default;
-
-        foreach(var dirSet in directionSets)
-        {
-            if(dirSet.snap == 0.5f && offset == dirSet.direction)
-            {
-                foundAdjacent = true;
-                adjacentDirSet = dirSet;
-                break;
-            }
-        }
-
-        if(!foundAdjacent)
-        {
-            // 1칸 거리 블록이 아니면 캘 수 없음
-            return diggableBlocks;
-        }
-
-        // 1칸 거리인 blockPos 기준으로 range만큼 블록 캘 수 있게 처리
-        float snapAdj = adjacentDirSet.snap;
-        float gridStepAdj = adjacentDirSet.gridStep;
-
-        if(!adjacentDirSet.isDiagonal)
-        {
-            Vector2 stepDir = adjacentDirSet.direction - new Vector2(0.5f, 0.5f); // 방향 유도
-
-            for(int step = 0; step < range; step++)
-            {
-                Vector2 digPos = blockPos + stepDir * step;
-
-                if(blocksDict.blockPosition.TryGetValue(digPos, out GameObject block))
-                    diggableBlocks.Add(block);
-            }
-        }
-        else
-        {
-            // 대각선 차단 (1칸 거리 기준)
-            bool left = blocksDict.blockPosition.ContainsKey(basePos + new Vector2(-0.5f, 0.5f));
-            bool right = blocksDict.blockPosition.ContainsKey(basePos + new Vector2(1.5f, 0.5f));
-            bool up = blocksDict.blockPosition.ContainsKey(basePos + new Vector2(0.5f, 1.5f));
-            bool down = blocksDict.blockPosition.ContainsKey(basePos + new Vector2(0.5f, -0.5f));
-
-            bool blocked =
-                (adjacentDirSet.direction == new Vector2(-snapAdj, gridStepAdj) && (left && up)) ||
-                (adjacentDirSet.direction == new Vector2(gridStepAdj, gridStepAdj) && (right && up)) ||
-                (adjacentDirSet.direction == new Vector2(-snapAdj, -snapAdj) && (left && down)) ||
-                (adjacentDirSet.direction == new Vector2(gridStepAdj, -snapAdj) && (right && down));
-
-            if(!blocked)
-            {
-                if(blocksDict.blockPosition.TryGetValue(blockPos, out GameObject block))
-                    diggableBlocks.Add(block);
-            }
-        }
-
-        foreach(GameObject block in diggableBlocks)
-            Debug.Log("캘 수 있는 블럭의 위치: " + block.transform.position);
-
-        return diggableBlocks;
-    }
-
 
     // 모래에 갇혔는지 판별
     private bool IsStuckInSand()
@@ -661,6 +425,7 @@ public class PlayerController : MonoBehaviour
     // 사망 처리
     public void Die()
     {
+        isDie = true;
         transform.position = new Vector3(15.5f, 0.5f, 0f);
         sr.color = Color.white;
         currentHP = maxHP;
@@ -689,7 +454,7 @@ public class PlayerController : MonoBehaviour
             if(item.count <= 0)
             {
                 item.count = 0;
-                playerScript.Inventory.SellItem(item);
+                playerScript.Inventory.RemoveItem(item);
             }
 
         }

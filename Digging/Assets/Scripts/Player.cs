@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.IO;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     public List<Item> minerals;
     public List<Item> UseItems;
     public List<Item> UpgradeItems;
+    public List<WeaponTemplate> Weapons;
 
     // 인벤토리
     public GameObject Inventory_obj;
@@ -76,6 +77,9 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject SavePanel;
     private bool isNearReset;
     private bool isOnResetUI;
+
+    // 액션 입력
+    public System.Action<bool> OnInventoryOpen;
     
 
     private string savePath => Application.persistentDataPath + "/SaveData.json";
@@ -112,6 +116,17 @@ public class Player : MonoBehaviour
 
         player = GetComponent<PlayerController>();
 
+        //if(!File.Exists(savePath))  // 저장 없을 때
+        //    InitItemCount();
+    }
+
+    // 아이템 갯수 초기화
+    void InitItemCount()
+    {
+        for(int i = 0; i < UseItems.Count; i++)
+        {
+            UseItems[i].count = 0;
+        }
     }
 
     // Start is called before the first frame update
@@ -212,8 +227,9 @@ public class Player : MonoBehaviour
             LevelManager.instance.left_guideButton.SetActive(false);
             LevelManager.instance.right_guideButton.SetActive(true);
             LoadScene.instance.isUseStart = false;
-            Inventory.AddItem(UseItems[0], 3);
-            Inventory.AddItem(UseItems[1], 10);
+            // 초기 아이템 넣기
+            Inventory.Instance.AddItem(UseItems[0], 3);
+            Inventory.Instance.AddItem(UseItems[1], 10);
             SaveSystem.Instance.Save();
         }
     }
@@ -263,14 +279,8 @@ public class Player : MonoBehaviour
                 Collection.player_lv += 1;
             }
 
-            // 잠시 추가함.
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-                Inventory.AddItem(UseItems[0], 3);
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-                Inventory.AddItem(UseItems[1], 3);
-
-            if(Input.GetKeyDown(KeyCode.R))
-                QuitSlot.Instance.TryAddItem(UseItems[2], Inventory, 1);
+            if(Input.GetKeyDown(KeyCode.R)) ;
+                //QuitSlotUI.Instance.TryAddItem(UseItems[2], Inventory, 1);
 
             
         }
@@ -399,6 +409,7 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
+                OnInventoryOpen.Invoke(true);
                 isInventoryMoving = false; // 애니메이션 완료
                 isOnInventory = true;
             }
@@ -411,6 +422,7 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
+                OnInventoryOpen.Invoke(false);
                 isInventoryMoving = false; // 애니메이션 완료
                 isOnInventory = false;
             }
@@ -714,7 +726,6 @@ public class Player : MonoBehaviour
         LevelManager.instance.isRunning = true;
         //Time.timeScale = 1f; // 게임 재개
         AddPlayerLife(3);
-
         
         if (!File.Exists(savePath))
         {

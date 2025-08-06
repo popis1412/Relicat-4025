@@ -37,7 +37,7 @@ public class Collection : MonoBehaviour
     public int player_lv;
     public int collect_count;
     public bool[] is_collect_complete;
-    public GameObject badgeUI_Icon;
+    public GameObject badgeUIitemImage;
     public TextMeshProUGUI badgeUI_TitleText;
 
     public Item guessItem;
@@ -149,27 +149,27 @@ public class Collection : MonoBehaviour
         switch (player_lv)
         {
             case 0:
-                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[0].itemImage;
+                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[0].itemImage;
                 badgeUI_TitleText.text = "입문자";
                 break;
             case 1:
-                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[1].itemImage;
+                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[1].itemImage;
                 badgeUI_TitleText.text = "초심자";
                 break;
             case 2:
-                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[1].itemImage;
+                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[1].itemImage;
                 badgeUI_TitleText.text = "수집가";
                 break;
             case 3:
-                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[2].itemImage;
+                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[2].itemImage;
                 badgeUI_TitleText.text = "전문가";
                 break;
             case 4:
-                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[2].itemImage;
+                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[2].itemImage;
                 badgeUI_TitleText.text = "큐레이터";
                 break;
             case 5:
-                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[3].itemImage;
+                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[3].itemImage;
                 badgeUI_TitleText.text = "고고학자";
                 break;
 

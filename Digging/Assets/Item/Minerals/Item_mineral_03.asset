@@ -15,6 +15,7 @@ MonoBehaviour:
   itemName: "\uCCA0"
   itemImage: {fileID: 21300000, guid: c6db13b66cddc8847b8631c809ee2167, type: 3}
   count: 0
+  stackLimit: 0
   accumulation_count: 0
   isMineral: 1
   isRelic: 0
