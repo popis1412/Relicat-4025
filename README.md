@@ -9,8 +9,6 @@
 <br />
 블럭 최적화 부분에서 블럭의 collider2D가 IsTrigger가 false가 안 되고 계속 true 상태가 유지 되는 경우가 있음.
 
-문제3[발견: 25.08.07, 해결: 25.08.08]
+문제3[발견: 25.08.07]
 <br />
 인벤토리들을 담고 있는 Canvas가 싱글톤이기 때문에 메뉴화면으로 돌아가면 [퀵슬롯, 미니맵]을 비활성화 상태로 해야 함.
-<br />해결1. DontDestroyLoad()부분을 하는 Collection, Shop, Inventroy, LevelManager를 없앰.
-<br />이미 해당 데이터들을 Save/Load를 하고 있는데, 씬 유지를 할 필요가 없음. 
