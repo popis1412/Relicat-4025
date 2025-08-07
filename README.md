@@ -12,3 +12,5 @@
 문제3[발견: 25.08.07]
 <br />
 인벤토리들을 담고 있는 Canvas가 싱글톤이기 때문에 메뉴화면으로 돌아가면 [퀵슬롯, 미니맵]을 비활성화 상태로 해야 함.
+해결1. DontDestroyLoad()부분을 하는 Collection, Shop, Inventroy, LevelManager를 없앰.
+       이미 해당 데이터들을 Save/Load를 하고 있는데, 씬 유지를 할 필요가 없음. 
