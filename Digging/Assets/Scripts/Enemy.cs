@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     float timer = 1f;
     float speed = 1f;
 
-    int damage = 1;
+    [SerializeField] int damage = 1;
 
     float attackCooldown = 1f;
 

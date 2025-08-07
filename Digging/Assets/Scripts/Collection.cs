@@ -44,13 +44,16 @@ public class Collection : MonoBehaviour
 
     [SerializeField] private Button[] resistButton_List;
 
+    [SerializeField] private GameObject MainPanel;
+    [SerializeField] private GameObject[] stagePanels;
 
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        slots = slotParent.GetComponentsInChildren<Slot>();
-    }
-#endif
+
+//#if UNITY_EDITOR
+//    private void OnValidate()
+//    {
+//        slots = slotParent.GetComponentsInChildren<Slot>();
+//    }
+//#endif
 
     private void Awake()
     {
@@ -63,7 +66,7 @@ public class Collection : MonoBehaviour
         }
         else
         {
-            Destroy(this.gameObject); // 중복 방지
+            Destroy(this.gameObject); 
         }
     }
 
@@ -77,8 +80,8 @@ public class Collection : MonoBehaviour
         player_lv = 0;
         collect_count = 0;
         
-        collectView_idx = 0;
-        Switch_CollectView();
+        //collectView_idx = 0;
+        //Switch_CollectView();
     }
 
     private void OnDestroy()
@@ -107,8 +110,8 @@ public class Collection : MonoBehaviour
             Transform collectionParent = museum.transform.Find("CollectionTable");
             if (collectionParent != null)
             {
-                Collection_Table = new GameObject[20];
-                for (int i = 0; i < 20; i++)
+                Collection_Table = new GameObject[30];
+                for (int i = 0; i < 30; i++)
                 {
                     Transform child = collectionParent.Find(i.ToString());
                     if (child != null)
@@ -206,11 +209,22 @@ public class Collection : MonoBehaviour
                 if (collect_count == 20)
                 {
                     is_collect_complete[player_lv] = true;
-                    rewardButton_List[0].GetComponent<Button>().interactable = true;
+                    rewardButton_List[1].GetComponent<Button>().interactable = true;
                 }
                 break;
             case 2:
-                
+                for (int i = 0; i < 30; i++)
+                {
+                    if (li_isRelicOnTable[i] == true)
+                    {
+                        collect_count++;
+                    }
+                }
+                if (collect_count == 30)
+                {
+                    is_collect_complete[player_lv] = true;
+                    rewardButton_List[2].GetComponent<Button>().interactable = true;
+                }
                 break;
             case 3:
                 
@@ -280,47 +294,47 @@ public class Collection : MonoBehaviour
     }
 
 
-    public void Button_Left()
-    {
-        collectView_idx -= 1;
-        if (collectView_idx < 0)
-        {
-            collectView_idx = 1;
-        }
-        Switch_CollectView();
-        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
-    }
+    //public void Button_Left()
+    //{
+    //    collectView_idx -= 1;
+    //    if (collectView_idx < 0)
+    //    {
+    //        collectView_idx = 1;
+    //    }
+    //    Switch_CollectView();
+    //    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
+    //}
 
-    // 상점 이동 오른쪽
-    public void Button_Right()
-    {
-        collectView_idx += 1;
-        if (collectView_idx > 1)
-        {
-            collectView_idx = 0;
-        }
-        Switch_CollectView();
-        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
-    }
+    
+    //public void Button_Right()
+    //{
+    //    collectView_idx += 1;
+    //    if (collectView_idx > 1)
+    //    {
+    //        collectView_idx = 0;
+    //    }
+    //    Switch_CollectView();
+    //    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
+    //}
 
 
-    private void Switch_CollectView()
-    {
-        switch (collectView_idx)
-        {
-            case 0:
-                collectUIList[0].SetActive(true);
-                collectUIList[1].SetActive(false);
+    //private void Switch_CollectView()
+    //{
+    //    switch (collectView_idx)
+    //    {
+    //        case 0:
+    //            collectUIList[0].SetActive(true);
+    //            collectUIList[1].SetActive(false);
                 
-                break;
-            case 1:
-                collectUIList[0].SetActive(false);
-                collectUIList[1].SetActive(true);
+    //            break;
+    //        case 1:
+    //            collectUIList[0].SetActive(false);
+    //            collectUIList[1].SetActive(true);
                 
-                break;
+    //            break;
             
-        }
-    }
+    //    }
+    //}
 
     public void MouseOverIn_01()
     {
@@ -429,4 +443,65 @@ public class Collection : MonoBehaviour
         }
 
     }
+
+    public void SelectStageButton(int stage)
+    {
+        switch (stage)
+        {
+            case 0:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+            case 1:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+            case 2:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+            case 3:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+            case 4:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+        }
+    }
+
+    public void BackStageButton(int stage)
+    {
+        switch (stage)
+        {
+            case 0:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+            case 1:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+            case 2:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+            case 3:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+            case 4:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+        }
+    }
+
+    public void exitCollectionButton()
+    {
+        player.currentTime = 0f;
+        player.isCollectMoving = true;
+    }
+
 }

@@ -8,7 +8,7 @@ public class collectToolTipFollower : MonoBehaviour
     public Collection collection;
 
     public GameObject tooltipPanel; // 따라다닐 UI 패널
-    public Vector2 offset = new Vector2(20f, -20f); // 마우스에서의 오프셋
+    public Vector2 offset = new Vector2(0f, -20f); // 마우스에서의 오프셋
 
     private bool isHovering = false;
 

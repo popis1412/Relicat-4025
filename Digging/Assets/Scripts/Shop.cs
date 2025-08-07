@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Shop : MonoBehaviour
     public int shopView_idx;
     [SerializeField] private GameObject[] shopList;
 
+    public Image pickImage;
     public TextMeshProUGUI shop_pickLvText;
     public TextMeshProUGUI shop_pickUpdateText;
     public TextMeshProUGUI shop_lightLvText;
@@ -26,6 +28,13 @@ public class Shop : MonoBehaviour
 
     public float pick_damage;
     public float lightRadius;
+
+
+    // 드릴
+    public GameObject createDrill_textobj;
+    public GameObject upgradeDrill_textobj;
+    public TextMeshProUGUI drill_Lv_Text;
+    public bool isCreateDrill;
 
     private void Awake()
     {
@@ -53,6 +62,8 @@ public class Shop : MonoBehaviour
         Switch_ShopView();
         
     }
+
+
 
     private void OnDestroy()
     {
@@ -215,6 +226,8 @@ public class Shop : MonoBehaviour
             Inventory.FreshSlot();
 
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
+            Inventory.LogMessage("곡괭이 업그레이드 완료");
         }
         else
         {
@@ -238,10 +251,71 @@ public class Shop : MonoBehaviour
 
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
 
+            Inventory.LogMessage("시야 업그레이드 완료");
         }
         else
         {
             Inventory.LogMessage("돈이 부족합니다");
+        }
+    }
+
+    public void Button_Create_Drill()
+    {
+        // 드릴 제작 재료 도면 1, 너트 5, 모터 2
+        if (player.Drill_Items[1].count > 0 && player.Drill_Items[2].count > 4 && player.Drill_Items[3].count > 1)
+        {
+            // 재료 감소
+            player.Drill_Items[1].count -= 1;
+            player.Drill_Items[2].count -= 5;
+            player.Drill_Items[3].count -= 2;
+
+            // 드릴 기능 부여
+            isCreateDrill = true;
+            //
+
+            createDrill_textobj.SetActive(false);
+            upgradeDrill_textobj.SetActive(true);
+
+            player.Drill_Items[0].count++;
+            drill_Lv_Text.text = "레벨 : " + player.Drill_Items[0].count;
+            Inventory.FreshSlot();
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
+            Inventory.LogMessage("드릴을 제작했습니다");
+        }
+        else
+        {
+            Inventory.LogMessage("재료가 부족합니다");
+        }
+    }
+
+    public void Button_Upgrade_Drill()
+    {
+        // 드릴 강화 재료 도면 1, 너트 2, 모터 1
+        if (player.Drill_Items[1].count > 0 && player.Drill_Items[2].count > 1 && player.Drill_Items[3].count > 0)
+        {
+            // 재료 감소
+            player.Drill_Items[1].count -= 1;
+            player.Drill_Items[2].count -= 2;
+            player.Drill_Items[3].count -= 1;
+
+            // 기능 업그레이드
+
+            //
+
+            player.Drill_Items[0].count++;
+            drill_Lv_Text.text = "레벨 : " + player.Drill_Items[0].count;
+            Inventory.FreshSlot();
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
+            Inventory.LogMessage("드릴을 업그레이드 했습니다");
+
+        }
+        else
+        {
+            Inventory.LogMessage("재료가 부족합니다");
         }
     }
 

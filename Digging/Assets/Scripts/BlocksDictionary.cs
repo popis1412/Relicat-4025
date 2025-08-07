@@ -31,6 +31,7 @@ public class BlocksDictionary : MonoBehaviour
 
     private void Start()
     {
+        minimap = FindObjectOfType<MiniMap>();
         mapImage = minimap.mapImage;
     }
 

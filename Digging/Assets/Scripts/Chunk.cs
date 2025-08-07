@@ -56,6 +56,47 @@ public class Chunk : MonoBehaviour
 
     void Start()
     {
+        stageNum = LoadScene.instance.stage_Level;
+
+        if(LoadScene.instance.difficulty_level == 0)
+        {
+            boxCount = 2;       //생성할 랜덤박스 개수
+            jewelWithHardBlockCount = 1;//생성할 보석+단단한블럭 개수
+            jewelCount = 10;    //생성할 보석 개수
+            sandCount = 5; // 생성할 모래 개수
+            relicBlockCount = 3;   //생성할 유물블럭 개수
+            hardBlockCount = 7;    //생성할 단단한블럭 개수
+            unbreakableCount = 3;  //생성할 안부서지는블럭 개수
+            monsterBlockCount = 0;  //생성할 몬스터블럭 개수
+        }
+        else if(LoadScene.instance.difficulty_level == 1)
+        {
+            boxCount = 1;       //생성할 랜덤박스 개수
+            jewelWithHardBlockCount = 2;//생성할 보석+단단한블럭 개수
+            jewelCount = 8;    //생성할 보석 개수
+            sandCount = 10; // 생성할 모래 개수
+            relicBlockCount = 2;   //생성할 유물블럭 개수
+            hardBlockCount = 7;    //생성할 단단한블럭 개수
+            unbreakableCount = 3;  //생성할 안부서지는블럭 개수
+            monsterBlockCount = 1;  //생성할 몬스터블럭 개수
+        }
+        else if (LoadScene.instance.difficulty_level == 2)
+        {
+            boxCount = 1;       //생성할 랜덤박스 개수
+            jewelWithHardBlockCount = 2;//생성할 보석+단단한블럭 개수
+            jewelCount = 5;    //생성할 보석 개수
+            sandCount = 10; // 생성할 모래 개수
+            relicBlockCount = 1;   //생성할 유물블럭 개수
+            hardBlockCount = 7;    //생성할 단단한블럭 개수
+            unbreakableCount = 3;  //생성할 안부서지는블럭 개수
+            monsterBlockCount = 2;  //생성할 몬스터블럭 개수
+        }
+        else
+        {
+            Debug.Log("난이도가 설정되지 않았습니다.");
+        }
+
+
         List<int> numbers = new List<int>();    //랜덤 수열 선언
 
         for (int i = 0; i < blocks.Length; i++)
@@ -160,6 +201,19 @@ public class Chunk : MonoBehaviour
                         blocks[numbers[i]].GetComponent<Block>().ChangeBlock(8);
                     }
                 }
+                else if (stageNum == 2)
+                {
+                    if (persentage <= 5)
+                    {
+                        blocks[numbers[i]].GetComponent<Block>().nowBlockType = 8;
+                        blocks[numbers[i]].GetComponent<Block>().ChangeBlock(8);
+                    }
+                    else
+                    {
+                        blocks[numbers[i]].GetComponent<Block>().nowBlockType = 9;
+                        blocks[numbers[i]].GetComponent<Block>().ChangeBlock(9);
+                    }
+                }
 
 
                 Vector2 xPlus = (Vector2)blocks[numbers[i]].transform.position + new Vector2(1, 0);
@@ -228,6 +282,19 @@ public class Chunk : MonoBehaviour
                     generateBlock(numbers, blockChangeCount, 1, 8);
                 }
             }
+            else if (stageNum == 2)
+            {
+                int persentage = Random.Range(1, 11);
+                if (persentage <= 5)
+                {
+                    generateBlock(numbers, blockChangeCount, 1, 8);
+                }
+                else
+                {
+                    generateBlock(numbers, blockChangeCount, 1, 9);
+                }
+            }
+
         }
         //보석 생성 끝
 
