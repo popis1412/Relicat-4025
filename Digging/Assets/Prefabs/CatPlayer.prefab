@@ -179,6 +179,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914b52b7f13958646b82e55fe89fa354, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bombPrefab: {fileID: 0}
+  torchPrefab: {fileID: 0}
+  itemSpawnParent: {fileID: 0}
   currentWeaponType: 1
   sprite: {fileID: 0}
 --- !u!1 &3083855431188750820
@@ -446,13 +449,19 @@ MonoBehaviour:
   UpgradeItems:
   - {fileID: 11400000, guid: d599f05a85872824395c767f8d0ebae8, type: 2}
   - {fileID: 11400000, guid: 04eb4ca36868e9849ac4682c0132c428, type: 2}
+  Drill_Items:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   Weapons:
   - {fileID: 11400000, guid: eebb90fd5e3e8584ab5253b09ec89b28, type: 2}
   - {fileID: 11400000, guid: df38aa2cc144da048afdc9f1cec26f26, type: 2}
   Inventory_obj: {fileID: 0}
+  currentTime: 0
   shopUIPanel: {fileID: 0}
   CollectUIPanel: {fileID: 0}
   isInMuseum: 0
+  isCollectMoving: 0
   RelicInfoUIPanel: {fileID: 0}
   RelicInfoImage: {fileID: 0}
   RelicInfoName: {fileID: 0}
@@ -466,6 +475,8 @@ MonoBehaviour:
   DiePanel: {fileID: 0}
   ResetPanel: {fileID: 0}
   SavePanel: {fileID: 0}
+  pick_obj: {fileID: 0}
+  pick_imgs: []
 --- !u!58 &7350869211537410046
 CircleCollider2D:
   m_ObjectHideFlags: 0

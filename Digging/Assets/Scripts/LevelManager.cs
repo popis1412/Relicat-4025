@@ -39,7 +39,7 @@ public class LevelManager : MonoBehaviour
 
     // 가이드 UI
     public GameObject GuidePanel;
-    public bool isOnGuide = true;
+    public bool isOnGuide = false;
     public GameObject[] Guide_list;
     public int guideView_idx;
     public GameObject left_guideButton;
@@ -57,6 +57,7 @@ public class LevelManager : MonoBehaviour
     // 다음 스테이지
     public GameObject ClearStagePanel_1;
     public GameObject ClearStagePanel_2;
+    public GameObject ClearStagePanel_3;
     public bool isStageClear = false;
     public GameObject NextStageButton;
     public GameObject EndingButton;
@@ -99,6 +100,14 @@ public class LevelManager : MonoBehaviour
         {
             remainingTime = totalTime_2;
         }
+        else if(LoadScene.instance.stage_Level == 2)
+        {
+            remainingTime = totalTime_2;
+        }
+        else
+        {
+            remainingTime = totalTime_1;
+        }
         
         //SaveSystem.Instance.DeleteSaveFile();
         //SaveSystem.Instance.Load();
@@ -117,7 +126,12 @@ public class LevelManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.buildIndex != 2) return;
+        //if (scene.buildIndex != 2) return;
+        if(scene.buildIndex != 3) return;
+        if(scene.buildIndex == 3)
+        {
+            Toggle_GuidePanel();
+        }
 
         // 씬이 로드된 후 Player 다시 찾기
         player = FindObjectOfType<Player>();
@@ -142,6 +156,10 @@ public class LevelManager : MonoBehaviour
         {
             stagetargetNumText.text = collection.collect_sum.ToString() + " / 20";
         }
+        else if(LoadScene.instance.stage_Level == 2)
+        {
+            stagetargetNumText.text = collection.collect_sum.ToString() + " / 30";
+        }
         
         if(collection.collect_sum >= stagetargetNum[LoadScene.instance.stage_Level] && isStageClear == false)
         {
@@ -160,11 +178,15 @@ public class LevelManager : MonoBehaviour
             {
                 ClearStagePanel_2.SetActive(true);
             }
+            else if(LoadScene.instance.stage_Level == 2)
+            {
+                ClearStagePanel_3.SetActive(true);
+            }
             
             collection.player.player.input.Disable();
         }
         
-        if(stagetargetUI.activeSelf == true && !isStageClear)
+        if(SceneManager.GetActiveScene().buildIndex > 2 && stagetargetUI.activeSelf == true && !isStageClear)
         {
             if (!isRunning)
             {
@@ -241,13 +263,13 @@ public class LevelManager : MonoBehaviour
         LoadScene.instance.GoEnding();
 
         LoadScene.instance.stage_Level = 0;
-        ClearStagePanel_2.SetActive(false);
+        ClearStagePanel_3.SetActive(false);
         EndingButton.SetActive(false);
     }
 
     public void GoNextStageButton()
     {
-        LoadScene.instance.stage_Level = 1;
+        LoadScene.instance.stage_Level += 1;
         if (LoadScene.instance.stage_Level == 0)
         {
             remainingTime = totalTime_1;
@@ -255,6 +277,12 @@ public class LevelManager : MonoBehaviour
         else if (LoadScene.instance.stage_Level == 1)
         {
             remainingTime = totalTime_2;
+            ClearStagePanel_1.SetActive(false);
+        }
+        else if(LoadScene.instance.stage_Level == 2)
+        {
+            remainingTime = totalTime_2;
+            ClearStagePanel_2.SetActive(false);
         }
         stagetargetNumText.color = originalTargetTextColor;
         stagetimerText.color = originalTimerTextColor;
@@ -263,13 +291,12 @@ public class LevelManager : MonoBehaviour
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
         //isStageClear = false;
 
-        ClearStagePanel_1.SetActive(false);
+        //ClearStagePanel_1.SetActive(false);
         NextStageButton.SetActive(false);
         collection.player.player.input.Enable();
 
         LoadScene.instance.GoMain();
         SaveSystem.Instance.Save();
-        
     }
 
     public void ContinueStageButton1()
@@ -286,12 +313,21 @@ public class LevelManager : MonoBehaviour
         ClearStagePanel_2.SetActive(false);
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
         SaveSystem.Instance.Save();
+        NextStageButton.SetActive(true);
+    }
+
+    public void ContinueStageButton3()
+    {
+        collection.player.player.input.Enable();
+        ClearStagePanel_3.SetActive(false);
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
+        SaveSystem.Instance.Save();
         EndingButton.SetActive(true);
     }
 
     public void CloseClearPanel_1()
     {
-        LoadScene.instance.stage_Level = 1;
+        //LoadScene.instance.stage_Level = 1;
         if (LoadScene.instance.stage_Level == 0)
         {
             remainingTime = totalTime_1;
@@ -322,7 +358,7 @@ public class LevelManager : MonoBehaviour
     }
     public void CloseClearPanel_2()
     {
-        LoadScene.instance.stage_Level = 1;
+        //LoadScene.instance.stage_Level = 1;
         if (LoadScene.instance.stage_Level == 0)
         {
             remainingTime = totalTime_1;
@@ -338,6 +374,41 @@ public class LevelManager : MonoBehaviour
         isStageClear = false;
 
         ClearStagePanel_2.SetActive(false);
+        collection.player.player.input.Enable();
+
+        LoadScene.instance.GoMenu();
+        SaveSystem.Instance.Save();
+
+        stagetargetUI.SetActive(false);
+        guide_Button.SetActive(false);
+        pause_Button.SetActive(false);
+
+        Collection.instance.player.Inventory_obj.SetActive(false);
+        Collection.instance.player.CollectUIPanel.SetActive(false);
+    }
+
+    public void CloseClearPanel_3()
+    {
+        //LoadScene.instance.stage_Level = 1;
+        if(LoadScene.instance.stage_Level == 0)
+        {
+            remainingTime = totalTime_1;
+        }
+        else if(LoadScene.instance.stage_Level == 1)
+        {
+            remainingTime = totalTime_2;
+        }
+        else if(LoadScene.instance.stage_Level == 2)
+        {
+            remainingTime = totalTime_2;
+        }
+        stagetargetNumText.color = originalTargetTextColor;
+        stagetimerText.color = originalTimerTextColor;
+
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
+        isStageClear = false;
+
+        ClearStagePanel_3.SetActive(false);
         collection.player.player.input.Enable();
 
         LoadScene.instance.GoMenu();
@@ -443,6 +514,10 @@ public class LevelManager : MonoBehaviour
         collection.player.UpgradeItems[1].count = 1;
         collection.player.UpgradeItems[1].value = 50;
 
+        collection.player.Drill_Items[1].count = 0;
+        collection.player.Drill_Items[2].count = 0;
+        collection.player.Drill_Items[3].count = 0;
+
         collection.Inventory.money_item.count = 0;
         collection.Inventory.ClearItem();
 
@@ -460,8 +535,10 @@ public class LevelManager : MonoBehaviour
         shop.playerlight.GetComponent<Light2D>().pointLightOuterRadius = shop.lightRadius;
         shop.shop_pickLvText.text = "레벨 : 1";
         shop.shop_lightLvText.text = "레벨 : 1";
+        shop.drill_Lv_Text.text = "레벨 : 0";
         shop.shop_pickUpdateText.text = "-" + Collection.instance.player.UpgradeItems[0].value.ToString();
         shop.shop_lightUpdateText.text = "-" + Collection.instance.player.UpgradeItems[1].value.ToString();
+        shop.isCreateDrill = false;
 
         if (LoadScene.instance.stage_Level == 1)
         {
@@ -515,6 +592,10 @@ public class LevelManager : MonoBehaviour
         collection.player.UpgradeItems[1].count = 1;
         collection.player.UpgradeItems[1].value = 50;
 
+        collection.player.Drill_Items[1].count = 0;
+        collection.player.Drill_Items[2].count = 0;
+        collection.player.Drill_Items[3].count = 0;
+
         collection.Inventory.money_item.count = 0;
         collection.Inventory.ClearItem();
 
@@ -532,8 +613,10 @@ public class LevelManager : MonoBehaviour
         shop.playerlight.GetComponent<Light2D>().pointLightOuterRadius = shop.lightRadius;
         shop.shop_pickLvText.text = "레벨 : 1";
         shop.shop_lightLvText.text = "레벨 : 1";
+        shop.drill_Lv_Text.text = "레벨 : 0";
         shop.shop_pickUpdateText.text = "-" + Collection.instance.player.UpgradeItems[0].value.ToString();
         shop.shop_lightUpdateText.text = "-" + Collection.instance.player.UpgradeItems[1].value.ToString();
+        shop.isCreateDrill = false;
 
         stagetargetNumText.color = originalTargetTextColor;
         stagetimerText.color = originalTimerTextColor;

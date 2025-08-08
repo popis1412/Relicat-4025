@@ -30,7 +30,7 @@ public class CamreaFollow : MonoBehaviour
         {
             _mapSize = new MapData.MapSizeIsometric(new Vector3(15f, 0.5f, 0f), 31f, 44f, 1f, 1f);
         }
-        else if(LoadScene.instance.stage_Level == 1)
+        else if(LoadScene.instance.stage_Level == 1 || LoadScene.instance.stage_Level == 2)
         {
             _mapSize = new MapData.MapSizeIsometric(new Vector3(15f, 0.5f, 0f), 51f, 84f, 1f, 1f);
         }
@@ -67,7 +67,7 @@ public class CamreaFollow : MonoBehaviour
             // 부드러운 이동
             transform.position = Vector3.SmoothDamp(transform.position, targetCameraPos, ref velocity, smooth);
         }
-        else if(LoadScene.instance.stage_Level == 1)
+        else if(LoadScene.instance.stage_Level == 1 || LoadScene.instance.stage_Level == 2)
         {
             if (target.position.x > 55f)
             {

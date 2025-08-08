@@ -33,7 +33,14 @@ public class LoadScene : MonoBehaviour
 
 
     // 레벨
-    public int stage_Level = 1;
+    public int stage_Level = 0;
+
+    // 난이도
+    public int difficulty_level = 0;
+
+    [SerializeField] private GameObject difficulty_panel;
+    [SerializeField] private Button[] difficulty_btns;
+    [SerializeField] private GameObject[] difficulty_info_panels;
 
     private void Awake()
     {
@@ -115,9 +122,23 @@ public class LoadScene : MonoBehaviour
         {
             SaveSystem.Instance.Load();
         }
+
+        // 세이브 삭제
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            SaveSystem.Instance.DeleteSaveFile();
+            isAlreadyWatchStory = false;
+            stage_Level = 0;
+        }
     }
 
     // 게임시작
+    public void GameStartButton()
+    {
+        difficulty_panel.gameObject.SetActive(true);
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
+    }
+
     public void GoMain()
     {
         FadeEffect.Instance.OnFade(FadeState.FadeInOut);
@@ -131,8 +152,11 @@ public class LoadScene : MonoBehaviour
         {
             Invoke("InvokeLoadMain", 1.5f);
         }
+
+        difficulty_panel.SetActive(false);
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
+
     void InvokeLoadMain()
     {
         MainMenu.SetActive(false);
@@ -143,6 +167,10 @@ public class LoadScene : MonoBehaviour
         else if(stage_Level == 1)
         {
             SceneManager.LoadScene("Main 1");
+        }
+        else if(stage_Level == 2)
+        {
+            SceneManager.LoadScene("Main 2");
         }
 
         //SaveSystem.Instance.Load();
@@ -207,5 +235,24 @@ public class LoadScene : MonoBehaviour
     public void OnPointerExit(int idx)
     {
         li_arrowImages[idx].gameObject.SetActive(false);
+    }
+
+    // 난이도
+    public void difficulty_select_button(int idx)
+    {
+        difficulty_level = idx;
+        for(int i = 0; i < difficulty_info_panels.Length; i++)
+        {
+            difficulty_info_panels[i].SetActive(false);
+        }
+        difficulty_info_panels[idx].SetActive(true);
+
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
+    }
+    public void close_difficulty_panel()
+    {
+        difficulty_panel.SetActive(false);
+
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
 }
