@@ -389,8 +389,12 @@ public class PlayerController : MonoBehaviour
     {
         currentHP -= damage;
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[27]);
-        playerScript.LostPlayerLife(currentHP);
         StartCoroutine(DamageEffect(attacker.position));
+
+        if(damage > 0)
+        {
+            playerScript.LostPlayerLife(currentHP);
+        }
     }
 
     // 피격 시 색깔 변화와 넉백

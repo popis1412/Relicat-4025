@@ -91,8 +91,8 @@ namespace Spine.Unity.Editor {
 		internal const float DEFAULT_DEFAULT_PHYSICS_ROTATION_INHERITANCE = 1f;
 		public float defaultPhysicsRotationInheritance = DEFAULT_DEFAULT_PHYSICS_ROTATION_INHERITANCE;
 
-		internal const bool DEFAULT_SHOW_HIERARCHYitemImageS = true;
-		public bool showHierarchyIcons = DEFAULT_SHOW_HIERARCHYitemImageS;
+		internal const bool DEFAULT_SHOW_HIERARCHY_ICONS = true;
+		public bool showHierarchyIcons = DEFAULT_SHOW_HIERARCHY_ICONS;
 
 		internal const bool DEFAULT_RELOAD_AFTER_PLAYMODE = true;
 		public bool reloadAfterPlayMode = DEFAULT_RELOAD_AFTER_PLAYMODE;
@@ -187,10 +187,10 @@ namespace Spine.Unity.Editor {
 		public const bool DEFAULT_AUTO_RELOAD_SCENESKELETONS = true;
 		public bool autoReloadSceneSkeletons = DEFAULT_AUTO_RELOAD_SCENESKELETONS;
 
-		public const string SCENEitemImageS_SCALE_KEY = "SPINE_SCENEitemImageS_SCALE";
-		internal const float DEFAULT_SCENEitemImageS_SCALE = 1f;
+		public const string SCENE_ICONS_SCALE_KEY = "SPINE_SCENE_ICONS_SCALE";
+		internal const float DEFAULT_SCENE_ICONS_SCALE = 1f;
 		[Range(0.01f, 2f)]
-		public float handleScale = DEFAULT_SCENEitemImageS_SCALE;
+		public float handleScale = DEFAULT_SCENE_ICONS_SCALE;
 
 		public const bool DEFAULT_MECANIM_EVENT_INCLUDE_FOLDERNAME = true;
 		public bool mecanimEventIncludeFolderName = DEFAULT_MECANIM_EVENT_INCLUDE_FOLDERNAME;
@@ -348,7 +348,7 @@ namespace Spine.Unity.Editor {
 					SerializedProperty scaleProperty = settings.FindProperty("handleScale");
 					EditorGUILayout.PropertyField(scaleProperty, new GUIContent("Editor Bone Scale"));
 					if (EditorGUI.EndChangeCheck()) {
-						EditorPrefs.SetFloat(SpinePreferences.SCENEitemImageS_SCALE_KEY, scaleProperty.floatValue);
+						EditorPrefs.SetFloat(SpinePreferences.SCENE_ICONS_SCALE_KEY, scaleProperty.floatValue);
 						SceneView.RepaintAll();
 					}
 				}

@@ -96,6 +96,10 @@ public class DropItem : MonoBehaviour
                 {
                     playerScript.Inventory.AddItem(playerScript.UseItems[itemCode], addEA);
                 }
+                else if(itemType == 3) // 이 아이템이 드릴 아이템이라면
+                {
+                    playerScript.Inventory.AddItem(playerScript.Drill_Items[itemCode], addEA);
+                }
                 Destroy(this.gameObject);
 
                 Debug.Log("enter");

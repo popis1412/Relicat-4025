@@ -158,7 +158,9 @@ public class SaveSystem : MonoBehaviour
             items = ConvertItemList(player.items),
             minerals = ConvertItemList(player.minerals),
             UseItems = ConvertItemList(player.UseItems),
-            UpgradeItems = ConvertItemList(player.UpgradeItems)
+            UpgradeItems = ConvertItemList(player.UpgradeItems),
+            Drill_Items = ConvertItemList(player.Drill_Items)
+
         };
 
         Tool tool = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Tool>();
@@ -175,8 +177,9 @@ public class SaveSystem : MonoBehaviour
         saveData.loadSceneData = new LoadSceneData
         {
             isAlreadyWatchStory = loadSceneScript.isAlreadyWatchStory,
-            stage_Level = loadSceneScript.stage_Level
-};
+            stage_Level = loadSceneScript.stage_Level,
+            difficulty_level = loadSceneScript.difficulty_level
+        };
 
         //레벨매니저 저장
         saveData.levelManageData = new LevelManageData
@@ -316,6 +319,7 @@ public class SaveSystem : MonoBehaviour
         ApplyItemList(player.minerals, loaded.playerData.minerals);
         ApplyItemList(player.UseItems, loaded.playerData.UseItems);
         ApplyItemList(player.UpgradeItems, loaded.playerData.UpgradeItems);
+        ApplyItemList(player.Drill_Items, loaded.playerData.Drill_Items);
 
         //도감 로드
         collection.collect_sum = loaded.collectionData.collect_sum;
@@ -333,6 +337,7 @@ public class SaveSystem : MonoBehaviour
         //로드씬 로드
         loadSceneScript.isAlreadyWatchStory = loaded.loadSceneData.isAlreadyWatchStory;
         loadSceneScript.stage_Level = loaded.loadSceneData.stage_Level;
+        loadSceneScript.difficulty_level = loaded.loadSceneData.difficulty_level;
 
         //레벨매니저 로드
         levelManager.remainingTime = loaded.levelManageData.remainingTime;

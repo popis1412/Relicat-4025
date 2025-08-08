@@ -46,6 +46,7 @@ public class PlayerData
     public List<ItemData> minerals;
     public List<ItemData> UseItems;
     public List<ItemData> UpgradeItems;
+    public List<ItemData> Drill_Items;
 }
 
 
@@ -60,6 +61,7 @@ public class LoadSceneData
 {
     public bool isAlreadyWatchStory = false;
     public int stage_Level = 0;
+    public int difficulty_level = 0;
 }
 
 [System.Serializable]

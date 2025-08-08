@@ -113,7 +113,7 @@ public class Block : MonoBehaviour
         playerController = PlayerController.FindAnyObjectByType<PlayerController>();
     }
 
-    void ItemDrop(int itemType, int itemCode, Player playerScript, int addEA) //itemType 0은 유물, 1은 광물
+    void ItemDrop(int itemType, int itemCode, Player playerScript, int addEA) //itemType 0은 유물, 1은 광물 2는 사용아이템 3은 드릴 아이템
     {
         GameObject newDropItem = Instantiate(dropItem, this.transform.position, Quaternion.identity);
 
@@ -124,6 +124,10 @@ public class Block : MonoBehaviour
         if (itemType == 0)
         {
             dropItemSprite = playerScript.items[itemCode].itemImage;
+        }
+        else if(itemType == 3)
+        {
+            dropItemSprite = playerScript.Drill_Items[itemCode].itemImage;
         }
         else
         {

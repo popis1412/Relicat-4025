@@ -39,7 +39,7 @@ public class SoundManager : MonoBehaviour
     private void OnSceneChanged(Scene currentScene, Scene nextScene)
     {
         
-        if (nextScene.name == "Main" || nextScene.name == "Main 1")
+        if (nextScene.name == "Main" || nextScene.name == "Main 1" || nextScene.name == "Main 2" || nextScene.name == "tutorial")
         {
             // BGMÀÌ Àç»ý ÁßÀÎ °æ¿ì ¸ØÃã
             if (BGMSoundPlay.isPlaying)
