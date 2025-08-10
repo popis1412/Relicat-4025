@@ -156,15 +156,15 @@ SpriteRenderer:
   m_SortingLayerID: 124320615
   m_SortingLayer: 4
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 33e66442f93d2bf4baa70b03d73b66b8, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.24, y: 1.21}
+  m_Size: {x: 1.43, y: 1.43}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &594270108718324734
@@ -179,10 +179,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914b52b7f13958646b82e55fe89fa354, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bombPrefab: {fileID: 0}
-  torchPrefab: {fileID: 0}
-  itemSpawnParent: {fileID: 0}
-  currentWeaponType: 1
+  bombPrefab: {fileID: 4969225968171647812, guid: f3306ce703067ce4897be033e57626c9, type: 3}
+  torchPrefab: {fileID: 7803309434280011547, guid: 9129e7242d2181c408a505f1fa9bb0b7, type: 3}
+  itemSpawnParent: {x: 0, y: 0}
+  currentWeaponType: 0
   sprite: {fileID: 0}
 --- !u!1 &3083855431188750820
 GameObject:
@@ -434,6 +434,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8f7c084ca57048348867e31802307832, type: 2}
   - {fileID: 11400000, guid: f07cc6700db25644a8e7144d11641efb, type: 2}
   - {fileID: 11400000, guid: 86f89b75fd70d56418e05beaa970443a, type: 2}
+  - {fileID: 11400000, guid: b084c5976aa524e4084e20cd5d7f19fb, type: 2}
+  - {fileID: 11400000, guid: fcfb29f23d379f94bb0db4807d841484, type: 2}
+  - {fileID: 11400000, guid: 588c0857fba8efd4b9f06e7b31db8010, type: 2}
+  - {fileID: 11400000, guid: 5b56703e72580bb43b22adf8f00da2ed, type: 2}
+  - {fileID: 11400000, guid: 86a3445ec1cf1ab42b7db4fce4db968a, type: 2}
+  - {fileID: 11400000, guid: d2bd5561af399854fbd9849d771b70b2, type: 2}
+  - {fileID: 11400000, guid: a1a37814e528e9f4aafc64bf18ca6e05, type: 2}
+  - {fileID: 11400000, guid: 693a1db9f7e67334181445d3544080ef, type: 2}
+  - {fileID: 11400000, guid: c0da9076e09e4944991238d3c436da49, type: 2}
+  - {fileID: 11400000, guid: cbb8713b64317c94790bcbc660be0b85, type: 2}
   minerals:
   - {fileID: 11400000, guid: a9108e8471c51fc4c807858769474eac, type: 2}
   - {fileID: 11400000, guid: ee8fe85d1f12af3469dacd4a80f2e30d, type: 2}
@@ -443,16 +453,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c45bc71b91c010e40a237e2962b4277f, type: 2}
   UseItems:
   - {fileID: 11400000, guid: b22ee3248dd1b6b49a3658d1621bc4d4, type: 2}
-  - {fileID: 11400000, guid: dcb855d8e859b3742a3a8472852fc517, type: 2}
+  - {fileID: 11400000, guid: c911090b198467c4aacab6e81efd67dc, type: 2}
   - {fileID: 11400000, guid: 6eaecb1d8351a794fbb8351b200080c8, type: 2}
   - {fileID: 11400000, guid: 0bb4c7cd6399f9d429dd5ec633bffd12, type: 2}
   UpgradeItems:
   - {fileID: 11400000, guid: d599f05a85872824395c767f8d0ebae8, type: 2}
   - {fileID: 11400000, guid: 04eb4ca36868e9849ac4682c0132c428, type: 2}
   Drill_Items:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 04eb4ca36868e9849ac4682c0132c428, type: 2}
+  - {fileID: 11400000, guid: 22d54fe3b55516a448aa0e1744da0d35, type: 2}
+  - {fileID: 11400000, guid: ce6146c10f1d8344a9114eb047e30034, type: 2}
+  - {fileID: 11400000, guid: bc0a30cf4d4dadd47b23bd8c408c0b3e, type: 2}
   Weapons:
   - {fileID: 11400000, guid: eebb90fd5e3e8584ab5253b09ec89b28, type: 2}
   - {fileID: 11400000, guid: df38aa2cc144da048afdc9f1cec26f26, type: 2}
@@ -475,8 +486,12 @@ MonoBehaviour:
   DiePanel: {fileID: 0}
   ResetPanel: {fileID: 0}
   SavePanel: {fileID: 0}
-  pick_obj: {fileID: 0}
-  pick_imgs: []
+  pick_obj: {fileID: 3057011070943476779}
+  pick_imgs:
+  - {fileID: 21300000, guid: f60f233f88987d642bf531283ff6b2d4, type: 3}
+  - {fileID: 21300000, guid: 79e8a98219e0e854ca7de4a24c2b504e, type: 3}
+  - {fileID: 21300000, guid: f83ad5343b2fb434780691c4dd83a8d3, type: 3}
+  - {fileID: 21300000, guid: f4806b3c905f798478198effe34235d2, type: 3}
 --- !u!58 &7350869211537410046
 CircleCollider2D:
   m_ObjectHideFlags: 0

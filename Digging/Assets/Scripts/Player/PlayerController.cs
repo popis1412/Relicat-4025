@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.Build;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
@@ -31,17 +32,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float flyAcceleration = 10f;   // 비행 가속도
     [SerializeField] private float flySpeed = 8f;           // 최대 비행 속도
     [SerializeField] private float deceleration = 15f;      // 비행 중 하강 시 감속도
-    //[SerializeField] private float maxHangDistance = 0.2f;  // 블록에 걸쳐 있을 때 파괴 가능 거리
-
-    // Use Items
-    [Header("사용 아이템들")]
-    [SerializeField] GameObject bomb;
-    [SerializeField] GameObject torch;
-
-    // Size
-    float playerSize;
-    float bombSize;
-    float torchSize;
 
     // Weapons
     public float pickdamage = 1f;
@@ -52,12 +42,6 @@ public class PlayerController : MonoBehaviour
 
     // Block Detection
     private int blockLayer;
-    // 모래에 플레이어가 끼었을 경우
-    private const float HeadCheckRadius = 0.1f;   // Overlap 반지름
-    private float NarrowDigDistance = 0.5f; // 모래에 갇혔을 때 파괴 가능 거리
-
-    float angle;
-    float t = 0;
 
     public bool isDie = false;
 
@@ -74,31 +58,13 @@ public class PlayerController : MonoBehaviour
     public AudioSource footstepAudioSourse02;
     private bool switchStepSound = false;
 
-    
-    private bool isDigSound = false;
-
     private GameObject jetpackEffect; // 이펙트 오브젝트
 
-
-    // 콜라이더 제어용 이벤트 선언
-    public static event Action OnSandEnter;
-    public static event Action OnSandExit;
-    private bool isInSand = false; // 이전 모래 상태 저장
+    private bool _isStuckInSand = false; // 현재 상태 저장
+    public bool ISInSand => _isStuckInSand;
 
     public BlocksDictionary blocksDictionary;
     private GameObject sandPos;
-
-    GameObject block;
-    Tool tool;
-
-    RaycastHit2D hit;
-
-    public bool left { get; private set; }
-    public bool right { get; private set; }
-    public bool up { get; private set; }
-    public bool down { get; private set; }
-
-    public Vector2 range = Vector2.one;
 
     private void Awake()
     {
@@ -108,15 +74,11 @@ public class PlayerController : MonoBehaviour
         col = GetComponent<CapsuleCollider2D>();
         sr = GetComponent<SpriteRenderer>();
         playerScript = GetComponent<Player>();
-        tool = FindObjectOfType<Tool>();
 
         blockLayer = LayerMask.GetMask("Block");
 
         maxHP = playerScript.li_PlayerHearts.Length;
         currentHP = maxHP;
-        playerSize = sr.size.y;
-        bombSize = bomb.GetComponent<SpriteRenderer>().size.y;
-        torchSize = torch.GetComponent<SpriteRenderer>().size.y;
 
         anim = GetComponent<Animator>();
 
@@ -157,7 +119,7 @@ public class PlayerController : MonoBehaviour
         {
             SlotManager.Instance.EquipWeaponByType(WeaponType.Pickaxe);
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            tool.UseWeapon(mouseWorldPos, playerScript);
+            Tool.Instance.UseWeapon(mouseWorldPos, playerScript);
         }
 
         // 우클릭 - 드릴 자동 장착 + 사용
@@ -165,26 +127,26 @@ public class PlayerController : MonoBehaviour
         {
             SlotManager.Instance.EquipWeaponByType(WeaponType.Drill);
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            tool?.UseWeapon(mouseWorldPos, playerScript);
+            Tool.Instance?.UseWeapon(mouseWorldPos, playerScript);
         }
 
         // 단축키 아이템 사용
-        if (Input.GetKeyDown(KeyCode.Q))
+        if(Input.GetKeyDown(KeyCode.Q))
         {
             SlotManager.Instance.EquipItemByType(ItemType.Bomb);
-            tool?.UseItem();
+            Tool.Instance?.UseItem(isGround);
         }
             
         if(Input.GetKeyDown(KeyCode.E))
         {
             SlotManager.Instance.EquipItemByType(ItemType.Torch);
-            tool?.UseItem();
+            Tool.Instance?.UseItem(isGround);
         }
 
         if(Input.GetKeyDown(KeyCode.R))
         {
             SlotManager.Instance.EquipItemByType(ItemType.Teleport);
-            tool?.UseItem();
+            Tool.Instance?.UseItem(isGround);
         }
 
         anim.SetBool("IsGround", isGround);
@@ -194,29 +156,49 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("IsDigging", isDigging);
     }
 
+    // 모래에 갇혔음을 액션 바인드하기
     private void UpdateSandStatus()
     {
-        isInSand = IsStuckInSand();
+        bool stuckNow = IsStuckInSand();
+
+        if(stuckNow != _isStuckInSand)
+        {
+            _isStuckInSand = stuckNow;
+            HandleSandTrapStateChanged(stuckNow);
+        }
+    }
+
+    // 플레이어 후처리
+    private void HandleSandTrapStateChanged(bool isInSand)
+    {
         if(isInSand)
         {
             Debug.Log("플레이어가 모래에 갇혔습니다!");
-            col.enabled = false;
-            Vector2 targetPos = sandPos.transform.position;
-            rb.gravityScale = 0;
-            transform.position = targetPos;
-            // 필요한 후처리: 예) 애니메이션 재생, 이동 종료 이벤트 등
-            
-            anim.SetBool("SandTrap", true);
 
+            if(sandPos != null)
+            {
+                Vector2 targetPos = sandPos.transform.position;
+                transform.position = targetPos;
+            }
+
+            // TODO: 여기서 모래 트랩 진입 시 필요한 후처리 실행
+            rb.gravityScale = 0;
+            col.enabled = false;
+
+            anim.SetBool("SandTrap", true);
         }
         else
         {
             Debug.Log("플레이어가 모래에서 벗어났습니다!");
+
+            // TODO: 모래 탈출 시 필요한 후처리 실행
             rb.gravityScale = 1;
             col.enabled = true;
+
             anim.SetBool("SandTrap", false);
         }
     }
+
 
     private void FixedUpdate()
     {
@@ -353,33 +335,31 @@ public class PlayerController : MonoBehaviour
     // 모래에 갇혔는지 판별
     private bool IsStuckInSand()
     {
-        float snap = 0.5f;
-        float gridStep = snap + 1f;
-        Vector2 playerPos = transform.position;
+        // 현재 플레이어 위치
+        Vector2 playerCenter = new Vector2(
+            Mathf.Floor(transform.position.x) + 0.5f,
+            Mathf.Floor(transform.position.y) + 0.5f
+        );
 
-        Vector2 basePos = new(Mathf.Floor(playerPos.x), Mathf.Floor(playerPos.y));
-        Vector2 pos = basePos + new Vector2(snap, snap);    // 15 + 0.5 = 15.5, 0 + 0.5 = 0.5, -1 + 0.5 = -0.5
-
-        print($"Sand | Pos: {pos}, playerPos: {playerPos}, snap: {snap}");
-
-        GameObject posBlockObj = null;
-        Block posBlock = null;
-
-        // 현재 위치 블럭 체크
-        if(blocksDictionary.blockPosition.TryGetValue(pos, out GameObject foundPosBlock))
+        // 체크할 위치들: 자기 위치 + 위쪽 1칸
+        Vector2[] checkPositions = new Vector2[]
         {
-            posBlockObj = foundPosBlock;
-            posBlock = posBlockObj.GetComponent<Block>();
-            print("모래 블럭 찾음 " + posBlock.transform.position);
+            playerCenter,               // 자기 위치
+        };
 
-            if(posBlock != null && posBlock.blockType == 6)
+        foreach(var pos in checkPositions)
+        {
+            if(blocksDictionary.blockPosition.TryGetValue(pos, out GameObject blockObj))
             {
-                sandPos = posBlockObj;
-                return true;
+                Block block = blockObj.GetComponent<Block>();
+                if(block != null && block.blockType == 6) // 6번이 모래라면
+                {
+                    sandPos = blockObj;
+                    return true;
+                }
             }
         }
 
-        // 아무 조건도 만족하지 않을 경우
         sandPos = null;
         return false;
     }
@@ -434,59 +414,6 @@ public class PlayerController : MonoBehaviour
         sr.color = Color.white;
         currentHP = maxHP;
         playerScript.AddPlayerLife(currentHP);
-    }
-
-    // 아이템 사용 로직
-    private void UseItem(int index, GameObject itemPrefab, Vector3 position)
-    {
-        var item = playerScript.UseItems[index];
-
-        if(item != null && item.count > 0 && isGround)
-        {
-            Instantiate(itemPrefab, position, Quaternion.identity);
-            item.count--;
-            playerScript.Inventory.FreshSlot();
-            Debug.Log($"아이템 사용: {item.itemName}, 남은 개수: {item.count}");
-            if(index == 0)
-            {
-                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[18]);
-            }
-            else if(index == 1)
-            {
-                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[14]);
-            }
-            if(item.count <= 0)
-            {
-                item.count = 0;
-                playerScript.Inventory.RemoveItem(item);
-            }
-
-        }
-        else
-        {
-            Debug.LogWarning($"{item?.itemName ?? "아이템"}이 없습니다.");
-        }
-    }
-
-    // 폭탄 위치 계산
-    private Vector3 GetBombPosition() => transform.position + Vector3.up * (playerSize - bombSize);
-
-    // 횃불 생성 위치 계산
-    private Vector3 GetTorchPosition()
-    {
-        return new Vector3(Mathf.Round(transform.position.x - 0.5f) + 0.5f, transform.position.y - (playerSize - torchSize));
-    }
-
-    // 무기 찾기
-    GameObject FindWeapon()
-    {
-        foreach(Transform child in transform)
-        {
-            if(child.CompareTag("Weapon"))
-                return child.gameObject;
-        }
-
-        return null;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

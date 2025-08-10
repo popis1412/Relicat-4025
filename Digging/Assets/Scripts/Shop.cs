@@ -29,6 +29,7 @@ public class Shop : MonoBehaviour
     public float pick_damage;
     public float lightRadius;
 
+
     // 드릴
     public GameObject createDrill_textobj;
     public GameObject upgradeDrill_textobj;
@@ -37,7 +38,7 @@ public class Shop : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
+        if(instance == null)
         {
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
@@ -48,18 +49,18 @@ public class Shop : MonoBehaviour
         {
             Destroy(this.gameObject); // 중복 방지
         }
-        pick_damage = playerController.pickdamage;
+
         lightRadius = playerlight.GetComponent<Light2D>().pointLightOuterRadius;
 
-        Debug.Log(pick_damage);
-        Debug.Log(lightRadius);
     }
 
     private void Start()
     {
         shopView_idx = 0;
         Switch_ShopView();
-        
+
+        if(SlotManager.Instance.IsEquipWeapon(WeaponType.Pickaxe) == true)
+            pick_damage = SlotManager.Instance.currentWeapon._instanceW._damage;
     }
 
     private void OnDestroy()
@@ -78,9 +79,9 @@ public class Shop : MonoBehaviour
         playerlight = GameObject.Find("Spot Light 2D");
         //Debug.Log(playerlight.gameObject.name);
 
-        
 
-        if (player != null)
+
+        if(player != null)
         {
             Debug.Log("씬 전환 후 Player 연결 완료: " + player.name);
             playerController.pickdamage = pick_damage;
@@ -96,7 +97,7 @@ public class Shop : MonoBehaviour
     public void Button_Left()
     {
         shopView_idx -= 1;
-        if (shopView_idx < 0 )
+        if(shopView_idx < 0)
         {
             shopView_idx = 2;
         }
@@ -109,7 +110,7 @@ public class Shop : MonoBehaviour
     public void Button_Right()
     {
         shopView_idx += 1;
-        if (shopView_idx > 2)
+        if(shopView_idx > 2)
         {
             shopView_idx = 0;
         }
@@ -121,7 +122,7 @@ public class Shop : MonoBehaviour
     // 상점 구분 0 : 판매 / 1 : 구매 / 2 : 업그레이드
     private void Switch_ShopView()
     {
-        switch (shopView_idx)
+        switch(shopView_idx)
         {
             case 0:
                 shopList[0].SetActive(true);
@@ -179,10 +180,10 @@ public class Shop : MonoBehaviour
     {
         if(Inventory.money_item.count >= player.UseItems[0].value)
         {
-            //SlotManager.Instance.FillSlot(player.UseItems[0], 1);
             Inventory.money_item.count -= player.UseItems[0].value;
             Inventory.AddItem(player.UseItems[0], 1);
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
+
         }
         else
         {
@@ -190,15 +191,14 @@ public class Shop : MonoBehaviour
         }
 
     }
-
     public void Button_Buy_Item_Torch()
     {
-        if (Inventory.money_item.count >= player.UseItems[1].value)
+        if(Inventory.money_item.count >= player.UseItems[1].value)
         {
-            //SlotManager.Instance.FillSlot(player.UseItems[1], 1);
             Inventory.money_item.count -= player.UseItems[1].value;
             Inventory.AddItem(player.UseItems[1], 1);
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
+
         }
         else
         {
@@ -211,10 +211,16 @@ public class Shop : MonoBehaviour
     public void Button_Upgrade_Pick()
     {
         if(Inventory.money_item.count >= player.UpgradeItems[0].value)
-        {
-
+        {            
             Inventory.money_item.count -= player.UpgradeItems[0].value;
-            playerController.pickdamage = pick_damage;
+            // 데미지 증가
+            pick_damage += 0.4f;
+            // 이미지 삽입
+            if(SlotManager.Instance.currentWeapon._instanceW._template.type == WeaponType.Pickaxe)
+            {
+                SlotManager.Instance.currentWeapon._instanceW._damage = pick_damage;
+                SlotManager.Instance.UpgradeWeapon(SlotManager.Instance.currentWeapon);
+            }    
             player.UpgradeItems[0].count++;
             shop_pickLvText.text = "레벨 : " + player.UpgradeItems[0].count;
             player.UpgradeItems[0].value += 10;
@@ -223,6 +229,7 @@ public class Shop : MonoBehaviour
             Inventory.FreshSlot();
 
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
             Inventory.LogMessage("곡괭이 업그레이드 완료");
         }
         else
@@ -232,7 +239,7 @@ public class Shop : MonoBehaviour
     }
     public void Button_Upgrade_EyeLight()
     {
-        if (Inventory.money_item.count >= player.UpgradeItems[1].value)
+        if(Inventory.money_item.count >= player.UpgradeItems[1].value)
         {
             Inventory.money_item.count -= player.UpgradeItems[1].value;
             lightRadius += 0.1f;
@@ -246,6 +253,7 @@ public class Shop : MonoBehaviour
             Inventory.FreshSlot();
 
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
             Inventory.LogMessage("시야 업그레이드 완료");
         }
         else
@@ -266,7 +274,11 @@ public class Shop : MonoBehaviour
 
             // 드릴 기능 부여
             isCreateDrill = true;
-            //
+            // 드릴 생성
+            if(SlotManager.Instance.IsEquipWeapon(WeaponType.Drill) == false)
+                SlotManager.Instance.FillSlot(player.UseItems[3], player.Weapons[1], 1);    // 아이템 추가
+            else
+                print("이미 드릴이 있습니다");
 
             createDrill_textobj.SetActive(false);
             upgradeDrill_textobj.SetActive(true);
@@ -297,7 +309,7 @@ public class Shop : MonoBehaviour
 
             // 기능 업그레이드
 
-            //
+            // 
 
             player.Drill_Items[0].count++;
             drill_Lv_Text.text = "레벨 : " + player.Drill_Items[0].count;
@@ -315,7 +327,7 @@ public class Shop : MonoBehaviour
     }
 
     #region Test
-    private void OnGUI()
+    /*private void OnGUI()
     {
         GUIStyle bigFontButton = new GUIStyle(GUI.skin.button);
         bigFontButton.fontSize = 30;  // 원하는 글씨 크기
@@ -325,44 +337,11 @@ public class Shop : MonoBehaviour
 
         GUILayout.Label("무기 상점", bigFontButton, GUILayout.Height(30));
 
-        //if(GUILayout.Button("무기 강화", bigFontButton, GUILayout.Width(400), GUILayout.Height(50)))
-        //{
-        //    // 일단 개개인 마다 업그레이드 UI 버튼들이 없기 때문에 동시에 강화를 하는 것으로 함.
-        //    List<SlotInfo> allSlots = new();
-        //    allSlots.AddRange(quickSlotUI.QuickSlots);
-        //    allSlots.AddRange(inventoryUI.InvnetnroySlots);
-
-        //    foreach(var slot in allSlots)
-        //    {
-        //        if(slot == null || slot._instanceW == null) continue;
-
-        //        var type = slot._instanceW._template.type;
-
-        //        switch(type)
-        //        {
-        //            case WeaponType.Drill:
-        //                slot.UpgradeAndRefresh();
-
-        //                var ui = slot.GetComponentInChildren<SlotInteraction>(true);
-        //                if(ui != null)
-        //                    ui.Apply(slot._instanceW);
-
-        //                Debug.Log($"[강화] {type} 무기: {slot._instanceW._id} → Lv.{slot._instanceW._level}");
-        //                break;
-
-        //            default:
-        //                break;
-        //        }
-        //    }
-
-        //}
-
         if(GUILayout.Button("텔레포트 생성", bigFontButton, GUILayout.Width(200), GUILayout.Height(50)))
         {
             if(Inventory.money_item.count >= player.UseItems[2].value)
             {
                 Inventory.money_item.count -= player.UseItems[2].value;
-                //SlotManager.Instance.FillSlot(player.UseItems[2], 3);
                 Inventory.AddItem(player.UseItems[2], 3);
                 SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
             }
@@ -372,45 +351,9 @@ public class Shop : MonoBehaviour
             }
         }
 
-        if(GUILayout.Button("Drill 생성", bigFontButton, GUILayout.Width(200), GUILayout.Height(50)))
-        {
-            if(Inventory.money_item.count >= player.UseItems[3].value)
-            {
-                // 드릴 제작 도구를 모두 모았을 때(if문)
-                SlotManager.Instance.FillSlot(player.UseItems[3], player.Weapons[1], 1);    // 아이템 추가
-                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
-            }
-            else
-            {
-                Inventory.LogMessage("돈이 부족합니다");
-            }
-        }
-
-        if(GUILayout.Button("폭탄 생성", bigFontButton, GUILayout.Width(200), GUILayout.Height(50)))
-        {
-            if(Inventory.money_item.count >= player.UseItems[3].value)
-            {
-                Inventory.AddItem(player.UseItems[0], 1);
-                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
-            }
-            else
-            {
-                Inventory.LogMessage("돈이 부족합니다");
-            }
-        }
-
-        if(GUILayout.Button("곡괭이 생성", bigFontButton, GUILayout.Width(200), GUILayout.Height(50)))
-        {
-            if(Inventory.money_item.count >= player.UseItems[3].value)
-            {
-                SlotManager.Instance.FillSlot(null, player.Weapons[0], 1);
-                SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
-            }
-        }
-
         GUILayout.EndVertical();
         GUILayout.EndArea();
-    }
+    }*/
     #endregion Test
 }
 

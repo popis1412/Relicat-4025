@@ -95,6 +95,30 @@ public class EnemyData
 }
 
 [System.Serializable]
+public class SlotInfoData   // 슬롯의 데이터들
+{
+    public int index;
+    public SlotType type;
+    public WeaponInstance instanceW;
+    public ItemInstance instanceI;
+
+    public SlotInfoData(int index, SlotType type, WeaponInstance instanceW, ItemInstance instanceI)
+    {
+        this.index = index;
+        this.type = type;
+        this.instanceW = instanceW;
+        this.instanceI = instanceI;
+    }
+}
+
+[System.Serializable]
+public class QuickSlotSaveData
+{
+    public List<SlotInfoData> slots = new List<SlotInfoData>();
+    public SlotInfoData currentWeapon;  // 장착된 무기 데이터
+}
+
+[System.Serializable]
 public class SaveData
 {
     public InventoryData inventoryData;
@@ -106,4 +130,5 @@ public class SaveData
     public LevelManageData levelManageData;
     public BlocksData blocksData;
     public EnemyData enemyData;
+    public QuickSlotSaveData quickSlotInfoData;
 }

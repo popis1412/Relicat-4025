@@ -145,6 +145,7 @@ public class LevelManager : MonoBehaviour
             Debug.Log("씬 전환 후 Player를 찾지 못했습니다.");
         }
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -295,8 +296,8 @@ public class LevelManager : MonoBehaviour
         NextStageButton.SetActive(false);
         collection.player.player.input.Enable();
 
-        LoadScene.instance.GoMain();
         SaveSystem.Instance.Save();
+        LoadScene.instance.GoMain();
     }
 
     public void ContinueStageButton1()
@@ -307,6 +308,7 @@ public class LevelManager : MonoBehaviour
         SaveSystem.Instance.Save();
         NextStageButton.SetActive(true);
     }
+
     public void ContinueStageButton2()
     {
         collection.player.player.input.Enable();

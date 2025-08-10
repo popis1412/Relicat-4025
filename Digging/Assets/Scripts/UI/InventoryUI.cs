@@ -16,7 +16,8 @@ public class InventoryUI : MonoBehaviour
 
     #endregion Field
 
-    private void Start()
+    // 인벤토리 데이터 채우기
+    public void InitFillData()
     {
         slotInfos = GetComponentsInChildren<SlotInfo>(true).ToList();
 
@@ -30,6 +31,15 @@ public class InventoryUI : MonoBehaviour
 
             // 우클릭: 제거
             item.onRightClick = SlotManager.Instance.RemoveInstance;
+        }
+    }
+
+    // 인벤토리 초기화
+    public void ResetInventorySlot()
+    {
+        foreach(var slot in slotInfos)
+        {
+            slot.GetComponentInChildren<SlotInteraction>().Clear();
         }
     }
 

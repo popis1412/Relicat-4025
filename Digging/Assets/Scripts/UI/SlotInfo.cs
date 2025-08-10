@@ -26,5 +26,16 @@ public class SlotInfo : MonoBehaviour
         _instanceI = null;
     }
 
+    public SlotInfoData ToData()
+    {
+        return new SlotInfoData(_index, _type, _instanceW, _instanceI);
+    }
 
+    public void RestoreFromData(SlotInfoData data)
+    {
+        _index = data.index;
+        _type = data.type;
+        _instanceW = data.instanceW;
+        _instanceI = data.instanceI;
+    }
 }

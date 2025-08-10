@@ -4,6 +4,7 @@ using UnityEngine.Rendering.Universal;
 
 public class Torch : MonoBehaviour
 {
+    [SerializeField] AudioSource audio;
     [SerializeField] private ItemInstance _instance;
 
     [SerializeField] GameObject dropItem;
@@ -25,6 +26,11 @@ public class Torch : MonoBehaviour
         light2D = this.gameObject.GetComponent<Light2D>();
         playerScript = playerObj.GetComponent<Player>();
         randFloat = Random.Range(0f, 1f);
+        audio = GetComponent<AudioSource>();
+    }
+    private void Start()
+    {
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[14]);
     }
 
     private void Update()

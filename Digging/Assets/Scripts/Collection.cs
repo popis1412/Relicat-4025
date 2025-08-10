@@ -37,24 +37,27 @@ public class Collection : MonoBehaviour
     public int player_lv;
     public int collect_count;
     public bool[] is_collect_complete;
-    public GameObject badgeUIitemImage;
+    public GameObject badgeUI_Icon;
     public TextMeshProUGUI badgeUI_TitleText;
 
     public Item guessItem;
 
     [SerializeField] private Button[] resistButton_List;
 
+    [SerializeField] private GameObject MainPanel;
+    [SerializeField] private GameObject[] stagePanels;
 
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        slots = slotParent.GetComponentsInChildren<Slot>();
-    }
-#endif
+
+    //#if UNITY_EDITOR
+    //    private void OnValidate()
+    //    {
+    //        slots = slotParent.GetComponentsInChildren<Slot>();
+    //    }
+    //#endif
 
     private void Awake()
     {
-        if (instance == null)
+        if(instance == null)
         {
             instance = this;
             DontDestroyOnLoad(transform.root.gameObject);
@@ -63,7 +66,7 @@ public class Collection : MonoBehaviour
         }
         else
         {
-            Destroy(this.gameObject); // 중복 방지
+            Destroy(this.gameObject);
         }
     }
 
@@ -76,9 +79,9 @@ public class Collection : MonoBehaviour
         is_collect_complete = new bool[5];
         player_lv = 0;
         collect_count = 0;
-        
-        collectView_idx = 0;
-        Switch_CollectView();
+
+        //collectView_idx = 0;
+        //Switch_CollectView();
     }
 
     private void OnDestroy()
@@ -92,7 +95,7 @@ public class Collection : MonoBehaviour
         // 씬이 로드된 후 Player 다시 찾기
         player = FindObjectOfType<Player>();
 
-        if (player != null)
+        if(player != null)
         {
             Debug.Log("씬 전환 후 Player 연결 완료: " + player.name);
         }
@@ -102,16 +105,16 @@ public class Collection : MonoBehaviour
         }
 
         GameObject museum = GameObject.Find("Museum");
-        if (museum != null)
+        if(museum != null)
         {
             Transform collectionParent = museum.transform.Find("CollectionTable");
-            if (collectionParent != null)
+            if(collectionParent != null)
             {
-                Collection_Table = new GameObject[20];
-                for (int i = 0; i < 20; i++)
+                Collection_Table = new GameObject[30];
+                for(int i = 0; i < 30; i++)
                 {
                     Transform child = collectionParent.Find(i.ToString());
-                    if (child != null)
+                    if(child != null)
                     {
                         Collection_Table[i] = child.gameObject;
                     }
@@ -133,8 +136,8 @@ public class Collection : MonoBehaviour
             Debug.Log("'Museum' 오브젝트를 찾을 수 없습니다.");
         }
 
-        
-            
+
+
     }
 
     // Update is called once per frame
@@ -146,30 +149,30 @@ public class Collection : MonoBehaviour
 
     public void Badge_nameTag_Update()
     {
-        switch (player_lv)
+        switch(player_lv)
         {
             case 0:
-                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[0].itemImage;
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[0].itemImage;
                 badgeUI_TitleText.text = "입문자";
                 break;
             case 1:
-                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[1].itemImage;
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[1].itemImage;
                 badgeUI_TitleText.text = "초심자";
                 break;
             case 2:
-                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[1].itemImage;
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[1].itemImage;
                 badgeUI_TitleText.text = "수집가";
                 break;
             case 3:
-                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[2].itemImage;
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[2].itemImage;
                 badgeUI_TitleText.text = "전문가";
                 break;
             case 4:
-                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[2].itemImage;
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[2].itemImage;
                 badgeUI_TitleText.text = "큐레이터";
                 break;
             case 5:
-                badgeUIitemImage.GetComponent<Image>().sprite = badge_items[3].itemImage;
+                badgeUI_Icon.GetComponent<Image>().sprite = badge_items[3].itemImage;
                 badgeUI_TitleText.text = "고고학자";
                 break;
 
@@ -179,10 +182,10 @@ public class Collection : MonoBehaviour
     public void collection_Lv_Check()
     {
         collect_count = 0;
-        switch (player_lv)
+        switch(player_lv)
         {
             case 0:
-                for (int i = 0; i < 10; i++)
+                for(int i = 0; i < 10; i++)
                 {
                     if(li_isRelicOnTable[i] == true)
                     {
@@ -196,30 +199,41 @@ public class Collection : MonoBehaviour
                 }
                 break;
             case 1:
-                for (int i = 0; i < 20; i++)
+                for(int i = 0; i < 20; i++)
                 {
-                    if (li_isRelicOnTable[i] == true)
+                    if(li_isRelicOnTable[i] == true)
                     {
                         collect_count++;
                     }
                 }
-                if (collect_count == 20)
+                if(collect_count == 20)
                 {
                     is_collect_complete[player_lv] = true;
-                    rewardButton_List[0].GetComponent<Button>().interactable = true;
+                    rewardButton_List[1].GetComponent<Button>().interactable = true;
                 }
                 break;
             case 2:
-                
+                for(int i = 0; i < 30; i++)
+                {
+                    if(li_isRelicOnTable[i] == true)
+                    {
+                        collect_count++;
+                    }
+                }
+                if(collect_count == 30)
+                {
+                    is_collect_complete[player_lv] = true;
+                    rewardButton_List[2].GetComponent<Button>().interactable = true;
+                }
                 break;
             case 3:
-                
+
                 break;
             case 4:
-                
+
                 break;
             case 5:
-                
+
                 break;
 
         }
@@ -229,11 +243,11 @@ public class Collection : MonoBehaviour
     {
         if(player != null)
         {
-            if (player.isInMuseum)
+            if(player.isInMuseum)
             {
-                for (int i = 0; i < player.items.Count; i++)
+                for(int i = 0; i < player.items.Count; i++)
                 {
-                    if (player.items[i].count > 0)
+                    if(player.items[i].count > 0)
                     {
                         resistButton_List[i].interactable = true;
                     }
@@ -248,9 +262,9 @@ public class Collection : MonoBehaviour
 
     public void Button_ResistRelic(int itemNum)
     {
-        
 
-        if (player.items[itemNum].count > 0)
+
+        if(player.items[itemNum].count > 0)
         {
             li_isRelicOnTable[itemNum] = true;
             player.items[itemNum].accumulation_count += 1;
@@ -262,65 +276,65 @@ public class Collection : MonoBehaviour
             collection_Lv_Check();
             Inventory.LogMessage("등록 되었습니다.");
         }
-        
+
     }
 
     public void UpdateOnTable(int itemNum)
     {
-        
+
         for(int i = 0; i < li_isRelicOnTable.Length; i++)
         {
-            if (li_isRelicOnTable[i] == true)
+            if(li_isRelicOnTable[i] == true)
             {
                 Collection_Table[itemNum].GetComponentInChildren<SpriteRenderer>().sprite = player.items[itemNum].itemImage;
-                
+
             }
         }
-        
+
     }
 
 
-    public void Button_Left()
-    {
-        collectView_idx -= 1;
-        if (collectView_idx < 0)
-        {
-            collectView_idx = 1;
-        }
-        Switch_CollectView();
-        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
-    }
-
-    // 상점 이동 오른쪽
-    public void Button_Right()
-    {
-        collectView_idx += 1;
-        if (collectView_idx > 1)
-        {
-            collectView_idx = 0;
-        }
-        Switch_CollectView();
-        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
-    }
+    //public void Button_Left()
+    //{
+    //    collectView_idx -= 1;
+    //    if (collectView_idx < 0)
+    //    {
+    //        collectView_idx = 1;
+    //    }
+    //    Switch_CollectView();
+    //    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
+    //}
 
 
-    private void Switch_CollectView()
-    {
-        switch (collectView_idx)
-        {
-            case 0:
-                collectUIList[0].SetActive(true);
-                collectUIList[1].SetActive(false);
-                
-                break;
-            case 1:
-                collectUIList[0].SetActive(false);
-                collectUIList[1].SetActive(true);
-                
-                break;
-            
-        }
-    }
+    //public void Button_Right()
+    //{
+    //    collectView_idx += 1;
+    //    if (collectView_idx > 1)
+    //    {
+    //        collectView_idx = 0;
+    //    }
+    //    Switch_CollectView();
+    //    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
+    //}
+
+
+    //private void Switch_CollectView()
+    //{
+    //    switch (collectView_idx)
+    //    {
+    //        case 0:
+    //            collectUIList[0].SetActive(true);
+    //            collectUIList[1].SetActive(false);
+
+    //            break;
+    //        case 1:
+    //            collectUIList[0].SetActive(false);
+    //            collectUIList[1].SetActive(true);
+
+    //            break;
+
+    //    }
+    //}
 
     public void MouseOverIn_01()
     {
@@ -365,21 +379,21 @@ public class Collection : MonoBehaviour
 
     public void Button_GetReward(int idx)
     {
-        
+
         if(idx == 0)
         {
-            if (is_collect_complete[idx] == true)
+            if(is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(badge_items[0], 1);
                 player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
                 SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[36]);
             }
-            
+
         }
-        else if (idx == 1)
+        else if(idx == 1)
         {
-            if (is_collect_complete[idx] == true)
+            if(is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(Inventory.money_item, 1000);
                 Inventory.money += 1000;
@@ -388,22 +402,22 @@ public class Collection : MonoBehaviour
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
                 SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[36]);
             }
-            
+
         }
-        else if (idx == 2)
+        else if(idx == 2)
         {
-            if (is_collect_complete[idx] == true)
+            if(is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(badge_items[1], 1);
                 player_lv++;
                 rewardButton_List[idx].GetComponent<Button>().interactable = false;
                 SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[36]);
             }
-            
+
         }
-        else if (idx == 3)
+        else if(idx == 3)
         {
-            if (is_collect_complete[idx] == true)
+            if(is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(Inventory.money_item, 3000);
                 Inventory.money += 3000;
@@ -413,9 +427,9 @@ public class Collection : MonoBehaviour
                 SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[36]);
             }
         }
-        else if (idx == 4)
+        else if(idx == 4)
         {
-            if (is_collect_complete[idx] == true)
+            if(is_collect_complete[idx] == true)
             {
                 Inventory.ItemLog(badge_items[2], 1);
                 player_lv++;
@@ -429,4 +443,65 @@ public class Collection : MonoBehaviour
         }
 
     }
+
+    public void SelectStageButton(int stage)
+    {
+        switch(stage)
+        {
+            case 0:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+            case 1:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+            case 2:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+            case 3:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+            case 4:
+                stagePanels[stage].SetActive(true);
+                MainPanel.SetActive(false);
+                break;
+        }
+    }
+
+    public void BackStageButton(int stage)
+    {
+        switch(stage)
+        {
+            case 0:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+            case 1:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+            case 2:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+            case 3:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+            case 4:
+                stagePanels[stage].SetActive(false);
+                MainPanel.SetActive(true);
+                break;
+        }
+    }
+
+    public void exitCollectionButton()
+    {
+        player.currentTime = 0f;
+        player.isCollectMoving = true;
+    }
+
 }

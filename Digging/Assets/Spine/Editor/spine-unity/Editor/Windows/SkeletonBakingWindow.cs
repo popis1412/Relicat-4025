@@ -67,7 +67,7 @@ namespace Spine.Unity.Editor {
 			bakeSkin = null;
 		}
 
-		void OnGUI () {
+		void vo () {
 			so = so ?? new SerializedObject(this);
 
 			EditorGUIUtility.wideMode = true;

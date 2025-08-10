@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
 
@@ -19,7 +20,10 @@ public class QuitSlotUI : MonoBehaviour
 
     #endregion Field
 
-    private void Start()
+    #region Func
+
+    // 퀵슬롯 데이터 채우기
+    public void InitFillData()
     {
         slotInfos = GetComponentsInChildren<SlotInfo>(true).ToList();
 
@@ -35,7 +39,19 @@ public class QuitSlotUI : MonoBehaviour
             item.onRightClick = SlotManager.Instance.RemoveInstance;
         }
     }
-    #region Func
+
+    // 퀵슬롯 초기화
+    public void ResetQuickSlot()
+    {
+        foreach(var slot in quickSlots)
+        {
+            slot._instanceW = null;
+            slot._instanceI = null;
+
+            slot.GetComponentInChildren<SlotInteraction>().Clear();
+            SlotManager.Instance.UpdateText(slot);
+        }
+    }
 
     // 빈 슬롯 찾기(아이템인 경우)[내부 인스턴스로 할 경우]
     public SlotInfo FindEmptySlot(bool isWeapon, string name)
