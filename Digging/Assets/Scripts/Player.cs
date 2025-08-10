@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEditor.SearchService;
 using System.Collections.ObjectModel;
+using Unity.VisualScripting;
 
 public class Player : MonoBehaviour
 {
@@ -88,9 +89,6 @@ public class Player : MonoBehaviour
     public GameObject pick_obj;
     public Sprite[] pick_imgs;
 
-    // 액션 입력
-    public System.Action<bool> OnInventoryOpen;
-
     private string savePath => Application.persistentDataPath + "/SaveData.json";
 
     private void Awake()
@@ -121,12 +119,19 @@ public class Player : MonoBehaviour
         //    UpgradeItems[i].value = 10;
         //}
 
-        
-
         player = GetComponent<PlayerController>();
-
         //if(!File.Exists(savePath))  // 저장 없을 때
         //    InitItemCount();
+    }
+
+    private void OnEnable()
+    {
+        SlotManager.Instance.OnInventoryOpen = SlotManager.Instance.HandleInventoryOpen;
+    }
+
+    private void OnDisable()
+    {
+        SlotManager.Instance.OnInventoryOpen = null;
     }
 
     // 아이템 갯수 초기화
@@ -226,7 +231,7 @@ public class Player : MonoBehaviour
             SaveSystem.Instance.Load();
         }
 
-
+        // 첫 Level의 아이템 드랍
         if(SceneManager.GetActiveScene().buildIndex == 3)
         {
             LevelManager.instance.GuidePanel.SetActive(true);
@@ -248,14 +253,15 @@ public class Player : MonoBehaviour
             //SaveSystem.Instance.Save();
         }
 
+        // 튜토리얼 스테이지 아이템 드랍
         if(SceneManager.GetActiveScene().buildIndex == 2)
         {
             Inventory.AddItem(UseItems[0], 99);
             Inventory.AddItem(UseItems[1], 99);
         }
 
-
-
+        SlotManager.Instance.BindPlayer(this);  // Player 다시 참조
+        SlotManager.Instance.Init();    // 레벨에 따른 아이템 초기화
     }
 
     // Update is called once per frame
@@ -263,26 +269,26 @@ public class Player : MonoBehaviour
     {
         currentTime += Time.deltaTime;
 
-        if(UpgradeItems[0].count >= 50)
-        {
-            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[3];
-            Shop.instance.pickImage.sprite = pick_imgs[3];
-        }
-        else if(UpgradeItems[0].count >= 35)
-        {
-            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[2];
-            Shop.instance.pickImage.sprite = pick_imgs[2];
-        }
-        else if(UpgradeItems[0].count >= 15)
-        {
-            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[1];
-            Shop.instance.pickImage.sprite = pick_imgs[1];
-        }
-        else
-        {
-            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[0];
-            Shop.instance.pickImage.sprite = pick_imgs[0];
-        }
+        //if(UpgradeItems[0].count >= 50)
+        //{
+        //    pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[3];
+        //    Shop.instance.pickImage.sprite = pick_imgs[3];
+        //}
+        //else if(UpgradeItems[0].count >= 35)
+        //{
+        //    pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[2];
+        //    Shop.instance.pickImage.sprite = pick_imgs[2];
+        //}
+        //else if(UpgradeItems[0].count >= 15)
+        //{
+        //    pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[1];
+        //    Shop.instance.pickImage.sprite = pick_imgs[1];
+        //}
+        //else
+        //{
+        //    pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[0];
+        //    Shop.instance.pickImage.sprite = pick_imgs[0];
+        //}
 
         if(isPaused == false)
         {
@@ -307,7 +313,7 @@ public class Player : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.X))
             {
-                Inventory.AddItem(minerals[3], 1);
+                Inventory.AddItem(minerals[3], 100000);
             }
 
             if (Input.GetKeyDown(KeyCode.C))
@@ -459,7 +465,7 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
-                OnInventoryOpen.Invoke(true);
+                SlotManager.Instance.OnInventoryOpen.Invoke(true);
                 isInventoryMoving = false; // 애니메이션 완료
                 isOnInventory = true;
             }
@@ -472,7 +478,7 @@ public class Player : MonoBehaviour
 
             if (t >= moveTime)
             {
-                OnInventoryOpen.Invoke(false);
+                SlotManager.Instance.OnInventoryOpen.Invoke(false);
                 isInventoryMoving = false; // 애니메이션 완료
                 isOnInventory = false;
             }
@@ -836,26 +842,26 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Shop"))
+        if(other.CompareTag("Shop"))
         {
             isNearShop = true;
             Debug.Log("상점에 접근했습니다. F 키로 상호작용.");
         }
-        if (other.CompareTag("Museum"))
+        if(other.CompareTag("Museum"))
         {
             isNearMuseum = true;
             Debug.Log("박물관에 접근했습니다. F 키로 상호작용.");
         }
-        if (other.CompareTag("Collect"))
+        if(other.CompareTag("Collect"))
         {
             isNearCollection = true;
             Debug.Log("도감에 접근했습니다. F 키로 상호작용.");
         }
-        if (other.CompareTag("Table"))
+        if(other.CompareTag("Table"))
         {
             Debug.Log(other.gameObject.name);
             int idx = int.Parse(other.gameObject.name);
-            if (Collection.li_isRelicOnTable[idx] == true)
+            if(Collection.li_isRelicOnTable[idx] == true)
             {
                 RelicInfoImage.GetComponent<Image>().sprite = items[idx].itemImage;
                 RelicInfoName.GetComponent<TextMeshProUGUI>().text = items[idx].itemName;
@@ -863,52 +869,62 @@ public class Player : MonoBehaviour
                 RelicInfoUIPanel.SetActive(true);
             }
 
-            
+
             Debug.Log("진열장에 접근했습니다.");
         }
-        if (other.CompareTag("Reset"))
+        if(other.CompareTag("Reset"))
         {
             isNearReset = true;
             Debug.Log("리셋에 접근했습니다. F 키로 상호작용.");
         }
-        if (other.CompareTag("ReturnMuseum"))
+        if(other.CompareTag("ReturnMuseum"))
         {
             isNearReturnMuseum = true;
             Debug.Log("리턴에 접근했습니다. F 키로 상호작용.");
+        }
+        if(other.CompareTag("tutorialExit"))
+        {
+            isNearTutorialExit = true;
+            Debug.Log("튜토리얼 탈출에 접근했습니다. F 키로 상호작용.");
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Shop"))
+        if(other.CompareTag("Shop"))
         {
             isNearShop = false;
             Debug.Log("상점에서 벗어났습니다.");
         }
-        if (other.CompareTag("Museum"))
+        if(other.CompareTag("Museum"))
         {
             isNearMuseum = false;
             Debug.Log("박물관에서 벗어났습니다.");
         }
-        if (other.CompareTag("Collect"))
+        if(other.CompareTag("Collect"))
         {
             isNearCollection = false;
             Debug.Log("도감에서 벗어났습니다.");
         }
-        if (other.CompareTag("Table"))
+        if(other.CompareTag("Table"))
         {
             RelicInfoUIPanel.SetActive(false);
             Debug.Log("진열장에서 벗어났습니다.");
         }
-        if (other.CompareTag("Reset"))
+        if(other.CompareTag("Reset"))
         {
             isNearReset = false;
             Debug.Log("리셋에서 벗어났습니다.");
         }
-        if (other.CompareTag("ReturnMuseum"))
+        if(other.CompareTag("ReturnMuseum"))
         {
             isNearReturnMuseum = false;
             Debug.Log("리턴에서 벗어났습니다.");
+        }
+        if(other.CompareTag("tutorialExit"))
+        {
+            isNearTutorialExit = false;
+            Debug.Log("튜토리얼 탈출에서 벗어났습니다.");
         }
     }
 

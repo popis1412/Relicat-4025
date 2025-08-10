@@ -1,5 +1,7 @@
 
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public enum WeaponType
@@ -40,9 +42,17 @@ public class WeaponTemplate : ScriptableObject
     {
         Sprite result = icon;
 
-        foreach(var entry in levelSprite)
+        // 높은 레벨부터 순회하여 조건을 만족하는 첫 스프라이트를 찾음
+        foreach(var entry in levelSprite.OrderByDescending(entry => entry.level))
+        {
             if(level >= entry.level)
+            {
                 result = entry.sprite;
+                Debug.Log($"이미지: {result.name}, 현재 레벨: {level}, 기준 레벨: {entry.level}");
+                break;
+            }
+        }
+
 
         return result;
     }

@@ -23,6 +23,8 @@ public class SaveSystem : MonoBehaviour
 
     public BlocksDictionary blocksDictionary;
 
+    public QuitSlotUI quickslotUI;
+
     [SerializeField] private GameObject blockPrefab;
     [SerializeField] private GameObject enemyPrefab1;
 
@@ -51,6 +53,16 @@ public class SaveSystem : MonoBehaviour
             if (inventory == null)
             {
                 print("인벤토리를 참조할 수 없어 세이브에 실패하였습니다");
+                return;
+            }
+        }
+
+        if(quickslotUI == null)
+        {
+            quickslotUI = FindObjectOfType<QuitSlotUI>();
+            if(quickslotUI == null)
+            {
+                print("퀵슬롯을 참조할 수 없어 세이브에 실패하였습니다");
                 return;
             }
         }
@@ -135,6 +147,19 @@ public class SaveSystem : MonoBehaviour
             items = ConvertItemList(inventory.items),
             money_item = ConvertItem(inventory.money_item)
         };
+
+        saveData.quickSlotInfoData = new QuickSlotSaveData
+        {
+            slots = quickslotUI.quickSlots
+                .Where(slot => slot != null)
+                .Select(slot => slot.ToData())
+                .ToList(),
+
+            currentWeapon = SlotManager.Instance.currentWeapon != null
+                ? SlotManager.Instance.currentWeapon.ToData()
+                : null
+        };
+
 
         //도감 저장
         saveData.collectionData = new CollectionData
@@ -236,6 +261,16 @@ public class SaveSystem : MonoBehaviour
             }
         }
 
+        if(quickslotUI == null)
+        {
+            quickslotUI = FindObjectOfType<QuitSlotUI>();
+            if(quickslotUI == null)
+            {
+                print("퀵슬롯을 참조할 수 없어 로드에 실패하였습니다");
+                return;
+            }
+        }
+
         if (collection == null)
         {
             collection = FindObjectOfType<Collection>();
@@ -313,6 +348,9 @@ public class SaveSystem : MonoBehaviour
         //인벤토리 로드
         inventory.items = CreateItemList(loaded.inventoryData.items);
         ApplyItem(inventory.money_item, loaded.inventoryData.money_item);
+
+        // 퀵슬롯 로드
+        SlotManager.Instance.LoadQuickSlots(loaded);
 
         //플레이어 로드
         ApplyItemList(player.items, loaded.playerData.items);
@@ -424,8 +462,6 @@ public class SaveSystem : MonoBehaviour
 
 
         //UI재갱신(아마도 도감도 갱신 넣어야할 예정)
-        //SlotManager.Instance.InitializeQuickSlotsFromInventroy();
-        SlotManager.Instance.InitFillSlot();
         inventory.FreshSlot();
         print("로드완료");
     }

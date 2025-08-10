@@ -15,10 +15,10 @@ MonoBehaviour:
   id: 
   name: Drill
   type: 1
-  icon: {fileID: 21300000, guid: 94ac1683cef03e74d89eb5ccc040f78d, type: 3}
+  icon: {fileID: 21300000, guid: 0e9c83fb7a354da40ade5b3a6e404ebe, type: 3}
   levelSprite:
   - level: 1
-    sprite: {fileID: 21300000, guid: 94ac1683cef03e74d89eb5ccc040f78d, type: 3}
+    sprite: {fileID: 21300000, guid: 0e9c83fb7a354da40ade5b3a6e404ebe, type: 3}
   damage: 12
   level: 1
   range: {x: 1, y: 1}

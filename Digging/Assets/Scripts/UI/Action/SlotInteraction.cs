@@ -1,3 +1,4 @@
+ï»¿using Spine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,29 +13,56 @@ public class SlotInteraction : MonoBehaviour, IPointerClickHandler
 
     [SerializeField] SlotInfo slotInfo;
 
-    // ¾×¼Ç
+    // ì•¡ì…˜
     public Action<SlotInfo> onLeftClick;
     public Action<SlotInfo> onRightClick;
 
     [SerializeField] private Image image;
     [HideInInspector] public Transform parentAfterDrag;
 
-    // ÀÌ¹ÌÁö ³Ö±â
+    // ì´ë¯¸ì§€ ë„£ê¸°
     public void Apply<T>(T instance)
     {
         ///<TOOD>
-        /// ÇØ´ç Å¸ÀÔÀÇ ÀÛ¼ºÇÑ ÀÌ¸§ÀÇ ÇÊµå °Ë»ö
-        /// Instance: ÀÎ½ºÅÏ½º ÇÊµå ´ë»ó(static Á¦¿Ü)
-        /// Public: public ÇÊµå
-        /// NonPublic: private, protected ÇÊµå 
+        /// í•´ë‹¹ íƒ€ì…ì˜ ì‘ì„±í•œ ì´ë¦„ì˜ í•„ë“œ ê²€ìƒ‰
+        /// Instance: ì¸ìŠ¤í„´ìŠ¤ í•„ë“œ ëŒ€ìƒ(static ì œì™¸)
+        /// Public: public í•„ë“œ
+        /// NonPublic: private, protected í•„ë“œ 
         /// </TOOD>
-        Sprite icon = typeof(T).GetField("itemImage", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)?
-        .GetValue(instance) as Sprite;
+        Sprite icon = null;
+
+        try
+        {
+            var field = typeof(T).GetField("itemImage", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if(field != null)
+            {
+                object value = field.GetValue(instance);
+                icon = value as Sprite;
+            }
+        }
+        catch
+        {
+            // ì•„ë¬´ ê²ƒë„ í•˜ì§€ ì•ŠìŒ â€” iconì€ null ìœ ì§€ë¨
+        }
+
+        // ìŠ¤í”„ë¼ì´íŠ¸ê°€ ì—†ìœ¼ë©´ ê·¸ëƒ¥ ìŠ¬ë¡¯ Clear()
+        if(icon == null)
+        {
+            Clear();
+            return;
+        }
+
+
+        if(instance is WeaponInstance weapon)   // ë¬´ê¸° ì—…ê·¸ë ˆì´ë“œ ì‹œ
+        {
+            icon = weapon.GetSprite();  // ë ˆë²¨ì— ë”°ë¥¸ ì´ë¯¸ì§€ ê°€ì ¸ì˜¤ê¸°
+            print(icon);
+        }
 
         image.sprite = icon;
         image.color = new Color(1, 1, 1, 1);
 
-        // UI »çÀÌÁî Á¶Àı
+        // UI ì‚¬ì´ì¦ˆ ì¡°ì ˆ
         float width = image.sprite.rect.width;
         float height = image.sprite.rect.height;
 
@@ -43,11 +71,11 @@ public class SlotInteraction : MonoBehaviour, IPointerClickHandler
         if(width > height + 20)
         {
             size.x = 80f;
-            size.y = height;  // °¡·Î°¡ ±æ¸é ¼¼·Î Å©±â¸¦ ÇØ´ç ÀÌ¹ÌÁöÀÇ Å©±â¿¡ ¸ÂÃã.
+            size.y = height;  // ê°€ë¡œê°€ ê¸¸ë©´ ì„¸ë¡œ í¬ê¸°ë¥¼ í•´ë‹¹ ì´ë¯¸ì§€ì˜ í¬ê¸°ì— ë§ì¶¤.
         }
         else if(height > width + 20)
         {
-            size.x = width;  // ¼¼·Î°¡ ±æ¸é °¡·Î Å©±â¸¦ ÇØ´ç ÀÌ¹ÌÁöÀÇ Å©±â¿¡ ¸ÂÃã.
+            size.x = width;  // ì„¸ë¡œê°€ ê¸¸ë©´ ê°€ë¡œ í¬ê¸°ë¥¼ í•´ë‹¹ ì´ë¯¸ì§€ì˜ í¬ê¸°ì— ë§ì¶¤.
             size.y = 80f;
         }
         else
@@ -58,7 +86,7 @@ public class SlotInteraction : MonoBehaviour, IPointerClickHandler
         rect.sizeDelta = size;
     }
 
-    // ¼­·Î ½½·Ô µ¥ÀÌÅÍ º¯°æ
+    // ì„œë¡œ ìŠ¬ë¡¯ ë°ì´í„° ë³€ê²½
     public void SetSlotInfo(SlotInfo info)
     {
         slotInfo = info;
@@ -78,7 +106,7 @@ public class SlotInteraction : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // ÀÌ¹ÌÁö ¾ø¾Ö±â
+    // ì´ë¯¸ì§€ ì—†ì• ê¸°
     public void Clear()
     {
         Vector2 size = new Vector2(80, 80);
@@ -97,16 +125,16 @@ public class SlotInteraction : MonoBehaviour, IPointerClickHandler
         if(!SlotManager.Instance._isOpen)
             return;
 
-        // Äü½½·ÔÀÏ °æ¿ì
+        // í€µìŠ¬ë¡¯ì¼ ê²½ìš°
         if(slotInfo._type == SlotType.QuickSlot)
         {
-            // ¾ø°Å³ª ¿ÏÀüÇÑ ºóÄ­ÀÎ °æ¿ì
-            if(!SlotManager.Instance._isOpen || slotInfo._instanceW == null && slotInfo._instanceI == null)
+            // ì—†ê±°ë‚˜ ì™„ì „í•œ ë¹ˆì¹¸ì¸ ê²½ìš°, ê°¯ìˆ˜ê°€ 0ê°œì¸ ê²½ìš°
+            if(!SlotManager.Instance._isOpen || slotInfo._instanceW == null && slotInfo._instanceI == null || slotInfo._instanceI._count <= 0)
                 return;
         }
         else if(slotInfo._type == SlotType.Inventory)
         {
-            if(eventData.pointerClick.GetComponent<Slot>().item == null)
+            if(GetComponent<Slot>().item == null || GetComponent<Slot>().item.type == ItemType.Null || GetComponent<Slot>().item.count <= 0)
                 return;
         }
         
@@ -115,7 +143,7 @@ public class SlotInteraction : MonoBehaviour, IPointerClickHandler
             case PointerEventData.InputButton.Left:
                 onLeftClick?.Invoke(slotInfo);
                 break;
-            // ÀÌ°Ç ³ªÁß¿¡ ¾ø¾Öµµ µÊ. ¹«±â Á¦°Å¿ëÀÓ.
+            // ì´ê±´ ë‚˜ì¤‘ì— ì—†ì• ë„ ë¨. ë¬´ê¸° ì œê±°ìš©ì„.
             case PointerEventData.InputButton.Right:
                 onRightClick?.Invoke(slotInfo);
                 break;

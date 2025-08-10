@@ -15,7 +15,6 @@ MonoBehaviour:
   itemName: "\uD398\uD2B8\uBCD1"
   itemImage: {fileID: 21300000, guid: 54f32ad3971488d47a6db377526ee552, type: 3}
   count: 0
-  stackLimit: 0
   accumulation_count: 0
   isMineral: 0
   isRelic: 1

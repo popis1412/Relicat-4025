@@ -8,7 +8,7 @@ public class collectToolTipFollower : MonoBehaviour
     public Collection collection;
 
     public GameObject tooltipPanel; // 따라다닐 UI 패널
-    public Vector2 offset = new Vector2(20f, -20f); // 마우스에서의 오프셋
+    public Vector2 offset = new Vector2(0f, -20f); // 마우스에서의 오프셋
 
     private bool isHovering = false;
 
@@ -17,7 +17,7 @@ public class collectToolTipFollower : MonoBehaviour
 
     void Update()
     {
-        if (isHovering && tooltipPanel.activeSelf)
+        if(isHovering && tooltipPanel.activeSelf)
         {
             Vector2 pos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -29,14 +29,14 @@ public class collectToolTipFollower : MonoBehaviour
 
             tooltipPanel.GetComponent<RectTransform>().anchoredPosition = pos + offset;
 
-            
+
         }
     }
 
     public void OnPointerEnter(int idx)
     {
-        
-        if (collection.li_isCollect[idx] == true)
+
+        if(collection.li_isCollect[idx] == true)
         {
             isHovering = true;
             tooltipPanel.SetActive(true);
@@ -45,7 +45,7 @@ public class collectToolTipFollower : MonoBehaviour
             tooltipText_list[1].text = "최초 등록 보상 : " + collection.player.items[idx].value.ToString() + "원";
             tooltipText_list[2].text = "누적 등록 보상 : " + collection.player.items[idx].duplicate_value.ToString() + "원";
             tooltipText_list[3].text = "누적 등록 개수 : " + collection.player.items[idx].accumulation_count.ToString() + "개";
-            
+
         }
         //Debug.Log(tooltipPanel.activeSelf);
     }

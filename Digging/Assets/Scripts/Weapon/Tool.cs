@@ -1,41 +1,61 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using static Spine.Unity.Examples.MixAndMatchSkinsExample;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class Tool : MonoBehaviour
 {
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private GameObject torchPrefab;
-    [SerializeField] private Transform itemSpawnParent;
+    [SerializeField] private Vector2 itemSpawnParent;
 
     private ItemInstance currentItemInstance; // 현재 장착된 아이템
     private SlotInfo currentItemSlot; // 해당 아이템이 들어있는 슬롯
 
     private static Tool _instance;
-    public static Tool Instance;
+    public static Tool Instance
+    {
+        get
+        {
+            if(_instance == null)
+            {
+                _instance = FindObjectOfType<Tool>();
+
+                if(_instance == null)
+                {
+                    GameObject obj = new GameObject();
+                    GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+                    obj.transform.SetParent(player.transform);
+
+                    obj.name = typeof(Tool).Name;
+                    obj.AddComponent<Transform>();
+                    obj.AddComponent<SpriteRenderer>();
+                    _instance = obj.AddComponent<Tool>();
+                }
+            }
+
+            return _instance;
+        }
+    }
 
     public WeaponType currentWeaponType;
 
     private Component currentWeaponComponent;
-    [SerializeField] SpriteRenderer sprite;
+    [SerializeField] private SpriteRenderer sprite;
 
-    // 일단 마우스 오른쪽 하면 드릴로 바꿔달라는 소리를 했으니
-    // 마우스 오른쪽 클릭을 하면 첫번째의 드릴로 자동 선택이 되게 만들어야지. 게다가 그것의 슬롯 선택된 것도 배경 표시를 해야 되고.
     private void Awake()
     {
         if(_instance == null)
         {
-            Instance = this;
+            _instance = this;
         }
         else
         {
-            Destroy(this.gameObject); // 중복 방지
+            Destroy(gameObject);
         }
 
         sprite = GetComponent<SpriteRenderer>();
     }
 
+    // 무기 장착 + 표시
     public void Equip(SlotInfo newSlot)
     {
         RemoveCurrentWeaponComponent();
@@ -63,14 +83,18 @@ public class Tool : MonoBehaviour
         }
     }
 
+    // 무기 사용
     public void UseWeapon(Vector2 mousePos, Player player)
     {
         if(currentWeaponComponent == null)
             return;
 
+        PlayerController _player = player.GetComponent<PlayerController>();
+        bool isSanded = _player.ISInSand;   // 모래 갇힘 상태
+
         if(currentWeaponComponent is Pickaxe pickaxe)
         {
-            pickaxe.Digging(mousePos, player);
+            pickaxe.Digging(mousePos, player, isSanded);
         }
         else if(currentWeaponComponent is Drill drill)
         {
@@ -78,13 +102,14 @@ public class Tool : MonoBehaviour
             if(drill.OnDecreaseEnergy == null)
                 drill.OnDecreaseEnergy = SlotManager.Instance.BindDrillEnergy;
 
-            drill.Digging(mousePos, player);
+            drill.Digging(mousePos, player, isSanded);
         }
     }
 
-    public void UseItem()
+    // 아이템 사용
+    public void UseItem(bool isGrounded)
     {
-        itemSpawnParent = GameObject.FindGameObjectWithTag("Player").transform;
+        itemSpawnParent = GameObject.FindGameObjectWithTag("Player").transform.position;
 
         if(currentItemInstance == null || currentItemInstance._count <= 0)
         {
@@ -97,10 +122,27 @@ public class Tool : MonoBehaviour
         switch(currentItemInstance._item.type)
         {
             case ItemType.Bomb:
+                if(!isGrounded)
+                {
+                    print("폭탄은 공중에서 설치할 수 없습니다.");
+                    return;
+                }
                 prefab = bombPrefab;
+                
                 break;
             case ItemType.Torch:
+                if(!isGrounded)
+                {
+                    print("횃불은 공중에서 설치할 수 없습니다.");
+                    return;
+                }
                 prefab = torchPrefab;
+                
+                // 횟불 설치 시 플레이어의 피벗이 (0,0) 위치에 설치 -> 나중에 블럭의 중앙 위치에 설치하게 할 것임.
+                SpriteRenderer sr = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>();
+                float playerSize = sr.size.y;
+                float torchSize = torchPrefab.GetComponent<SpriteRenderer>().size.y;
+                itemSpawnParent = new Vector3(Mathf.Round(transform.position.x - 0.5f) + 0.5f, transform.position.y - (playerSize - torchSize));
                 break;
             default:
                 Debug.LogWarning("지원되지 않는 아이템 타입입니다.");
@@ -109,8 +151,9 @@ public class Tool : MonoBehaviour
 
         if(prefab != null)
         {
-            GameObject clone = Instantiate(prefab, itemSpawnParent);
+            GameObject clone = Instantiate(prefab, itemSpawnParent, Quaternion.identity);
             clone.transform.position = transform.position; // 플레이어 위치에서 생성 (원하면 조정 가능)
+            clone.transform.SetParent(null); // 부모 움직임의 영향 주지 않기
         }
 
         // 개수 감소
@@ -119,7 +162,6 @@ public class Tool : MonoBehaviour
         // UI 갱신
         SlotManager.Instance.UpdateSlotUI(currentItemSlot, currentItemInstance._item);
     }
-
 
     // 장착 해제
     public void Unequip()
@@ -133,11 +175,11 @@ public class Tool : MonoBehaviour
     {
         if(instance is WeaponInstance weapon)
         {
-            sprite.sprite = weapon != null ? weapon.GetSprite() : null;
+            sprite.sprite = weapon == null ? null : weapon.GetSprite();
         }
         else if(instance is ItemInstance item)
         {
-            sprite.sprite = item != null ? item.GetSprite() : null;
+            sprite.sprite = item == null ? null: item.GetSprite();
         }
     }
 

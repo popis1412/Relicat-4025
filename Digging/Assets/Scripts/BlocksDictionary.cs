@@ -52,6 +52,7 @@ public class BlocksDictionary : MonoBehaviour
         {
             blockPosition.Remove(obj.transform.position);
         }
+
         mapImage.DrawSquare(Mathf.RoundToInt(obj.transform.position.x - 0.5f), Mathf.RoundToInt(obj.transform.position.y - 0.5f), Color.yellow);
     }
 

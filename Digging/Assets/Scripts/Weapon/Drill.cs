@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 
@@ -9,6 +10,7 @@ public class Drill: MonoBehaviour
 
     private bool isDigging = false;
     private bool isDigSound = false;
+    private bool isBound = false;
 
     // 에너지 카운트
     float decreaseEnergy = 10f;  // 에너지 감소률 - 1초마다 0.1감소
@@ -41,12 +43,33 @@ public class Drill: MonoBehaviour
         timer = cooldown;
     }
 
-    public void Digging(Vector2 worldMousePos, Player player)
+    public void Digging(Vector2 worldMousePos, Player player, bool isSanded)
     {
+        if(_instance._energy <= 0)
+        {
+            t = cooldown;
+            OnDecreaseEnergy = null;
+            return;
+        }
+
         RaycastHit2D hit = Physics2D.Raycast(worldMousePos, Vector2.zero);
 
         // 블럭 가져오기
-        List<GameObject> blocks = GetVaildBlocksUnderMouse(hit);
+        List<GameObject> blocks;
+
+        if(isSanded)
+        {
+            // 모래에 갇혔으면 자신의 위치에 있는 블럭만 반환
+            GameObject sandBlock = GetCurrentPlayerBlock(player.GetComponent<PlayerController>());
+            blocks = new List<GameObject>();
+            if(sandBlock != null) blocks.Add(sandBlock);
+        }
+        else
+        {
+            // 정상적으로 주변 블럭 반환
+            blocks = GetVaildBlocksUnderMouse(hit);
+        }
+
         if(blocks == null || blocks.Count == 0)
         {
             isDigging = false;
@@ -341,18 +364,38 @@ public class Drill: MonoBehaviour
         }
     }
 
+    // 현재 방향
+    private GameObject GetCurrentPlayerBlock(PlayerController player)
+    {
+        Vector2 playerCenter = new Vector2(
+            Mathf.Floor(player.transform.position.x) + 0.5f,
+            Mathf.Floor(player.transform.position.y) + 0.5f
+        );
+
+        if(player.blocksDictionary.blockPosition.TryGetValue(playerCenter, out GameObject blockObj))
+        {
+            return blockObj;
+        }
+        return null;
+    }
+
     // 에너지 충전(액션)
     public void ChargeEnergy()
     {
-        // PrograssBar를 참조를 해서 그 value 값을 하든
+        _instance._energy = 100;
+
+        // SlotManager의 메서드를 단 한 번만 등록
+        if(!isBound)
+        {
+            OnEnergyChanged = SlotManager.Instance.BindDrillEnergy;
+            isBound = true;
+        }
+        OnEnergyChanged?.Invoke(this);
     }
 
     // 에너지 감소
     public void DecreaseEnergy(float amount)
     { 
-        if(_instance._energy <= 0)
-            return;
-
         _instance._energy -= amount;
         OnDecreaseEnergy?.Invoke(this);
     }

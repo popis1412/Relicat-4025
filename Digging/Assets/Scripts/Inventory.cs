@@ -10,6 +10,7 @@ using Unity.VisualScripting;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System;
+using Spine;
 
 public class Inventory : MonoBehaviour
 {
@@ -93,6 +94,9 @@ public class Inventory : MonoBehaviour
         {
             slots[i].item = null;
 
+            if(slots[i] == null || slots[i].gameObject == null) continue;
+
+
             // 빈 슬롯이면 텍스트 비우기
             Transform parent = slots[i].transform.parent;
             TextMeshProUGUI text = parent.GetComponentInChildren<TextMeshProUGUI>();
@@ -169,28 +173,12 @@ public class Inventory : MonoBehaviour
             Debug.Log(text);
             text.text = "";
         }
+
         items.Clear();
         FreshSlot();
 
         money = 0;
         
-    }
-
-    // 아아템 사용 또는 제거
-    public void RemoveItem(Item _item)
-    {
-        for(int i = 0; i < items.Count; i++)
-        {
-            if(items[i].itemName == _item.itemName)
-            {
-                if(items[i].count <= 0)
-                {
-                    items.RemoveAt(i);
-                }
-
-                break;
-            }
-        }
     }
 
     // 특정 아이템 판매
@@ -323,7 +311,13 @@ public class Inventory : MonoBehaviour
         // 다른 아이템 획득 시
         else
         {
-            getItem_Image.GetComponent<Image>().sprite = _item.itemImage;
+            if(getItem_Image != null)
+            {
+                Image image = getItem_Image.GetComponent<Image>();
+                if(image != null)
+                    image.sprite = _item.itemImage;
+            }
+
             if (_item.isRelic == true)
             {
                 for(int i = 0; i < collection.player.items.Count; i++)

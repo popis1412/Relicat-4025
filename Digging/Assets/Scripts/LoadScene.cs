@@ -13,7 +13,7 @@ public class LoadScene : MonoBehaviour
     [SerializeField] private GameObject[] li_arrowImages;
 
     public GameObject settingsPanel;
-    
+
     [SerializeField] private AudioMixer m_AudioMixer;
     [SerializeField] private Slider m_MusicMasterSlider;
     [SerializeField] private Slider m_MusicBGMSlider;
@@ -25,7 +25,7 @@ public class LoadScene : MonoBehaviour
     public bool isUseStart;
 
     [SerializeField] private GameObject[] Button_List;
-    
+
     [SerializeField] private TextMeshProUGUI startText;
     [SerializeField] private TextMeshProUGUI continueText;
 
@@ -44,7 +44,7 @@ public class LoadScene : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
+        if(instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -60,11 +60,12 @@ public class LoadScene : MonoBehaviour
 
         Cursor.SetCursor(cursorTex, new Vector2(30f, 100f), CursorMode.ForceSoftware);
     }
+
     public static LoadScene Instance
     {
         get
         {
-            if (instance == null)
+            if(instance == null)
             {
                 return null;
             }
@@ -112,13 +113,13 @@ public class LoadScene : MonoBehaviour
             continueText.color = new Color(1, 1, 1, 0.3f);
         }
         //세이브
-        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        if(Input.GetKeyDown(KeyCode.LeftBracket))
         {
             SaveSystem.Instance.Save();
         }
 
         //로드
-        if (Input.GetKeyDown(KeyCode.RightBracket))
+        if(Input.GetKeyDown(KeyCode.RightBracket))
         {
             SaveSystem.Instance.Load();
         }
@@ -133,6 +134,7 @@ public class LoadScene : MonoBehaviour
     }
 
     // 게임시작
+
     public void GameStartButton()
     {
         difficulty_panel.gameObject.SetActive(true);
@@ -142,7 +144,7 @@ public class LoadScene : MonoBehaviour
     public void GoMain()
     {
         FadeEffect.Instance.OnFade(FadeState.FadeInOut);
-        if (isAlreadyWatchStory == false)
+        if(isAlreadyWatchStory == false)
         {
             isUseStart = true;
             isAlreadyWatchStory = true;
@@ -156,7 +158,6 @@ public class LoadScene : MonoBehaviour
         difficulty_panel.SetActive(false);
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
-
     void InvokeLoadMain()
     {
         MainMenu.SetActive(false);
@@ -238,6 +239,7 @@ public class LoadScene : MonoBehaviour
     }
 
     // 난이도
+
     public void difficulty_select_button(int idx)
     {
         difficulty_level = idx;
@@ -255,4 +257,27 @@ public class LoadScene : MonoBehaviour
 
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
+
+    #region Skip!!!
+
+    /*private void OnGUI()
+    {
+        GUIStyle bigFontButton = new GUIStyle(GUI.skin.button);
+        bigFontButton.fontSize = 30;  // 원하는 글씨 크기
+
+        GUILayout.BeginArea(new Rect(10, 10, 300, 300)); // 버튼 위치 설정
+        GUILayout.BeginVertical();
+
+        if(GUILayout.Button("다음 씬으로", bigFontButton, GUILayout.Width(200), GUILayout.Height(50)))
+        {
+            // 현재 씬의 buildIndex에 +1 해서 다음 씬으로 전환
+            int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+            SceneManager.LoadScene(nextSceneIndex);
+        }
+
+        GUILayout.EndVertical();
+        GUILayout.EndArea();
+    }*/
+
+    #endregion
 }

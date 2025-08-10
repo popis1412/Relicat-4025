@@ -15,7 +15,6 @@ MonoBehaviour:
   itemName: CD
   itemImage: {fileID: 21300000, guid: df8da32fe04327b409cd7dad36fca2d6, type: 3}
   count: 0
-  stackLimit: 0
   accumulation_count: 0
   isMineral: 0
   isRelic: 1

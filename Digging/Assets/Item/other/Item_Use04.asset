@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Item_Use04
   m_EditorClassIdentifier: 
   itemName: "\uB4DC\uB9B4"
-  itemImage: {fileID: 21300000, guid: 94ac1683cef03e74d89eb5ccc040f78d, type: 3}
+  type: 0
+  itemImage: {fileID: 21300000, guid: 0e9c83fb7a354da40ade5b3a6e404ebe, type: 3}
   count: 0
   stackLimit: 1
   accumulation_count: 0

@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
+    [SerializeField] AudioSource audio;
     [SerializeField] Player playerScript;
     [SerializeField] private ItemInstance _instance;
 
@@ -46,6 +48,7 @@ public class Bomb : MonoBehaviour
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         anim = GetComponent<Animator>();
         anim.enabled = false;
+        audio = GetComponent<AudioSource>();
     }
 
     private void OnEnable()
@@ -62,19 +65,20 @@ public class Bomb : MonoBehaviour
     void Start()
     {
         originalScale = Vector3.one;
-
         rb = GetComponent<Rigidbody2D>();
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[18]);
 
         // 생성 후, 던지기
         Throw(GetPlayerDirection());
-
-        //originalScale = transform.localScale;
-        //StartCoroutine(ExplosionRoutine()); // 폭발 카운트다운 시작
     }
 
     private void Update()
     {
-        if(!isCountingDown || hasExploded) return;
+        if(!isCountingDown || hasExploded)
+        {
+            transform.localScale = originalScale;
+            return;
+        }
 
         timer -= Time.deltaTime;
 
@@ -95,24 +99,24 @@ public class Bomb : MonoBehaviour
         if(player == null)
             return Vector2.right * throwForceX; // fallback
 
-        Vector2 playerPos = player.transform.position;
+        Vector2 playerPos = (Vector2) player.transform.position;
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 dir = (mouseWorldPos - playerPos).normalized;
 
         // fallback: 방향이 없다면 바라보는 방향
         if(dir == Vector2.zero)
-            dir = new Vector2(Mathf.Sign(player.transform.localScale.x), 0f);
+            dir = new Vector2(Mathf.Sign(player.transform.localScale.x), 0.5f);
 
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         angle = (angle + 360f) % 360f;
 
         // 8방향
         Vector2[] directions = {
-            new Vector2(1, 0),    // 0: →
+            new Vector2(1, 0.5f),    // 0: →
             new Vector2(1, 1),    // 1: ↗
             new Vector2(0, 1),    // 2: ↑
             new Vector2(-1, 1),   // 3: ↖
-            new Vector2(-1, 0),   // 4: ←
+            new Vector2(-1, 0.5f),   // 4: ←
             new Vector2(-1, -1),  // 5: ↙
             new Vector2(0, -1),   // 6: ↓
             new Vector2(1, -1)    // 7: ↘
@@ -161,6 +165,7 @@ public class Bomb : MonoBehaviour
                 break;
         }
 
+        print($"각도: {angle}, X힘: {forceX * selectedDir.x}, Y힘: {forceY * selectedDir.y}\n방향: {selectedDir}, 방향벡터: {dir}\n 플레이어 위치: {playerPos}, 마우스 위치: {mouseWorldPos}");
         return new Vector2(selectedDir.x * forceX, selectedDir.y * forceY);
     }
 
@@ -168,44 +173,6 @@ public class Bomb : MonoBehaviour
     {
         rb.AddForce(force, ForceMode2D.Impulse);
     }
-
-    //void HandleIgnoreCollision()
-    //{
-    //    Collider2D bombCol = GetComponent<Collider2D>();
-    //    if(bombCol == null) return;
-
-    //    if (playerScript != null)
-    //    {
-    //        Collider2D playerCol = playerScript.GetComponent<Collider2D>();
-    //        if(playerCol != null)
-    //            Physics2D.IgnoreCollision(bombCol, playerCol, true);
-    //    }
-
-    //    GameObject[] bombs = GameObject.FindGameObjectsWithTag("Bomb");
-    //    foreach(GameObject bomb in bombs)
-    //    {
-    //        foreach (Collider2D col in bomb.GetComponents<Collider2D>())
-    //        {
-    //            Physics2D.IgnoreCollision(bombCol, col, true);
-    //        }
-    //    }
-
-    //    GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-    //    foreach(GameObject enemy in enemies)
-    //    {
-    //        foreach(Collider2D col in enemy.GetComponents<Collider2D>())
-    //        {
-    //            Physics2D.IgnoreCollision(bombCol, col, true);
-    //        }
-    //    }
-    //}
-
-    //IEnumerator ExplosionRoutine()
-    //{
-    //    yield return new WaitForSeconds(explosionDelay);
-    //    Explode();
-    //    Destroy(gameObject);
-    //}
 
     void Explode()
     {
@@ -215,21 +182,24 @@ public class Bomb : MonoBehaviour
 
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[19]);
 
-
         // 1. 폭발 크기 지정
         Vector2 explosionSize = new Vector2(1f * exploSize.x, 1f * exploSize.y);
         Vector2 explosionCenter = transform.position;
         Vector2 explosionHalfSize = explosionSize * 0.5f;
 
-        DrawDebugBox(transform.position, explosionSize, Color.red);
-        Debug.Break();
+        //DrawDebugBox(transform.position, explosionSize, Color.red);
 
         // 3. 충돌 감지 (전체 대상)
         Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, explosionSize, 0f);
 
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[19]);
+
         // 4. 범위 내 중심만 필터링
         foreach(var hit in hits)
         {
+            if(hit == null || hit.gameObject == null)
+                continue;
+
             Vector2 hitCenter = hit.bounds.center;
 
             bool isInsideExplosion =
@@ -259,6 +229,8 @@ public class Bomb : MonoBehaviour
                 case "Torch":
                     TryTriggerTorch(hit);
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -266,10 +238,9 @@ public class Bomb : MonoBehaviour
     void TryDestroyBlock(Collider2D hit)
     {
         Block block = hit.GetComponent<Block>();
-        if(block != null && block.blockType != -1 && block.blockType != 1)
-        {
-            block.BlockDestroy(10, playerScript);
-        }
+        if(block == null || block.blockType == -1 || block.blockType == -2 || block.blockType == 1)
+            return;
+        block.BlockDestroy(10, playerScript);
     }
 
     void TryDestroyEnemy(Collider2D hit)
@@ -305,6 +276,7 @@ public class Bomb : MonoBehaviour
 
     public void OnExplosionFinished()
     {
+        print("폭탄 터짐");
         Destroy(gameObject);
     }
 
@@ -324,22 +296,48 @@ public class Bomb : MonoBehaviour
         Debug.DrawLine(bottomLeft, topLeft, color);
     }
 
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(!collision.collider.CompareTag("Block")) return;
 
         ContactPoint2D contact = collision.GetContact(0);
+        Vector2 normal = contact.normal.normalized;
 
-        if(!isGrounded && IsGroundContact(contact.normal))
+        // 현재 이동 방향
+        Vector2 moveDir = rb.velocity.normalized;
+
+        // 떨어지는 중일 때만 바닥 충돌 처리
+        bool isFalling = rb.velocity.y <= 0f;
+
+        if(!isGrounded )
         {
-            isGrounded = true;
-            rb.velocity = Vector2.zero;
-            Debug.Log("💥 바닥에 닿아 정지됨");
+            if(isFalling && IsGroundContact(contact.normal))
+            {
+                isGrounded = true;
+                rb.velocity = Vector2.zero;
+                //print("바닥 충돌 - 정지");
+            }
+        }
+        else if(IsWallContact(normal))
+        {
+            rb.velocity = new Vector2(0f, rb.velocity.y);
+            //print("벽면 충돌 - 수직 낙하 시작");
+        }
+        else
+        {
+            //print("대각선 등 기타 충돌 - 무시");
         }
     }
 
     bool IsGroundContact(Vector2 normal)
     {
-        return normal.y > 0.5f;
+        return Vector2.Dot(normal, Vector2.up) > 0.9f;
+    }
+
+    bool IsWallContact(Vector2 normal)
+    {
+        // 좌우 벽 충돌(왼쪽 또는 오른쪽)
+        return Vector2.Dot(normal, Vector2.left) > 0.9f || Vector2.Dot(normal, Vector2.right) > 0.9f;
     }
 }

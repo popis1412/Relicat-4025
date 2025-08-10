@@ -1,11 +1,10 @@
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class Pickaxe : MonoBehaviour
 {
     [SerializeField] private AudioSource diggingAudioSource;
-
-    [SerializeField] float damage = 6f; // 나중에 인스턴스 damge로 바꿀 것임.
 
     private bool isDigging = false;
     private bool isDigSound = false;
@@ -15,7 +14,7 @@ public class Pickaxe : MonoBehaviour
 
     private Vector3 pivot;
 
-    private WeaponInstance _instance;
+    public WeaponInstance _instance;
 
     public void Setup(WeaponInstance instance)
     {
@@ -27,12 +26,25 @@ public class Pickaxe : MonoBehaviour
         diggingAudioSource = GameObject.FindWithTag("Player")?.GetComponent<AudioSource>();
     }
 
-    public void Digging(Vector2 worldMousePos, Player player)
+    public void Digging(Vector2 worldMousePos, Player player, bool isSanded)
     {
         RaycastHit2D hit = Physics2D.Raycast(worldMousePos, Vector2.zero);
-
         // 블럭 가져오기
-        List<GameObject> blocks = GetVaildBlocksUnderMouse(hit);
+        List<GameObject> blocks;
+
+        if(isSanded)
+        {
+            // 모래에 갇혔으면 자신의 위치에 있는 블럭만 반환
+            GameObject sandBlock = GetCurrentPlayerBlock(player.GetComponent<PlayerController>());
+            blocks = new List<GameObject>();
+            if(sandBlock != null) blocks.Add(sandBlock);
+        }
+        else
+        {
+            // 정상적으로 주변 블럭 반환
+            blocks = GetVaildBlocksUnderMouse(hit);
+        }
+
         if(blocks == null || blocks.Count == 0)
         {
             isDigging = false;
@@ -47,8 +59,7 @@ public class Pickaxe : MonoBehaviour
         {
             if(blockObj.TryGetComponent(out Block block))
             {
-                //block.BlockDestroy(_instance._damage * Time.deltaTime, player);
-                block.BlockDestroy(6 * Time.deltaTime, player);
+                block.BlockDestroy(_instance._damage * Time.deltaTime, player);
                 PlayDigSound(block.blockType);
             }
         }
@@ -77,6 +88,7 @@ public class Pickaxe : MonoBehaviour
                 isDigSound = false;
             }
         }
+
         // 광물 블록
         if(blockType == 2 || blockType == 7 || blockType == 8 || blockType == 9 || blockType == 10 || blockType == 11)
         {
@@ -139,7 +151,7 @@ public class Pickaxe : MonoBehaviour
     {
         pivot = transform.parent.Find("Pivot").position;
 
-        t += Time.fixedDeltaTime * (damage / 2);
+        t += Time.fixedDeltaTime * (_instance._damage / 2);
         t = Mathf.Clamp01(t);
 
         angle = Mathf.Lerp(60, -30, t);
@@ -169,7 +181,7 @@ public class Pickaxe : MonoBehaviour
 
         var blocksDict = hit.collider.GetComponent<Block>().blocksDictionary;
 
-        return CanDigBlocks(playerPos, clickBlockPos, blocksDict, new Vector2(1, 1));//_instance._range);
+        return CanDigBlocks(playerPos, clickBlockPos, blocksDict, _instance._range);
     }
 
     public List<GameObject> CanDigBlocks(Vector2 playerPos, Vector2 blockPos, BlocksDictionary blocksDict, Vector2 range)
@@ -294,4 +306,22 @@ public class Pickaxe : MonoBehaviour
         int index = Mathf.RoundToInt(angle / 45f) % 8;
         return directions[index];
     }
+
+    // 현재 방향
+    private GameObject GetCurrentPlayerBlock(PlayerController player)
+    {
+        Vector2 playerCenter = new Vector2(
+            Mathf.Floor(player.transform.position.x) + 0.5f,
+            Mathf.Floor(player.transform.position.y) + 0.5f
+        );
+
+        if(player.blocksDictionary.blockPosition.TryGetValue(playerCenter, out GameObject blockObj))
+        {
+            return blockObj;
+        }
+
+        return null;
+    }
+
+
 }

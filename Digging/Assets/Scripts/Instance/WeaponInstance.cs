@@ -30,18 +30,14 @@ public class WeaponInstance
         itemImage = template.icon;
     }
 
-    // [상점] 상점에 버튼 누르면 무기 데미지 업그레이드
-    public void Upgrade()
-    {
-        _level++;
-        _damage += 0.3f;
-    }
-
     // [무기] 
     public Sprite GetSprite()
     {
         if(_template != null)
+        {
             return _template.GetSpriteForLevel(_level);
+        }
+            
 
         return null;
     }
