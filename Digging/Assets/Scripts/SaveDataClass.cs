@@ -10,6 +10,7 @@ public class ItemData
     public int accumulation_count;
     public bool isMineral;
     public bool isRelic;
+    public bool isDrillItem;
     public int value;
     public bool ishaveitem;
     public bool isalreadySell;
