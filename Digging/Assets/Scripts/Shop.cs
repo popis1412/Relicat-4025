@@ -342,7 +342,7 @@ public class Shop : MonoBehaviour
     }
 
     #region Test
-    private void OnGUI()
+    /*private void OnGUI()
     {
         GUIStyle bigFontButton = new GUIStyle(GUI.skin.button);
         bigFontButton.fontSize = 30;  // 원하는 글씨 크기
@@ -368,7 +368,7 @@ public class Shop : MonoBehaviour
 
         GUILayout.EndVertical();
         GUILayout.EndArea();
-    }
+    }*/
     #endregion Test
 }
 

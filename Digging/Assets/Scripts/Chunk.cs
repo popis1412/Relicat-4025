@@ -214,6 +214,19 @@ public class Chunk : MonoBehaviour
                         blocks[numbers[i]].GetComponent<Block>().ChangeBlock(8);
                     }
                 }
+                else if (stageNum == 2)
+                {
+                    if (persentage <= 5)
+                    {
+                        blocks[numbers[i]].GetComponent<Block>().nowBlockType = 8;
+                        blocks[numbers[i]].GetComponent<Block>().ChangeBlock(8);
+                    }
+                    else
+                    {
+                        blocks[numbers[i]].GetComponent<Block>().nowBlockType = 9;
+                        blocks[numbers[i]].GetComponent<Block>().ChangeBlock(9);
+                    }
+                }
 
 
                 Vector2 xPlus = (Vector2)blocks[numbers[i]].transform.position + new Vector2(1, 0);
@@ -280,6 +293,18 @@ public class Chunk : MonoBehaviour
                 else
                 {
                     generateBlock(numbers, blockChangeCount, 1, 8);
+                }
+            }
+            else if (stageNum == 2)
+            {
+                int persentage = Random.Range(1, 11);
+                if (persentage <= 5)
+                {
+                    generateBlock(numbers, blockChangeCount, 1, 8);
+                }
+                else
+                {
+                    generateBlock(numbers, blockChangeCount, 1, 9);
                 }
             }
         }

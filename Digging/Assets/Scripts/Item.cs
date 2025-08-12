@@ -19,6 +19,7 @@ public class Item : ScriptableObject
     public int accumulation_count = 0;
     public bool isMineral;
     public bool isRelic;
+    public bool isDrillItem;
     public int rarity;
     public int value;
     public int duplicate_value;

@@ -262,6 +262,19 @@ public class Player : MonoBehaviour
 
         SlotManager.Instance.BindPlayer(this);  // Player 다시 참조
         SlotManager.Instance.Init();    // 레벨에 따른 아이템 초기화
+
+        if (!File.Exists(savePath))
+        {
+            print("저장된 파일이 없습니다");
+            yield return null;
+        }
+        else
+        {
+            string jsonForLoad = File.ReadAllText(savePath);
+            SaveData loaded = JsonUtility.FromJson<SaveData>(jsonForLoad);
+            SlotManager.Instance.LoadQuickSlots(loaded);
+        }
+        
     }
 
     // Update is called once per frame
@@ -672,17 +685,8 @@ public class Player : MonoBehaviour
         SavePanel.SetActive(false);
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[35]);
         LevelManager.instance.isClickReset = true;
+        SaveSystem.Instance.Save();
 
-        if(Inventory.money_item.count >= 100)
-        {
-            Inventory.money_item.count -= 100;
-            Inventory.FreshSlot();
-            //SaveSystem.Instance.Save();
-        }
-        else
-        {
-            Inventory.LogMessage("돈이 부족합니다");
-        }
     }
     public void Reset_Close_Button()
     {
