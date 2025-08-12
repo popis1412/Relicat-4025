@@ -232,7 +232,7 @@ public class Player : MonoBehaviour
         }
 
         // 첫 Level의 아이템 드랍
-        if(SceneManager.GetActiveScene().buildIndex == 3)
+        if(SceneManager.GetActiveScene().buildIndex == 3 && LoadScene.instance.isUseStart)
         {
             LevelManager.instance.GuidePanel.SetActive(true);
             LevelManager.instance.guideView_idx = 0;
@@ -254,11 +254,11 @@ public class Player : MonoBehaviour
         }
 
         // 튜토리얼 스테이지 아이템 드랍
-        if(SceneManager.GetActiveScene().buildIndex == 2)
-        {
-            Inventory.AddItem(UseItems[0], 99);
-            Inventory.AddItem(UseItems[1], 99);
-        }
+        //if(SceneManager.GetActiveScene().buildIndex == 2)
+        //{
+        //    Inventory.AddItem(UseItems[0], 99);
+        //    Inventory.AddItem(UseItems[1], 99);
+        //}
 
         SlotManager.Instance.BindPlayer(this);  // Player 다시 참조
         SlotManager.Instance.Init();    // 레벨에 따른 아이템 초기화
@@ -269,28 +269,28 @@ public class Player : MonoBehaviour
     {
         currentTime += Time.deltaTime;
 
-        //if(UpgradeItems[0].count >= 50)
-        //{
-        //    pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[3];
-        //    Shop.instance.pickImage.sprite = pick_imgs[3];
-        //}
-        //else if(UpgradeItems[0].count >= 35)
-        //{
-        //    pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[2];
-        //    Shop.instance.pickImage.sprite = pick_imgs[2];
-        //}
-        //else if(UpgradeItems[0].count >= 15)
-        //{
-        //    pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[1];
-        //    Shop.instance.pickImage.sprite = pick_imgs[1];
-        //}
-        //else
-        //{
-        //    pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[0];
-        //    Shop.instance.pickImage.sprite = pick_imgs[0];
-        //}
+        if (UpgradeItems[0].count >= 50)
+        {
+            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[3];
+            Shop.instance.pickImage.sprite = pick_imgs[3];
+        }
+        else if (UpgradeItems[0].count >= 35)
+        {
+            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[2];
+            Shop.instance.pickImage.sprite = pick_imgs[2];
+        }
+        else if (UpgradeItems[0].count >= 15)
+        {
+            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[1];
+            Shop.instance.pickImage.sprite = pick_imgs[1];
+        }
+        else
+        {
+            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[0];
+            Shop.instance.pickImage.sprite = pick_imgs[0];
+        }
 
-        if(isPaused == false)
+        if (isPaused == false)
         {
             Interaction_Inventory();
             Interaction_F();
@@ -299,7 +299,8 @@ public class Player : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.G))
             {
-                LostPlayerLife(-1);
+                Inventory.AddItem(UseItems[0], 3);
+                Inventory.AddItem(UseItems[1], 10);
             }
             if (Input.GetKeyDown(KeyCode.H))
             {

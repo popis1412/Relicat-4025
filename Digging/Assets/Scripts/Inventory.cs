@@ -152,6 +152,7 @@ public class Inventory : MonoBehaviour
                     ItemLog(_item, addEA);
                 }
             }
+            FreshSlot();
         }
         else
         {

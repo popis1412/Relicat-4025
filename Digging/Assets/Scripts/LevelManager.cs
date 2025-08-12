@@ -69,6 +69,8 @@ public class LevelManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            SceneManager.sceneLoaded += OnSceneLoaded3;
         }
         else
         {
@@ -121,18 +123,20 @@ public class LevelManager : MonoBehaviour
     private void OnDestroy()
     {
         // 이벤트 제거 (중복 방지)
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded3;
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded3(Scene scene, LoadSceneMode mode)
     {
         //if (scene.buildIndex != 2) return;
-        if(scene.buildIndex != 3) return;
+        //if(scene.buildIndex != 3) return;
         if(scene.buildIndex == 3)
         {
             Toggle_GuidePanel();
+            player = FindObjectOfType<Player>();
+            Debug.Log("asdfaeaafsa");
         }
-
+        Debug.Log("asdfaeaafsa11111111111111");
         // 씬이 로드된 후 Player 다시 찾기
         player = FindObjectOfType<Player>();
 

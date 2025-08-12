@@ -90,24 +90,7 @@ public class DropItem : MonoBehaviour
                 else if (itemType == 1) //이 아이템이 보석이면
                 {
                     playerScript.Inventory.AddItem(playerScript.minerals[itemCode], addEA);
-
-                    // 배터리 아이템을 넣으면 바꿔주셈.
-                    if(playerScript.minerals[itemCode] == playerScript.minerals[0])
-                    {
-                        Drill drill = playerScript.GetComponentInChildren<Drill>();
-
-                        if(drill == null)
-                        {
-                            print("드릴이라는 아이템이 없습니다.");
-                            return;
-                        }
-
-                        drill.ChargeEnergy();
-                    }
-
-                    playerScript.Inventory.AddItem(playerScript.minerals[itemCode], addEA);
                     SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
-
                 }
                 else if(itemType == 2) // 이 아이템이 사용 아이템이라면
                 {
@@ -116,6 +99,21 @@ public class DropItem : MonoBehaviour
                 else if(itemType == 3) // 이 아이템이 드릴 아이템이라면
                 {
                     playerScript.Inventory.AddItem(playerScript.Drill_Items[itemCode], addEA);
+                }
+                else if (itemType == 4) // 이 아이템이 드릴 배터리 아이템이라면
+                {
+                    if (playerScript.Drill_Items[itemCode] == playerScript.Drill_Items[4])
+                    {
+                        Drill drill = playerScript.GetComponentInChildren<Drill>();
+
+                        if (drill == null)
+                        {
+                            print("드릴이라는 아이템이 없습니다.");
+                            return;
+                        }
+
+                        drill.ChargeEnergy();
+                    }
                 }
                 Destroy(this.gameObject);
 

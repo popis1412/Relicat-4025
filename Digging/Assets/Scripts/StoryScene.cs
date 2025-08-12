@@ -58,6 +58,12 @@ public class StoryScene : MonoBehaviour
 
 
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            FadeEffect.Instance.OnFade(FadeState.FadeInOut);
+            Invoke("InvokeLoadScene", 1.5f);
+        }
     }
 
     void InvokeLoadScene()
