@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
 #endif
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Block : MonoBehaviour
 {
@@ -113,7 +114,7 @@ public class Block : MonoBehaviour
         playerController = PlayerController.FindAnyObjectByType<PlayerController>();
     }
 
-    void ItemDrop(int itemType, int itemCode, Player playerScript, int addEA) //itemType 0은 유물, 1은 광물 2는 사용아이템 3은 드릴 아이템
+    void ItemDrop(int itemType, int itemCode, Player playerScript, int addEA) //itemType 0은 유물, 1은 광물 2는 사용아이템 3은 드릴 아이템 4는 드릴 배터리
     {
         GameObject newDropItem = Instantiate(dropItem, this.transform.position, Quaternion.identity);
 
@@ -125,7 +126,15 @@ public class Block : MonoBehaviour
         {
             dropItemSprite = playerScript.items[itemCode].itemImage;
         }
+        else if (itemType == 2)
+        {
+            dropItemSprite = playerScript.UseItems[itemCode].itemImage;
+        }
         else if(itemType == 3)
+        {
+            dropItemSprite = playerScript.Drill_Items[itemCode].itemImage;
+        }
+        else if(itemType == 4)
         {
             dropItemSprite = playerScript.Drill_Items[itemCode].itemImage;
         }
@@ -436,9 +445,14 @@ public class Block : MonoBehaviour
                     {
                         ItemDrop(0, Random.Range(0, 10), playerScript, 1);
                     }
-                    else if(LoadScene.instance.stage_Level == 1)
+                    else if (LoadScene.instance.stage_Level == 1)
                     {
                         ItemDrop(0, Random.Range(0, 20), playerScript, 1);
+
+                    }
+                    else if (LoadScene.instance.stage_Level == 2)
+                    {
+                        ItemDrop(0, Random.Range(10, 30), playerScript, 1);
 
                     }
 
@@ -584,19 +598,52 @@ public class Block : MonoBehaviour
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[26]);
             
                 Player playerScript = getPlayer.GetComponent<Player>();
-            if (LoadScene.instance.stage_Level == 0)
-            {
-                int randCoal = Random.Range(1, 11);
-                int randCopper = Random.Range(1, 11);
 
-                for (int i = 0; i < randCoal; i++)
+            if(SceneManager.GetActiveScene().buildIndex == 2)
+            {
+                ItemDrop(2, 0, getPlayer.GetComponent<Player>(), 10);
+                ItemDrop(2, 1, getPlayer.GetComponent<Player>(), 10);
+            }
+            else if (SceneManager.GetActiveScene().buildIndex == 3 && LoadScene.instance.stage_Level == 0)
+            {
+                //int randCoal = Random.Range(1, 11);
+                //int randCopper = Random.Range(1, 11);
+
+                //for (int i = 0; i < randCoal; i++)
+                //{
+                //    ItemDrop(1, 0, getPlayer.GetComponent<Player>(), 1);
+                //}
+
+                //for (int i = 0; i < randCopper; i++)
+                //{
+                //    ItemDrop(1, 1, playerScript.GetComponent<Player>(), 1);
+                //}
+
+                int randIron = Random.Range(1, 6);
+                int randGold = Random.Range(1, 6);
+
+                int randDrillcomponent = Random.Range(0, 3);
+
+                int randDrillBattery = Random.Range(0, 3);
+
+                for (int i = 0; i < randIron; i++)
                 {
-                    ItemDrop(1, 0, getPlayer.GetComponent<Player>(), 1);
+                    ItemDrop(1, 2, playerScript.GetComponent<Player>(), 1);
+                }
+                for (int i = 0; i < randGold; i++)
+                {
+                    ItemDrop(1, 3, playerScript.GetComponent<Player>(), 1);
                 }
 
-                for (int i = 0; i < randCopper; i++)
+                for (int i = 0; i < randDrillcomponent; i++)
                 {
-                    ItemDrop(1, 1, playerScript.GetComponent<Player>(), 1);
+                    int drillcomponent_num = Random.Range(1, 4);
+                    ItemDrop(3, drillcomponent_num, playerScript.GetComponent<Player>(), 1);
+                }
+
+                if (randDrillBattery > 1)
+                {
+                    ItemDrop(4, 4, playerScript.GetComponent<Player>(), 1);
                 }
             }
             else if (LoadScene.instance.stage_Level == 1)
@@ -604,6 +651,9 @@ public class Block : MonoBehaviour
                 int randCoal = Random.Range(1, 6);
                 int randCopper = Random.Range(1, 6);
                 int randIron = Random.Range(1, 6);
+
+                int randDrillcomponent = Random.Range(0, 3);
+
 
                 for (int i = 0; i < randCoal; i++)
                 {
@@ -617,6 +667,43 @@ public class Block : MonoBehaviour
                 for (int i = 0; i < randIron; i++)
                 {
                     ItemDrop(1, 2, playerScript.GetComponent<Player>(), 1);
+                }
+
+                for (int i = 0; i < randDrillcomponent; i++)
+                {
+                    int drillcomponent_num = Random.Range(1, 4);
+                    ItemDrop(3, drillcomponent_num, playerScript.GetComponent<Player>(), 1);
+                }
+
+            }
+            else if (LoadScene.instance.stage_Level == 2)
+            {
+
+                int randIron = Random.Range(1, 6);
+                int randGold = Random.Range(1, 6);
+
+                int randDrillcomponent = Random.Range(0, 3);
+
+                int randDrillBattery = Random.Range(0, 3);
+
+                for (int i = 0; i < randIron; i++)
+                {
+                    ItemDrop(1, 2, playerScript.GetComponent<Player>(), 1);
+                }
+                for (int i = 0; i < randGold; i++)
+                {
+                    ItemDrop(1, 3, playerScript.GetComponent<Player>(), 1);
+                }
+
+                for (int i = 0; i < randDrillcomponent; i++)
+                {
+                    int drillcomponent_num = Random.Range(1, 4);
+                    ItemDrop(3, drillcomponent_num, playerScript.GetComponent<Player>(), 1);
+                }
+                
+                if(randDrillBattery > 1)
+                {
+                    ItemDrop(4, 4, playerScript.GetComponent<Player>(), 1);
                 }
 
             }
