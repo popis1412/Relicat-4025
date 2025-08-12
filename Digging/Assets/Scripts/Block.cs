@@ -641,7 +641,7 @@ public class Block : MonoBehaviour
                     ItemDrop(3, drillcomponent_num, playerScript.GetComponent<Player>(), 1);
                 }
 
-                if (randDrillBattery > 1)
+                if (randDrillBattery > 0)
                 {
                     ItemDrop(4, 4, playerScript.GetComponent<Player>(), 1);
                 }

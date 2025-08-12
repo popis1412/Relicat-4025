@@ -531,6 +531,7 @@ public class SaveSystem : MonoBehaviour
         result.accumulation_count = item.accumulation_count;
         result.isMineral = item.isMineral;
         result.isRelic = item.isRelic;
+        result.isDrillItem = item.isDrillItem;
         result.value = item.value;
         result.ishaveitem = item.ishaveitem;
         result.isalreadySell = item.isalreadySell;
@@ -589,6 +590,17 @@ public class SaveSystem : MonoBehaviour
                         if (data.itemName == player.items[i].itemName)
                         {
                             result.Add(player.items[i]);
+                            break;
+                        }
+                    }
+                }
+                else if (data.isDrillItem)
+                {
+                    for (int i = 0; i < player.Drill_Items.Count; i++)
+                    {
+                        if (data.itemName == player.Drill_Items[i].itemName)
+                        {
+                            result.Add(player.Drill_Items[i]);
                             break;
                         }
                     }
