@@ -95,10 +95,13 @@ public class DropItem : MonoBehaviour
                 else if(itemType == 2) // 이 아이템이 사용 아이템이라면
                 {
                     playerScript.Inventory.AddItem(playerScript.UseItems[itemCode], addEA);
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
                 }
                 else if(itemType == 3) // 이 아이템이 드릴 아이템이라면
                 {
                     playerScript.Inventory.AddItem(playerScript.Drill_Items[itemCode], addEA);
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
+                    Inventory.instance.LogMessage("드릴 부품을 획득했습니다.");
                 }
                 else if (itemType == 4) // 이 아이템이 드릴 배터리 아이템이라면
                 {
@@ -111,7 +114,12 @@ public class DropItem : MonoBehaviour
                             print("드릴이라는 아이템이 없습니다.");
                             return;
                         }
+                        else
+                        {
+                            Inventory.instance.LogMessage("드릴의 배터리가 충전되었습니다.");
+                        }
 
+                        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
                         drill.ChargeEnergy();
                     }
                 }
@@ -146,6 +154,33 @@ public class DropItem : MonoBehaviour
                 else if (itemType == 2) // 이 아이템이 사용 아이템이라면
                 {
                     playerScript.Inventory.AddItem(playerScript.UseItems[itemCode], addEA);
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
+                }
+                else if (itemType == 3) // 이 아이템이 드릴 아이템이라면
+                {
+                    playerScript.Inventory.AddItem(playerScript.Drill_Items[itemCode], addEA);
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
+                    Inventory.instance.LogMessage("드릴 부품을 획득했습니다.");
+                }
+                else if (itemType == 4) // 이 아이템이 드릴 배터리 아이템이라면
+                {
+                    if (playerScript.Drill_Items[itemCode] == playerScript.Drill_Items[4])
+                    {
+                        Drill drill = playerScript.GetComponentInChildren<Drill>();
+
+                        if (drill == null)
+                        {
+                            print("드릴이라는 아이템이 없습니다.");
+                            return;
+                        }
+                        else
+                        {
+                            Inventory.instance.LogMessage("드릴의 배터리가 충전되었습니다.");
+                        }
+
+                        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
+                        drill.ChargeEnergy();
+                    }
                 }
                 tryOnce = true;
                 Destroy(this.gameObject);
