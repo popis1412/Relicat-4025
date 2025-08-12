@@ -21,7 +21,7 @@ MonoBehaviour:
   isMineral: 0
   isRelic: 0
   rarity: 0
-  value: 290
+  value: 10
   duplicate_value: 0
   ishaveitem: 0
   isalreadySell: 0

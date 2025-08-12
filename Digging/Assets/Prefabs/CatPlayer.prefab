@@ -345,8 +345,6 @@ MonoBehaviour:
   flyAcceleration: 10
   flySpeed: 8
   deceleration: 15
-  bomb: {fileID: 4969225968171647812, guid: f3306ce703067ce4897be033e57626c9, type: 3}
-  torch: {fileID: 7803309434280011547, guid: 9129e7242d2181c408a505f1fa9bb0b7, type: 3}
   pickdamage: 6
   isDie: 0
   jetpack: {fileID: 3999598315526630206}
@@ -354,7 +352,6 @@ MonoBehaviour:
   footstepAudioSourse01: {fileID: 3612227909773941091}
   footstepAudioSourse02: {fileID: 7679143946750363700}
   blocksDictionary: {fileID: 0}
-  range: {x: 1, y: 1}
 --- !u!50 &3083855431188750829
 Rigidbody2D:
   serializedVersion: 4
@@ -458,12 +455,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0bb4c7cd6399f9d429dd5ec633bffd12, type: 2}
   UpgradeItems:
   - {fileID: 11400000, guid: d599f05a85872824395c767f8d0ebae8, type: 2}
+  - {fileID: 11400000, guid: 3b5a9cc6f4c3cac4f96538f42721c789, type: 2}
   - {fileID: 11400000, guid: 04eb4ca36868e9849ac4682c0132c428, type: 2}
   Drill_Items:
   - {fileID: 11400000, guid: 04eb4ca36868e9849ac4682c0132c428, type: 2}
   - {fileID: 11400000, guid: 22d54fe3b55516a448aa0e1744da0d35, type: 2}
   - {fileID: 11400000, guid: ce6146c10f1d8344a9114eb047e30034, type: 2}
   - {fileID: 11400000, guid: bc0a30cf4d4dadd47b23bd8c408c0b3e, type: 2}
+  - {fileID: 11400000, guid: 73edff97ad531db4c8db17c052f8b8f1, type: 2}
   Weapons:
   - {fileID: 11400000, guid: eebb90fd5e3e8584ab5253b09ec89b28, type: 2}
   - {fileID: 11400000, guid: df38aa2cc144da048afdc9f1cec26f26, type: 2}

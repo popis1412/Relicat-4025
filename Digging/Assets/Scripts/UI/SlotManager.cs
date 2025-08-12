@@ -118,7 +118,7 @@ public class SlotManager : MonoBehaviour
     // 퀵슬롯 비활성화
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(scene.buildIndex == 0)
+        if(scene.buildIndex == 0 || scene.buildIndex == 1 || scene.name == "Ending")
         {
             var quickslotUIObj = GetComponentInChildren<QuitSlotUI>(true);
 

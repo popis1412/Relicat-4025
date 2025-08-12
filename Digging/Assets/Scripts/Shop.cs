@@ -206,6 +206,21 @@ public class Shop : MonoBehaviour
         }
 
     }
+    public void Button_Buy_Item_Teleport()
+    {
+        if (Inventory.money_item.count >= player.UseItems[2].value)
+        {
+            Inventory.money_item.count -= player.UseItems[2].value;
+            Inventory.AddItem(player.UseItems[2], 1);
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
+
+        }
+        else
+        {
+            Inventory.LogMessage("돈이 부족합니다");
+        }
+
+    }
 
     // 업그레이드 버튼
     public void Button_Upgrade_Pick()
@@ -327,7 +342,7 @@ public class Shop : MonoBehaviour
     }
 
     #region Test
-    /*private void OnGUI()
+    private void OnGUI()
     {
         GUIStyle bigFontButton = new GUIStyle(GUI.skin.button);
         bigFontButton.fontSize = 30;  // 원하는 글씨 크기
@@ -353,7 +368,7 @@ public class Shop : MonoBehaviour
 
         GUILayout.EndVertical();
         GUILayout.EndArea();
-    }*/
+    }
     #endregion Test
 }
 

@@ -36,7 +36,7 @@ public class LoadScene : MonoBehaviour
     public int stage_Level = 0;
 
     // ≥≠¿Ãµµ
-    public int difficulty_level = 0;
+    public int difficulty_level = 1;
 
     [SerializeField] private GameObject difficulty_panel;
     [SerializeField] private Button[] difficulty_btns;
