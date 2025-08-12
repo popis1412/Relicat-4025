@@ -22,7 +22,7 @@ public class ChunkManager : MonoBehaviour
             {
                 float distanceToPlayer = Vector2.Distance(new Vector2(chunks[i].transform.position.x + 5f, chunks[i].transform.position.y - 5f), player.transform.position);
 
-                print($"번호 {i}, 거리{distanceToPlayer}");
+                //print($"번호 {i}, 거리{distanceToPlayer}");
 
                 if (chunks[i].activeSelf && distanceToPlayer > activeDistance)
                 {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Chunk : MonoBehaviour
 {
@@ -56,6 +57,59 @@ public class Chunk : MonoBehaviour
 
     void Start()
     {
+
+        stageNum = LoadScene.instance.stage_Level;
+
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            boxCount = 0;       //생성할 랜덤박스 개수
+            jewelWithHardBlockCount = 0;//생성할 보석+단단한블럭 개수
+            jewelCount = 0;    //생성할 보석 개수
+            sandCount = 3; // 생성할 모래 개수
+            relicBlockCount = 0;   //생성할 유물블럭 개수
+            hardBlockCount = 3;    //생성할 단단한블럭 개수
+            unbreakableCount = 0;  //생성할 안부서지는블럭 개수
+            monsterBlockCount = 0;  //생성할 몬스터블럭 개수
+        }
+        else if (LoadScene.instance.difficulty_level == 0)
+        {
+            boxCount = 2;       //생성할 랜덤박스 개수
+            jewelWithHardBlockCount = 1;//생성할 보석+단단한블럭 개수
+            jewelCount = 10;    //생성할 보석 개수
+            sandCount = 5; // 생성할 모래 개수
+            relicBlockCount = 3;   //생성할 유물블럭 개수
+            hardBlockCount = 7;    //생성할 단단한블럭 개수
+            unbreakableCount = 3;  //생성할 안부서지는블럭 개수
+            monsterBlockCount = 0;  //생성할 몬스터블럭 개수
+        }
+        else if (LoadScene.instance.difficulty_level == 1)
+        {
+            boxCount = 1;       //생성할 랜덤박스 개수
+            jewelWithHardBlockCount = 2;//생성할 보석+단단한블럭 개수
+            jewelCount = 8;    //생성할 보석 개수
+            sandCount = 10; // 생성할 모래 개수
+            relicBlockCount = 2;   //생성할 유물블럭 개수
+            hardBlockCount = 7;    //생성할 단단한블럭 개수
+            unbreakableCount = 3;  //생성할 안부서지는블럭 개수
+            monsterBlockCount = 1;  //생성할 몬스터블럭 개수
+        }
+        else if (LoadScene.instance.difficulty_level == 2)
+        {
+            boxCount = 1;       //생성할 랜덤박스 개수
+            jewelWithHardBlockCount = 2;//생성할 보석+단단한블럭 개수
+            jewelCount = 5;    //생성할 보석 개수
+            sandCount = 10; // 생성할 모래 개수
+            relicBlockCount = 1;   //생성할 유물블럭 개수
+            hardBlockCount = 7;    //생성할 단단한블럭 개수
+            unbreakableCount = 3;  //생성할 안부서지는블럭 개수
+            monsterBlockCount = 2;  //생성할 몬스터블럭 개수
+        }
+        else
+        {
+            Debug.Log("난이도가 설정되지 않았습니다.");
+        }
+
+
         List<int> numbers = new List<int>();    //랜덤 수열 선언
 
         for (int i = 0; i < blocks.Length; i++)

@@ -122,7 +122,10 @@ public class MapImage : MonoBehaviour
                     texture.SetPixel(px, py, Color.clear);
                 }
                 else
-                    print("픽셀을 그리려는 위치가 텍스쳐의 바깥임");
+                {
+                    //print("픽셀을 그리려는 위치가 텍스쳐의 바깥임");
+                }
+                    
             }
         }
         print($"지우기로 한 좌표는 ({x},{y})");
