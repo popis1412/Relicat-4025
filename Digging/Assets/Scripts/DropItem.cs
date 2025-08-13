@@ -128,10 +128,20 @@ public class DropItem : MonoBehaviour
                     if (playerScript.Drill_Items[itemCode] == playerScript.Drill_Items[4])
                     {
                         // 드릴이라는 아이템이 퀵슬롯에 있다면 배터리 채우기
-                        if(SlotManager.Instance.FindSlot(WeaponType.Drill))
+                        if(SlotManager.Instance.FindSlot(WeaponType.Drill) && Shop.instance.isCreateDrill == true)
                         {
                             Inventory.instance.LogMessage("드릴의 배터리가 충전되었습니다.");
-                            SlotManager.Instance.PickupEnergy?.Invoke();
+                            if (SlotManager.Instance.currentWeapon != SlotManager.Instance.FindSlot(WeaponType.Drill))
+                            {
+                                SlotManager.Instance.EquipWeapon(SlotManager.Instance.FindSlot(WeaponType.Drill));
+                                Drill drill = playerScript.GetComponentInChildren<Drill>();
+                                drill.ChargeEnergy();
+                            }
+                            else
+                            {
+                                Drill drill = playerScript.GetComponentInChildren<Drill>();
+                                drill.ChargeEnergy();
+                            }
                             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
                         }
                         else
@@ -198,10 +208,20 @@ public class DropItem : MonoBehaviour
                     if (playerScript.Drill_Items[itemCode] == playerScript.Drill_Items[4])
                     {
                         // 드릴이라는 아이템이 퀵슬롯에 있다면 배터리 채우기
-                        if(SlotManager.Instance.FindSlot(WeaponType.Drill))
+                        if(SlotManager.Instance.FindSlot(WeaponType.Drill) && Shop.instance.isCreateDrill == true)
                         {
                             Inventory.instance.LogMessage("드릴의 배터리가 충전되었습니다.");
-                            SlotManager.Instance.PickupEnergy?.Invoke();
+                            if (SlotManager.Instance.currentWeapon != SlotManager.Instance.FindSlot(WeaponType.Drill))
+                            {
+                                SlotManager.Instance.EquipWeapon(SlotManager.Instance.FindSlot(WeaponType.Drill));
+                                Drill drill = playerScript.GetComponentInChildren<Drill>();
+                                drill.ChargeEnergy();
+                            }
+                            else
+                            {
+                                Drill drill = playerScript.GetComponentInChildren<Drill>();
+                                drill.ChargeEnergy();
+                            }
                             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
                         }
                         else
@@ -210,6 +230,7 @@ public class DropItem : MonoBehaviour
                             return;
                         }
                     }
+                    
                 }
                 tryOnce = true;
                 Destroy(this.gameObject);

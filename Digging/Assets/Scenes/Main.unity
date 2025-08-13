@@ -2445,7 +2445,7 @@ PrefabInstance:
       objectReference: {fileID: 437677733}
     - target: {fileID: 4821243043321155454, guid: 5896e598125a416449e8a02209dcc244, type: 3}
       propertyPath: blocks.Array.size
-      value: 18
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 4821243043321155454, guid: 5896e598125a416449e8a02209dcc244, type: 3}
       propertyPath: blocks.Array.data[6]
@@ -2486,15 +2486,15 @@ PrefabInstance:
     - target: {fileID: 4821243043321155454, guid: 5896e598125a416449e8a02209dcc244, type: 3}
       propertyPath: blocks.Array.data[15]
       value: 
-      objectReference: {fileID: 851651003}
+      objectReference: {fileID: 851650999}
     - target: {fileID: 4821243043321155454, guid: 5896e598125a416449e8a02209dcc244, type: 3}
       propertyPath: blocks.Array.data[16]
       value: 
-      objectReference: {fileID: 851651002}
+      objectReference: {fileID: 851651003}
     - target: {fileID: 4821243043321155454, guid: 5896e598125a416449e8a02209dcc244, type: 3}
       propertyPath: blocks.Array.data[17]
       value: 
-      objectReference: {fileID: 851651001}
+      objectReference: {fileID: 851651002}
     - target: {fileID: 4821243043321155454, guid: 5896e598125a416449e8a02209dcc244, type: 3}
       propertyPath: blocks.Array.data[18]
       value: 
@@ -2513,7 +2513,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4821243043321155454, guid: 5896e598125a416449e8a02209dcc244, type: 3}
       propertyPath: monsterBlocks.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4821243043321155454, guid: 5896e598125a416449e8a02209dcc244, type: 3}
       propertyPath: entranceBlocks.Array.size
