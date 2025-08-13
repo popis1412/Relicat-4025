@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Tool : MonoBehaviour
 {
+    public List<Vector2> torchPositions = new List<Vector2>();
     [SerializeField] private GameObject bombPrefab;
-    [SerializeField] private GameObject torchPrefab;
+    public GameObject torchPrefab;
     [SerializeField] private Vector2 itemSpawnParent;
 
     private ItemInstance currentItemInstance; // 현재 장착된 아이템
@@ -160,6 +162,9 @@ public class Tool : MonoBehaviour
             GameObject clone = Instantiate(prefab, itemSpawnParent, Quaternion.identity);
             clone.transform.position = transform.position; // 플레이어 위치에서 생성 (원하면 조정 가능)
             clone.transform.SetParent(null); // 부모 움직임의 영향 주지 않기
+
+            if(prefab == torchPrefab)
+                torchPositions.Add(itemSpawnParent);
         }
 
         // 개수 감소

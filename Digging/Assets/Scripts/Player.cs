@@ -282,7 +282,8 @@ public class Player : MonoBehaviour
             SaveData loaded = JsonUtility.FromJson<SaveData>(jsonForLoad);
             SlotManager.Instance.LoadQuickSlots(loaded);
         }
-        
+
+        Tool.Instance.torchPositions.Clear();
     }
 
     // Update is called once per frame

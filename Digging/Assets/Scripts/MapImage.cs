@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -15,6 +16,21 @@ public class MapImage : MonoBehaviour
     private Texture2D texture;
     private RectTransform rectTransform;
 
+    public struct MiniMapPixel
+    {
+        public int x;
+        public int y;
+        public Color color;
+        
+        public MiniMapPixel(int x, int y, Color color)
+        {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+        }
+    }
+
+    public List<MiniMapPixel> pixels = new List<MiniMapPixel>();
 
     private void Awake()
     {
@@ -80,6 +96,7 @@ public class MapImage : MonoBehaviour
             clearTex[i] = Color.clear;
         tex.SetPixels(clearTex);
         tex.Apply();
+        pixels.Clear();
     }
 
     public void DrawSquare(int x, int y, Color color)
@@ -103,6 +120,7 @@ public class MapImage : MonoBehaviour
         }
         print($"그리려 한 위치는 ({x}, {y})임");
         texture.Apply();
+        pixels.Add(new MiniMapPixel(x, y, color));
     }
 
     public void EraseSquare(int x, int y)
@@ -130,5 +148,9 @@ public class MapImage : MonoBehaviour
         }
         print($"지우기로 한 좌표는 ({x},{y})");
         texture.Apply();
+        int index = pixels.FindIndex(p => p.x == x && p.y == y);
+        if(index >= 0)
+            pixels.RemoveAt(index);
     }
+
 }

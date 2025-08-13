@@ -25,6 +25,21 @@ public class SaveSystem : MonoBehaviour
 
     public QuitSlotUI quickslotUI;
 
+    public struct MiniMapPixel
+    {
+        public int x;
+        public int y;
+        public Color color;
+
+        public MiniMapPixel(int x, int y, Color color)
+        {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+        }
+    }
+    public MapImage mapImage;
+
     [SerializeField] private GameObject blockPrefab;
     [SerializeField] private GameObject enemyPrefab1;
 
@@ -137,6 +152,20 @@ public class SaveSystem : MonoBehaviour
             }
         }
 
+        if (mapImage == null)
+        {
+            mapImage = FindObjectOfType<MapImage>();
+            if(mapImage == null)
+            {
+                print("미니맵이미지를 참조할 수 없어 세이브에 실패하였습니다");
+                return;
+            }
+        }
+
+        if (Tool.Instance == null)
+        {
+            print("Tool 스크립트를 참조할 수 없어 세이브에 실패하였습니다.");
+        }
 
         var saveData = new SaveData();
 
@@ -234,6 +263,25 @@ public class SaveSystem : MonoBehaviour
             saveData.enemyData = new EnemyData
             {
                 EnemyDatas = enemyPosition,
+            };
+        }
+
+        //미니맵데이터 저장
+        saveData.minimapPixelsData = new MinimapPixelsData
+        {
+            minimapPixelsData = ConvertMinimapPixelsData(mapImage)
+        };
+
+        //횃불위치 저장
+        {
+            List<Vector2> torchPositions = new List<Vector2>();
+            foreach (Vector2 pos in Tool.Instance.torchPositions) {
+                torchPositions.Add(pos);
+            }
+
+            saveData.torchPositionData = new torchPositionData
+            {
+                torchPositionDatas = torchPositions
             };
         }
 
@@ -342,6 +390,21 @@ public class SaveSystem : MonoBehaviour
             }
         }
 
+        if (mapImage == null)
+        {
+            mapImage = FindObjectOfType<MapImage>();
+            if (mapImage == null)
+            {
+                print("미니맵이미지를 참조할 수 없어 세이브에 실패하였습니다");
+                return;
+            }
+        }
+
+        if(Tool.Instance == null)
+        {
+            print("Tool 스크립트를 참조할 수 없어 세이브에 실패하였습니다.");
+        }
+
         //로드 시작
         string jsonForLoad = File.ReadAllText(savePath);
         SaveData loaded = JsonUtility.FromJson<SaveData>(jsonForLoad);
@@ -431,23 +494,6 @@ public class SaveSystem : MonoBehaviour
                 print($"잘못된 키 ({blockData.blockPosition})");
         }
 
-        //foreach (BlockData blockData in loaded.blocksData.blockDatas)
-        //{
-        //    GameObject newBlock = Instantiate(blockPrefab);
-        //    Block blockScript = newBlock.GetComponent<Block>();
-
-        //    newBlock.transform.position = blockData.blockPosition;
-        //    blocksDictionary.blockPosition.Add(blockData.blockPosition, newBlock);
-        //    blockScript.blocksDictionary = blocksDictionary;
-        //    BlockBreakingEffectManager effectManager = FindObjectOfType<BlockBreakingEffectManager>();
-        //    if (effectManager != null)
-        //        blockScript.effectManager = effectManager;
-        //    blockScript.nowBlockType = blockData.nowBlockType;
-        //    blockScript.stageNum = blockData.stageNum;
-        //    blockScript.ChangeBlock(blockData.blockType);
-        //    blockScript.blockHealth = blockData.blockHealth;
-
-        //}
 
         //몬스터들 로드
         Enemy[] enemys = FindObjectsOfType<Enemy>();
@@ -462,6 +508,17 @@ public class SaveSystem : MonoBehaviour
             }
         }
 
+        //미니맵 로드
+        foreach(var loadPixelData in loaded.minimapPixelsData.minimapPixelsData)
+        {
+            mapImage.DrawSquare(loadPixelData.x, loadPixelData.y, loadPixelData.color);
+        }
+
+        //횃불위치 로드
+        foreach (Vector2 pos in loaded.torchPositionData.torchPositionDatas)
+        {
+            Instantiate(Tool.Instance.torchPrefab, pos, Quaternion.identity);
+        }
 
         //UI재갱신(아마도 도감도 갱신 넣어야할 예정)
         inventory.FreshSlot();
@@ -652,6 +709,22 @@ public class SaveSystem : MonoBehaviour
         result.blockType = blockScript.blockType;
         result.stageNum = blockScript.stageNum;
         result.blockHealth = blockScript.blockHealth;
+
+        return result;
+    }
+
+    private List<MinimapPixelData> ConvertMinimapPixelsData(MapImage mapImage)
+    {
+        var result = new List<MinimapPixelData>();
+
+        foreach(var pixeldata in mapImage.pixels)
+        {
+            MinimapPixelData pixel = new MinimapPixelData();
+            pixel.x = pixeldata.x;
+            pixel.y = pixeldata.y;
+            pixel.color = pixeldata.color;
+            result.Add(pixel);
+        }
 
         return result;
     }

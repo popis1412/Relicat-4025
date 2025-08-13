@@ -121,6 +121,26 @@ public class QuickSlotSaveData
 }
 
 [System.Serializable]
+public class MinimapPixelData
+{
+    public int x;
+    public int y;
+    public Color color;
+}
+
+[System.Serializable]
+public class MinimapPixelsData
+{
+    public List<MinimapPixelData> minimapPixelsData;
+}
+
+[System.Serializable]
+public class torchPositionData
+{
+    public List<Vector2> torchPositionDatas;
+}
+
+[System.Serializable]
 public class SaveData
 {
     public InventoryData inventoryData;
@@ -133,4 +153,6 @@ public class SaveData
     public BlocksData blocksData;
     public EnemyData enemyData;
     public QuickSlotSaveData quickSlotInfoData;
+    public MinimapPixelsData minimapPixelsData;
+    public torchPositionData torchPositionData;
 }
