@@ -191,7 +191,7 @@ public class Tool : MonoBehaviour
     // 타입에 맞는 무기 데이터 넣기
     public void ReplaceToolComponent<T>(T instance)
     {
-        RemoveCurrentWeaponComponent();
+        
 
         if(instance == null) return;
 
@@ -213,6 +213,8 @@ public class Tool : MonoBehaviour
                     break;
             }
         }
+
+        RemoveCurrentWeaponComponent();
 
         // 현재 장착된 무기 컴포넌트로 등록
         currentWeaponComponent = toolComponent;
