@@ -44,7 +44,7 @@ public class SlotManager : MonoBehaviour
 
 
     // 인벤토리들
-    [SerializeField] private QuitSlotUI quitSlotUI;
+    [SerializeField] public QuitSlotUI quitSlotUI;
     [SerializeField] private InventoryUI inventoyUI;
     [SerializeField] private Inventory inventory;
 
@@ -146,7 +146,7 @@ public class SlotManager : MonoBehaviour
             if(quickslotUIObj != null)
             {
                 quickslotUIObj.gameObject.SetActive(true);
-                SaveSystem.Instance.Load();
+                //SaveSystem.Instance.Load();
             }
         }
     }
@@ -204,12 +204,12 @@ public class SlotManager : MonoBehaviour
     // 무기 장착
     public void EquipWeapon(SlotInfo newSlot)
     {
-        // 이미 선택한 무기라면 기존의 것 표시
-        //if(newSlot == currentWeapon)
-        //    return;
+        //이미 선택한 무기라면 기존의 것 표시
+        if (newSlot == currentWeapon)
+            return;
 
-        // 기존 무기 하이라이트 해제
-        if(currentWeapon != null)
+        //기존 무기 하이라이트 해제
+        if (currentWeapon != null)
             SetWeaponHighlight(currentWeapon, false);
 
         // 무기라면 무기 장착 + 하이라이트

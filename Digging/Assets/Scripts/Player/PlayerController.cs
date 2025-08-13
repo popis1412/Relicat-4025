@@ -114,21 +114,7 @@ public class PlayerController : MonoBehaviour
     {
         UpdateSandStatus();
 
-        // 좌클릭 - 곡괭이 자동 장착 + 사용
-        if(Input.GetMouseButton(0))
-        {
-            SlotManager.Instance.EquipWeaponByType(WeaponType.Pickaxe);
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Tool.Instance.UseWeapon(mouseWorldPos, playerScript);
-        }
-
-        // 우클릭 - 드릴 자동 장착 + 사용
-        if(Input.GetMouseButton(1))
-        {
-            SlotManager.Instance.EquipWeaponByType(WeaponType.Drill);
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Tool.Instance?.UseWeapon(mouseWorldPos, playerScript);
-        }
+        
 
         // 단축키 아이템 사용
         if(Input.GetKeyDown(KeyCode.Q))
@@ -202,6 +188,21 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // 좌클릭 - 곡괭이 자동 장착 + 사용
+        if (Input.GetMouseButton(0))
+        {
+            SlotManager.Instance.EquipWeaponByType(WeaponType.Pickaxe);
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Tool.Instance.UseWeapon(mouseWorldPos, playerScript);
+        }
+
+        // 우클릭 - 드릴 자동 장착 + 사용
+        if (Input.GetMouseButton(1))
+        {
+            SlotManager.Instance.EquipWeaponByType(WeaponType.Drill);
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Tool.Instance?.UseWeapon(mouseWorldPos, playerScript);
+        }
         UpdateJumpAxisSmoothly();
         HandleMovement();
     }

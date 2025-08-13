@@ -37,6 +37,7 @@ public class ShopData
 {
     public float pick_damage;
     public float lightRadius;
+    public bool isCreateDrill;
 }
 
 

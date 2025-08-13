@@ -16,6 +16,8 @@ public class Pickaxe : MonoBehaviour
 
     public WeaponInstance _instance;
 
+    public int speed;
+
     public void Setup(WeaponInstance instance)
     {
         _instance = instance;
@@ -151,7 +153,7 @@ public class Pickaxe : MonoBehaviour
     {
         pivot = transform.parent.Find("Pivot").position;
 
-        t += Time.fixedDeltaTime * (_instance._damage / 2);
+        t += Time.fixedDeltaTime * (_instance._damage);
         t = Mathf.Clamp01(t);
 
         angle = Mathf.Lerp(60, -30, t);

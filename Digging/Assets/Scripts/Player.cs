@@ -394,6 +394,7 @@ public class Player : MonoBehaviour
         LevelManager.instance.stagetargetUI.SetActive(false);
         LevelManager.instance.isOnEnding = false;
         LoadScene.instance.stage_Level = 0;
+        SlotManager.Instance.quitSlotUI.ResetQuickSlot();
     }
 
     // 게임 일시정지 / 재개
