@@ -6,6 +6,7 @@ using UnityEngine;
 
 public enum WeaponType
 {
+    Null,
     Pickaxe,
     Drill
 }

@@ -20,6 +20,7 @@ MonoBehaviour:
   accumulation_count: 0
   isMineral: 0
   isRelic: 0
+  isDrillItem: 0
   rarity: 0
   value: 100
   duplicate_value: 0

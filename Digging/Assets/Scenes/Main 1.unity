@@ -7800,7 +7800,7 @@ SpriteRenderer:
   m_SortingLayerID: 756493957
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e2dab6babbe65ef418e7185329dc0c53, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 990f77374ba775d47be7717a4da9f6d1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -9210,6 +9210,30 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2412600680120500901, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412600680120500901, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412600680120500901, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412600680120500901, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412600680120500901, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412600680120500901, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3268175994393537049, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
       propertyPath: m_Name
       value: QuickSlot
@@ -9244,7 +9268,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3560527712971082139, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 3560527712971082139, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
       propertyPath: m_SizeDelta.y

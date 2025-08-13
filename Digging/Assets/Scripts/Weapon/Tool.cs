@@ -98,10 +98,6 @@ public class Tool : MonoBehaviour
         }
         else if(currentWeaponComponent is Drill drill)
         {
-            // 처음 한 번만 바인딩하도록 체크
-            if(drill.OnDecreaseEnergy == null)
-                drill.OnDecreaseEnergy = SlotManager.Instance.BindDrillEnergy;
-
             drill.Digging(mousePos, player, isSanded);
         }
     }
@@ -111,7 +107,7 @@ public class Tool : MonoBehaviour
     {
         itemSpawnParent = GameObject.FindGameObjectWithTag("Player").transform.position;
 
-        if(currentItemInstance == null || currentItemInstance._count <= 0)
+        if(currentItemInstance == null || currentItemInstance._item.count <= 0)
         {
             Debug.LogWarning("사용 가능한 아이템이 없습니다.");
             return;
@@ -144,6 +140,16 @@ public class Tool : MonoBehaviour
                 float torchSize = torchPrefab.GetComponent<SpriteRenderer>().size.y;
                 itemSpawnParent = new Vector3(Mathf.Round(transform.position.x - 0.5f) + 0.5f, transform.position.y - (playerSize - torchSize));
                 break;
+            case ItemType.Teleport:
+                if(!isGrounded)
+                {
+                    print("텔레포트는 공중에서 사용할 수 없습니다");
+                    return;
+                }
+                Teleport teleport = new Teleport();
+                teleport.Spawn(transform.parent.GetComponent<PlayerController>());
+                break;
+
             default:
                 Debug.LogWarning("지원되지 않는 아이템 타입입니다.");
                 return;
@@ -157,8 +163,7 @@ public class Tool : MonoBehaviour
         }
 
         // 개수 감소
-        currentItemInstance._count--;
-
+        currentItemInstance._item.count--;
         // UI 갱신
         SlotManager.Instance.UpdateSlotUI(currentItemSlot, currentItemInstance._item);
     }

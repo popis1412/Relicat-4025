@@ -282,24 +282,24 @@ public class Player : MonoBehaviour
     {
         currentTime += Time.deltaTime;
 
-        if (UpgradeItems[0].count >= 50)
+        if(UpgradeItems[0].count >= 50)
         {
-            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[3];
+            //pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[3];
             Shop.instance.pickImage.sprite = pick_imgs[3];
         }
-        else if (UpgradeItems[0].count >= 35)
+        else if(UpgradeItems[0].count >= 35)
         {
-            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[2];
+            //pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[2];
             Shop.instance.pickImage.sprite = pick_imgs[2];
         }
-        else if (UpgradeItems[0].count >= 15)
+        else if(UpgradeItems[0].count >= 15)
         {
-            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[1];
+            //pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[1];
             Shop.instance.pickImage.sprite = pick_imgs[1];
         }
         else
         {
-            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[0];
+            //pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[0];
             Shop.instance.pickImage.sprite = pick_imgs[0];
         }
 

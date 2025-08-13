@@ -3,9 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
+using UnityEngine.VFX;
 using UnityEngine.Windows;
+using static UnityEditor.Progress;
 
 // 싱글톤을 만들 때 참조 필드를 만들지 말고 메소드 아니면 이 Manager에 필요한 데이터들의 필드만 있을 것(참조가 필요하다면 매개변수를 쓸 것)
 public class SlotManager : MonoBehaviour
@@ -35,7 +39,9 @@ public class SlotManager : MonoBehaviour
     [SerializeField] private Player player;
 
     // 액션 입력
-    public System.Action<bool> OnInventoryOpen;
+    public System.Action<bool> OnInventoryOpen; // 인벤토리 열림
+    public Action PickupEnergy; // 드릴 배터리 채우기
+
 
     // 인벤토리들
     [SerializeField] private QuitSlotUI quitSlotUI;
@@ -74,8 +80,14 @@ public class SlotManager : MonoBehaviour
     }
     
     private void OnEnable()
-    {
+    {           
         SceneManager.sceneLoaded += OnSceneLoaded;
+        PickupEnergy = PrintEvent;
+    }
+
+    void PrintEvent()
+    {
+        print("이벤트 등록");
     }
 
     private void Start()
@@ -134,6 +146,7 @@ public class SlotManager : MonoBehaviour
             if(quickslotUIObj != null)
             {
                 quickslotUIObj.gameObject.SetActive(true);
+                SaveSystem.Instance.Load();
             }
         }
     }
@@ -192,8 +205,8 @@ public class SlotManager : MonoBehaviour
     public void EquipWeapon(SlotInfo newSlot)
     {
         // 이미 선택한 무기라면 기존의 것 표시
-        if(newSlot == currentWeapon)
-            return;
+        //if(newSlot == currentWeapon)
+        //    return;
 
         // 기존 무기 하이라이트 해제
         if(currentWeapon != null)
@@ -220,7 +233,7 @@ public class SlotManager : MonoBehaviour
         // 교환할 슬롯 데이터 -> 숫자 입력값
         SlotInfo targetSlot = quitSlotUI.quickSlots[quickIndex];
 
-        if(selectedSlot._type == SlotType.QuickSlot)
+        if(selectedSlot._typeS == SlotType.QuickSlot)
         {
             SwapQuickSlot(selectedSlot, targetSlot);
 
@@ -238,7 +251,7 @@ public class SlotManager : MonoBehaviour
                 }
             }
         }
-        else if(selectedSlot._type == SlotType.Inventory)
+        else if(selectedSlot._typeS == SlotType.Inventory)
         {
             SwapInventroySlot(selectedSlot.GetComponentInChildren<Slot>().item, quickIndex);
         }
@@ -498,13 +511,16 @@ public class SlotManager : MonoBehaviour
             string _name = item.item.name;
 
             // 1. 퀵슬롯
-            SlotInfo slot = quitSlotUI.FindEmptySlot(false, _name);
+            SlotInfo slot = FindSlot(item.item.type);
 
             ItemInstance instance = new ItemInstance(item.item);
             slot._instanceI = instance;
             slot._instanceW = null;
 
-            if(item.item.count > item.item.stackLimit) // 아이템의 개수가 최대치보다 많다면
+            slot._instanceI._count = item.item.count;
+
+            // 나중에 아이템에 대한 제한 개수가 있다면 쓸 예정
+            /*if(item.item.count > item.item.stackLimit) // 아이템의 개수가 최대치보다 많다면
             {
                 slot._instanceI._count = item.item.stackLimit;  // 최대치로 계수 저장
                 item.item.count -= slot._instanceI._count;
@@ -513,7 +529,7 @@ public class SlotManager : MonoBehaviour
             {
                 slot._instanceI._count = item.item.count;
                 item.item.count -= slot._instanceI._count;  // 현재 개수를 넣기
-            }
+            }*/
 
             UpdateSlotUI(slot, item.item);
         }
@@ -538,7 +554,7 @@ public class SlotManager : MonoBehaviour
             if(slot == null) continue;
 
             slot._index = saved.index;
-            slot._type = saved.type;
+            slot._typeS = saved.type;
 
             // 유효한 무기만 복원
             slot._instanceW = saved.instanceW?._template != null ? saved.instanceW : null;
@@ -564,9 +580,6 @@ public class SlotManager : MonoBehaviour
         }
     }
 
-
-
-
     // 슬롯들 채우기(아이템)
     public void FillSlot(Item template, int addEA)
     {
@@ -578,7 +591,7 @@ public class SlotManager : MonoBehaviour
                 break;
 
             // 1. 퀵슬롯
-            SlotInfo slot = quitSlotUI.FindEmptySlot(false, template.itemName);
+            SlotInfo slot = FindSlot(template.type);
 
             // 2. 인벤토리
             if(slot == null)
@@ -596,7 +609,7 @@ public class SlotManager : MonoBehaviour
     public void FillSlot(Item item, WeaponTemplate template, int addEA)
     {
         // 1. 퀵슬롯
-        SlotInfo slot = quitSlotUI.FindEmptySlot(true, null);
+        SlotInfo slot = FindSlot(template.type);
 
         // 2. 인벤토리
         if(slot == null)
@@ -612,10 +625,10 @@ public class SlotManager : MonoBehaviour
 
         UpdateSlotUI(slot, item);
 
-        if(item != null)
-        {
-            inventory.ItemLog(item, addEA);
-        }
+        //if(item != null)
+        //{
+        //    inventory.ItemLog(item, addEA);
+        //}
     }
 
     // 퀵슬롯에 데이터들 채우기
@@ -628,7 +641,7 @@ public class SlotManager : MonoBehaviour
 
         int toAdd = available;
 
-        if(slot._type == SlotType.QuickSlot)
+        if(slot._typeS == SlotType.QuickSlot)
         {
             int space = instance._item.stackLimit - instance._count;
             toAdd = Mathf.Min(space, available);
@@ -669,16 +682,13 @@ public class SlotManager : MonoBehaviour
         }
         else if(slot._instanceW == null && slot._instanceI != null)
         {
-            interaction.Apply(item);    // 아이템 장착
-        }
+            if(slot._instanceI._item.count >= 0)    
+            {
+                interaction.Apply(item);    // 아이템 장착
+            }
 
-        // 해당 아이템 초기값으로 변경
-        if(slot._instanceI != null && slot._instanceW == null)
-        {
-            if(slot._instanceI._count <= 0)
-                interaction.Clear();
+            //interaction.Clear(); // 나중에 카운트가 따로 있다면 사용 -> 인벤토리 0개 시 초기화
         }
-        // 나중에 인벤토리 0개 시 초기화
 
         SetSlotHighlight(slot, false);
         UpdateText(slot);
@@ -690,16 +700,20 @@ public class SlotManager : MonoBehaviour
         var text = slot.GetComponentInChildren<TextMeshProUGUI>(true);  // 비활성화 상태에서도 찾기
         EnergyBar _bar = slot.GetComponentInChildren<EnergyBar>(true);
         if(_bar != null)
+        {
             Destroy(_bar.gameObject);
+        }
 
         if(text != null && slot._instanceI == null && slot._instanceW == null)    // 아무런 데이터가 없을 때
         {
             text.enabled = false;
+            text.text = "0";
         }
         else if(text != null && slot._instanceI != null)    // 아이템
         {
             text.enabled = true;
-            text.text = slot._instanceI._count.ToString();
+            //text.text = slot._instanceI._count.ToString(); // 나중에 인벤토리와 따로 연관이 된다면 사용
+            text.text = slot._instanceI._item.count.ToString();
         }
         else if(text != null && slot._instanceW != null) // 무기
         {
@@ -735,7 +749,7 @@ public class SlotManager : MonoBehaviour
     }
 
     // 드릴 에너지 감소 및 충전
-    public void BindDrillEnergy(Drill drill)
+    public void BindDrillEnergy(Drill drill, float energy)
     {
         // 1. 슬롯에 드릴이 있는지 확인
         SlotInfo slot = quitSlotUI.FindDrill(drill);
@@ -749,7 +763,7 @@ public class SlotManager : MonoBehaviour
         EnergyBar bar = slot.GetComponentInChildren<EnergyBar>(true);
         //bar.SetMax(slot._instanceW._energy); // 나중에 강화 중에서 energy 증가를 위해 남겨둠.
 
-        bar.SetValue(drill._instance._energy);
+        bar.SetValue(energy);
     }
 
 
@@ -758,10 +772,14 @@ public class SlotManager : MonoBehaviour
     {
         foreach(var slot in quitSlotUI.quickSlots)
         {
-            if(slot._instanceW != null && slot._instanceW._template.type == weaponType)
+            if(slot._instanceW != null && slot._instanceI == null)
             {
-                EquipWeapon(slot);
-                return;
+                if(slot._instanceW._template.type == weaponType)
+                {
+                    EquipWeapon(slot);
+                    print($"타입: {slot._instanceW._template.type}, 적용된 슬롯: {slot}");
+                    return;
+                }
             }
         }
         Debug.LogWarning($"해당 무기 타입({weaponType})을 가진 슬롯이 없습니다.");
@@ -771,9 +789,10 @@ public class SlotManager : MonoBehaviour
     {
         foreach(var slot in quitSlotUI.quickSlots)
         {
-            if(slot._instanceW != null && slot._instanceW._template.type == weaponType)
+            if(slot._instanceW != null && slot._instanceI == null)
             {
-                return true;
+                if(slot._instanceW._template.type == weaponType)
+                    return true;
             }
         }
         return false;
@@ -794,6 +813,30 @@ public class SlotManager : MonoBehaviour
             }
         }
         Debug.LogWarning($"해당 아이템 타입({itemType})을 가진 슬롯이 없습니다.");
+    }
+
+    // 무슨 아이템 먹었는지 확인 -> 해당 슬롯의 데이터 가져오기
+    public void ItemPick(Item item, int amount)
+    {
+        FillSlot(item, amount);
+    }
+
+    // 타입을 이용해 아이템 지정석에 아이템들 넣기
+    public SlotInfo FindSlot<T>(T typeEnum) where T : System.Enum
+    {
+        foreach(var slot in quitSlotUI.quickSlots)
+        {
+            if(typeEnum is WeaponType weapon && slot._typeW == weapon)  // 무기
+                return slot;
+            else if(typeEnum is ItemType item && slot._typeI == item)   // 아이템
+            {
+                return slot;
+            }
+            else
+                continue;
+        }
+
+        return null;    // 무기가 이미 있는 경우, 빈 슬롯일 경우
     }
 
     #endregion Func

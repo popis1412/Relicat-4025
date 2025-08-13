@@ -126,13 +126,13 @@ public class SlotInteraction : MonoBehaviour, IPointerClickHandler
             return;
 
         // 퀵슬롯일 경우
-        if(slotInfo._type == SlotType.QuickSlot)
+        if(slotInfo._typeS == SlotType.QuickSlot)
         {
             // 없거나 완전한 빈칸인 경우, 갯수가 0개인 경우
             if(!SlotManager.Instance._isOpen || slotInfo._instanceW == null && slotInfo._instanceI == null || slotInfo._instanceI._count <= 0)
                 return;
         }
-        else if(slotInfo._type == SlotType.Inventory)
+        else if(slotInfo._typeS == SlotType.Inventory)
         {
             if(GetComponent<Slot>().item == null || GetComponent<Slot>().item.type == ItemType.Null || GetComponent<Slot>().item.count <= 0)
                 return;
