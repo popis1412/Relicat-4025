@@ -270,6 +270,7 @@ public class LevelManager : MonoBehaviour
         LoadScene.instance.stage_Level = 0;
         ClearStagePanel_3.SetActive(false);
         EndingButton.SetActive(false);
+        SlotManager.Instance.quitSlotUI.ResetQuickSlot();
     }
 
     public void GoNextStageButton()
@@ -302,6 +303,8 @@ public class LevelManager : MonoBehaviour
 
         SaveSystem.Instance.Save();
         LoadScene.instance.GoMain();
+
+        SlotManager.Instance.currentWeapon = null;
     }
 
     public void ContinueStageButton1()
