@@ -26,7 +26,7 @@ public class Shop : MonoBehaviour
 
     public GameObject playerlight;
 
-    public float pick_damage;
+    public float pick_damage = 6f;
     public float lightRadius;
 
 
@@ -59,8 +59,8 @@ public class Shop : MonoBehaviour
         shopView_idx = 0;
         Switch_ShopView();
 
-        if(SlotManager.Instance.IsEquipWeapon(WeaponType.Pickaxe) == true)
-            pick_damage = SlotManager.Instance.currentWeapon._instanceW._damage;
+        //if(SlotManager.Instance.IsEquipWeapon(WeaponType.Pickaxe) == true)
+        //    pick_damage = SlotManager.Instance.currentWeapon._instanceW._damage;
     }
 
     private void OnDestroy()

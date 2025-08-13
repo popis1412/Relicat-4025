@@ -5,7 +5,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+#if UNITY_EDITOR
 using UnityEditor.SearchService;
+#endif
+
 using System.Collections.ObjectModel;
 using Unity.VisualScripting;
 
@@ -24,6 +27,9 @@ public class Player : MonoBehaviour
     public List<Item> UpgradeItems;
     public List<Item> Drill_Items;
     public List<WeaponTemplate> Weapons;
+
+    // 개발자 모드
+    private bool isdebugmode = false;
 
     // 인벤토리
     public GameObject Inventory_obj;
@@ -232,7 +238,7 @@ public class Player : MonoBehaviour
         }
 
         // 첫 Level의 아이템 드랍
-        if(SceneManager.GetActiveScene().buildIndex == 3 && LoadScene.instance.isUseStart)
+        if(SceneManager.GetActiveScene().buildIndex == 3)
         {
             LevelManager.instance.GuidePanel.SetActive(true);
             LevelManager.instance.guideView_idx = 0;
@@ -250,15 +256,17 @@ public class Player : MonoBehaviour
 
             Inventory.AddItem(UseItems[0], 3);
             Inventory.AddItem(UseItems[1], 10);
-            //SaveSystem.Instance.Save();
+            
         }
 
+        //SaveSystem.Instance.Save();
         // 튜토리얼 스테이지 아이템 드랍
         //if(SceneManager.GetActiveScene().buildIndex == 2)
         //{
         //    Inventory.AddItem(UseItems[0], 99);
         //    Inventory.AddItem(UseItems[1], 99);
         //}
+        SlotManager.Instance.currentWeapon = null;
 
         SlotManager.Instance.BindPlayer(this);  // Player 다시 참조
         SlotManager.Instance.Init();    // 레벨에 따른 아이템 초기화
@@ -310,48 +318,85 @@ public class Player : MonoBehaviour
             //GroundAutoHeal();
             Ground_Time_Pause();
 
-            if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetKeyDown(KeyCode.P))
             {
-                Inventory.AddItem(UseItems[0], 3);
-                Inventory.AddItem(UseItems[1], 10);
-            }
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                AddPlayerLife(1);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                Inventory.AddItem(minerals[0], 1);
-            }
-
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                Inventory.AddItem(minerals[3], 100000);
+                
+                if(isdebugmode == false)
+                {
+                    isdebugmode = true;
+                    Inventory.LogMessage("개발자모드입니다.");
+                }
+                else if(isdebugmode == true)
+                {
+                    isdebugmode = false;
+                    Inventory.LogMessage("개발자모드가 해제되었습니다.");
+                }
             }
 
-            if (Input.GetKeyDown(KeyCode.C))
+            if(isdebugmode == true)
             {
-                Inventory.AddItem(items[Random.Range(0, 20)], 1);
-            }
+                if (Input.GetKeyDown(KeyCode.G))
+                {
+                    Inventory.AddItem(UseItems[0], 3);
+                    Inventory.AddItem(UseItems[1], 10);
+                }
+                if (Input.GetKeyDown(KeyCode.H))
+                {
+                    AddPlayerLife(1);
+                }
 
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                Inventory.AddItem(items[5], 1);
-            }
+                if (Input.GetKeyDown(KeyCode.Z))
+                {
+                    Inventory.AddItem(minerals[0], 1);
+                }
 
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                Inventory.AddItem(items[7], 1);
-                Inventory.AddItem(Drill_Items[1], 1);
-                Inventory.AddItem(Drill_Items[2], 1);
-                Inventory.AddItem(Drill_Items[3], 1);
-            }
+                if (Input.GetKeyDown(KeyCode.X))
+                {
+                    Inventory.AddItem(minerals[3], 100000);
+                }
 
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                Collection.player_lv += 1;
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    Inventory.AddItem(items[Random.Range(0, 20)], 1);
+                }
+
+                if (Input.GetKeyDown(KeyCode.V))
+                {
+                    Inventory.AddItem(items[5], 1);
+                }
+
+                if (Input.GetKeyDown(KeyCode.B))
+                {
+                    Inventory.AddItem(items[7], 1);
+                    Inventory.AddItem(Drill_Items[1], 1);
+                    Inventory.AddItem(Drill_Items[2], 1);
+                    Inventory.AddItem(Drill_Items[3], 1);
+                }
+
+                if (Input.GetKeyDown(KeyCode.L))
+                {
+                    Collection.player_lv += 1;
+                }
+
+                //세이브
+                if (Input.GetKeyDown(KeyCode.LeftBracket))
+                {
+                    SaveSystem.Instance.Save();
+                }
+
+                //로드
+                if (Input.GetKeyDown(KeyCode.RightBracket))
+                {
+                    SaveSystem.Instance.Load();
+                }
+
+                // 세이브 삭제
+                if (Input.GetKeyDown(KeyCode.M))
+                {
+                    Reset_SaveFile_and_GoMenu();
+                }
             }
+            
         }
 
         // 일시정지 esc
@@ -362,23 +407,7 @@ public class Player : MonoBehaviour
 
         }
 
-        //세이브
-        if(Input.GetKeyDown(KeyCode.LeftBracket))
-        {
-            SaveSystem.Instance.Save();
-        }
-
-        //로드
-        if(Input.GetKeyDown(KeyCode.RightBracket))
-        {
-            SaveSystem.Instance.Load();
-        }
-
-        // 세이브 삭제
-        if(Input.GetKeyDown(KeyCode.M))
-        {
-            Reset_SaveFile_and_GoMenu();
-        }
+        
     }
 
     public void Reset_SaveFile_and_GoMenu()
