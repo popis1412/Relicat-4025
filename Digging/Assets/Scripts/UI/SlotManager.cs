@@ -8,8 +8,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using UnityEngine.VFX;
-using UnityEngine.Windows;
+//using UnityEngine.Windows;
+using System.IO;
+#if UNITY_EDITOR
 using static UnityEditor.Progress;
+#endif
+
 
 // 싱글톤을 만들 때 참조 필드를 만들지 말고 메소드 아니면 이 Manager에 필요한 데이터들의 필드만 있을 것(참조가 필요하다면 매개변수를 쓸 것)
 public class SlotManager : MonoBehaviour
@@ -53,7 +57,7 @@ public class SlotManager : MonoBehaviour
     public bool _isOpen;
 
     // 무기
-    public SlotInfo currentWeapon { get; private set; } // 현재 장착 무기 정보
+    public SlotInfo currentWeapon { get; set; } // 현재 장착 무기 정보
 
     private string savePath => Application.persistentDataPath + "/SaveData.json";
 
@@ -167,6 +171,7 @@ public class SlotManager : MonoBehaviour
     {
         if(SceneManager.GetActiveScene().buildIndex == 2)   // Tutorial
         {
+            currentWeapon = null;
             FillSlot(null, player.Weapons[0], 1);   // 곡괭이
             BindInitWeapon();   // 초기 곡괭이
             InitFillSlot();
@@ -585,12 +590,7 @@ public class SlotManager : MonoBehaviour
     {
         int remaining = addEA;
 
-        for(int i = 0; i < addEA; i++)
-        {
-            if(remaining <= 0)
-                break;
-
-            // 1. 퀵슬롯
+        
             SlotInfo slot = FindSlot(template.type);
 
             // 2. 인벤토리
@@ -601,8 +601,8 @@ public class SlotManager : MonoBehaviour
             }
 
             int added = TryFillSlot(slot, template, remaining);
-            remaining -= added;
-        }
+            
+        
     }
 
     // 슬롯 채우기(무기)

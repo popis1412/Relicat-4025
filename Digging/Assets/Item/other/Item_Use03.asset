@@ -24,7 +24,7 @@ MonoBehaviour:
   rarity: 0
   value: 100
   duplicate_value: 0
-  ishaveitem: 1
+  ishaveitem: 0
   isalreadySell: 0
   Info: "\uC0AC\uC6A9\uD558\uBA74 \uC9C0\uC0C1\uC73C\uB85C \uC989\uC2DC \uC774\uB3D9\uD560
     \uC218 \uC788\uB2E4."
