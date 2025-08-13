@@ -57,8 +57,14 @@ public class Torch : MonoBehaviour
         if(hit.collider == null)
         {
             ItemDrop(2, 1, playerScript, 1);
-            Destroy(gameObject);
             itemDropped = true;
+
+            if(Tool.Instance.torchObj.Contains(this.gameObject))
+            {
+                Tool.Instance.torchObj.Remove(this.gameObject);
+            }
+
+            Destroy(gameObject);
         }
         else
         {

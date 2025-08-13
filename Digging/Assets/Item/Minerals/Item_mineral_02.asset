@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Item_mineral_02
   m_EditorClassIdentifier: 
   itemName: "\uAD6C\uB9AC"
+  type: 0
   itemImage: {fileID: 21300000, guid: ffee3bc931e874f46b1819a725d69e82, type: 3}
   count: 0
+  stackLimit: 0
   accumulation_count: 0
   isMineral: 1
   isRelic: 0
+  isDrillItem: 0
   rarity: 1
   value: 8
   duplicate_value: 0

@@ -275,8 +275,8 @@ public class SaveSystem : MonoBehaviour
         //횃불위치 저장
         {
             List<Vector2> torchPositions = new List<Vector2>();
-            foreach (Vector2 pos in Tool.Instance.torchPositions) {
-                torchPositions.Add(pos);
+            foreach (GameObject obj in Tool.Instance.torchObj) {
+                torchPositions.Add(obj.transform.position);
             }
 
             saveData.torchPositionData = new torchPositionData
@@ -517,7 +517,8 @@ public class SaveSystem : MonoBehaviour
         //횃불위치 로드
         foreach (Vector2 pos in loaded.torchPositionData.torchPositionDatas)
         {
-            Instantiate(Tool.Instance.torchPrefab, pos, Quaternion.identity);
+            GameObject obj = Instantiate(Tool.Instance.torchPrefab, pos, Quaternion.identity);
+            Tool.Instance.torchObj.Add(obj);
         }
 
         //UI재갱신(아마도 도감도 갱신 넣어야할 예정)

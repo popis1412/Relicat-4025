@@ -162,8 +162,10 @@ public class Player : MonoBehaviour
         Collect_StartPos = new Vector3(3420f, Screen.height / 2, 0f);
         Collect_EndPos = new Vector3(1920f, Screen.height / 2, 0f);
 
+        Tool.Instance.torchObj.Clear();
         // 한 프레임 대기 (인스턴스 초기화 대기)
         yield return null;
+
 
         // Inventory 스크립트 연결
         Inventory = Inventory.Instance ?? FindObjectOfType<Inventory>();
@@ -283,7 +285,7 @@ public class Player : MonoBehaviour
             SlotManager.Instance.LoadQuickSlots(loaded);
         }
 
-        Tool.Instance.torchPositions.Clear();
+        
     }
 
     // Update is called once per frame
