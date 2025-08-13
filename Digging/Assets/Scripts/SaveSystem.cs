@@ -174,7 +174,8 @@ public class SaveSystem : MonoBehaviour
         saveData.shopData = new ShopData
         {
             pick_damage = shop.pick_damage,
-            lightRadius = shop.lightRadius
+            lightRadius = shop.lightRadius,
+            isCreateDrill = shop.isCreateDrill
         };
 
         //플레이어 저장
@@ -368,6 +369,7 @@ public class SaveSystem : MonoBehaviour
         //상점 로드
         shop.pick_damage = loaded.shopData.pick_damage;
         shop.lightRadius = loaded.shopData.lightRadius;
+        shop.isCreateDrill = loaded.shopData.isCreateDrill;
 
         //플레이어컨트롤러 로드
         //playerController.pickdamage = loaded.playerControllerData.pickDamage;
