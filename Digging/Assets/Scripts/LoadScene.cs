@@ -260,7 +260,7 @@ public class LoadScene : MonoBehaviour
 
     #region Skip!!!
 
-    /*private void OnGUI()
+    private void OnGUI()
     {
         GUIStyle bigFontButton = new GUIStyle(GUI.skin.button);
         bigFontButton.fontSize = 30;  // 원하는 글씨 크기
@@ -277,7 +277,7 @@ public class LoadScene : MonoBehaviour
 
         GUILayout.EndVertical();
         GUILayout.EndArea();
-    }*/
+    }
 
     #endregion
 }

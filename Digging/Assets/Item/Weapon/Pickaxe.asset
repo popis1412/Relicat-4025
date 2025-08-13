@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 
   name: Pickaxe
-  type: 0
+  type: 1
   icon: {fileID: 21300000, guid: f60f233f88987d642bf531283ff6b2d4, type: 3}
   levelSprite:
   - level: 1

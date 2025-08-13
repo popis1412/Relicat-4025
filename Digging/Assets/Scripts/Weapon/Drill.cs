@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
-public class Drill: MonoBehaviour
+public class Drill : MonoBehaviour
 {
     [SerializeField] private AudioSource diggingAudioSource;
 
@@ -13,9 +11,9 @@ public class Drill: MonoBehaviour
     private bool isBound = false;
 
     // 에너지 카운트
-    float decreaseEnergy = 10f;  // 에너지 감소률 - 1초마다 0.1감소
-    float cooldown = 1f;        // 쿨타임
-    float timer;                // 시간          
+    public float decreaseEnergy = 10f;  // 에너지 감소률 - 1초마다 0.1감소
+    public float cooldown = 1f;                 // 쿨타임
+    [SerializeField] float timer;                // 시간          
 
     // 애니메이션 카운트
     private float t;
@@ -25,12 +23,23 @@ public class Drill: MonoBehaviour
 
     public WeaponInstance _instance;
 
-    public Action<Drill> OnEnergyChanged; // 이벤트 콜백 - 에너지 충전 - 배터리
-    public Action<Drill> OnDecreaseEnergy; // 에너지 감소
+    public Action<Drill, float> OnEnergyChanged; // 이벤트 콜백 - 에너지 충전 - 배터리
+    public Action<Drill, float> OnDecreaseEnergy; // 에너지 감소
+
 
     public void Setup(WeaponInstance instance)
     {
         _instance = instance;
+    }
+
+    private void OnEnable()
+    {
+        SlotManager.Instance.PickupEnergy = ChargeEnergy;
+    }
+
+    private void OnDisable()
+    {
+        SlotManager.Instance.PickupEnergy = null;
     }
 
     private void Awake()
@@ -48,7 +57,6 @@ public class Drill: MonoBehaviour
         if(_instance._energy <= 0)
         {
             t = cooldown;
-            OnDecreaseEnergy = null;
             return;
         }
 
@@ -382,21 +390,16 @@ public class Drill: MonoBehaviour
     // 에너지 충전(액션)
     public void ChargeEnergy()
     {
-        _instance._energy = 100;
-
-        // SlotManager의 메서드를 단 한 번만 등록
-        if(!isBound)
-        {
-            OnEnergyChanged = SlotManager.Instance.BindDrillEnergy;
-            isBound = true;
-        }
-        OnEnergyChanged?.Invoke(this);
+        print("배터리 충전됨");
+        this._instance._energy = 100;
+        SlotManager.Instance.BindDrillEnergy(this, this._instance._energy);
+        //OnEnergyChanged?.Invoke(this, _instance._energy);
     }
 
     // 에너지 감소
     public void DecreaseEnergy(float amount)
     { 
         _instance._energy -= amount;
-        OnDecreaseEnergy?.Invoke(this);
+        SlotManager.Instance.BindDrillEnergy(this, _instance._energy);
     }
 }

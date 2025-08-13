@@ -182,6 +182,19 @@ public class Shop : MonoBehaviour
         {
             Inventory.money_item.count -= player.UseItems[0].value;
             Inventory.AddItem(player.UseItems[0], 1);
+
+            // 해당 타입에 맞는 슬롯 찾기
+            SlotInfo slot = SlotManager.Instance.FindSlot(player.UseItems[0].type);
+
+            if(slot != null && slot._instanceI != null)    // 이미 퀵슬롯에 아이템이 있음.
+            {
+                SlotManager.Instance.UpdateText(slot);
+            }
+            else
+            {
+                SlotManager.Instance.FillSlot(player.UseItems[0], 1);
+            }
+
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
 
         }
@@ -197,8 +210,20 @@ public class Shop : MonoBehaviour
         {
             Inventory.money_item.count -= player.UseItems[1].value;
             Inventory.AddItem(player.UseItems[1], 1);
-            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
 
+            // 해당 타입에 맞는 슬롯 찾기
+            SlotInfo slot = SlotManager.Instance.FindSlot(player.UseItems[1].type);
+
+            if(slot != null && slot._instanceI != null)    // 이미 퀵슬롯에 아이템이 있음.
+            {
+                SlotManager.Instance.UpdateText(slot);
+            }
+            else
+            {
+                SlotManager.Instance.FillSlot(player.UseItems[1], 1);
+            }
+            
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
         }
         else
         {
@@ -212,6 +237,19 @@ public class Shop : MonoBehaviour
         {
             Inventory.money_item.count -= player.UseItems[2].value;
             Inventory.AddItem(player.UseItems[2], 1);
+
+            // 해당 타입에 맞는 슬롯 찾기
+            SlotInfo slot = SlotManager.Instance.FindSlot(player.UseItems[2].type);
+
+            if(slot != null && slot._instanceI != null)    // 이미 퀵슬롯에 아이템이 있음.
+            {
+                SlotManager.Instance.UpdateText(slot);
+            }
+            else
+            {
+                SlotManager.Instance.FillSlot(player.UseItems[2], 1);
+            }
+
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
 
         }

@@ -54,7 +54,8 @@ public class QuitSlotUI : MonoBehaviour
     }
 
     // 빈 슬롯 찾기(아이템인 경우)[내부 인스턴스로 할 경우]
-    public SlotInfo FindEmptySlot(bool isWeapon, string name)
+    // -> 타입이 있다면 이름은 필요 없어짐. + 고유 ID를 이용해 스킬이나 스탯이 생긴다면 추가 해서 사용 예정
+    /*public SlotInfo FindEmptySlot(bool isWeapon, string name)
     {
         foreach(var slot in slotInfos)
         {
@@ -81,43 +82,21 @@ public class QuitSlotUI : MonoBehaviour
         }
 
         return null;
-    }
-
-    // 빈 슬롯 찾기
-    /*public SlotInfo FindEmptySlot(bool isWeapon, string name)
-    {
-        foreach(var slot in slotInfos)
-        {
-            // 완전히 비어있는 슬롯이면 바로 반환
-            if(slot._instanceW == null && slot._instanceI == null)
-                return slot;
-
-            // 아이템이 있는 상황
-            else if(slot._instanceW == null && slot._instanceI != null)
-                if(slot._instanceI._item.name == name)
-                    return slot;
-
-            // 무기가 있는 상황
-            else if(slot._instanceI == null && slot._instanceW != null)
-                continue;
-
-            else
-                continue;
-        }
-
-        return null;
     }*/
 
     public SlotInfo FindDrill(Drill drill)
     {
         foreach(SlotInfo slot in quickSlots)
         {
-            if(slot._instanceI == null && slot._instanceW._template.type == WeaponType.Drill)
+            if(slot._instanceI == null && slot._instanceW != null)
             {
-                if(slot._instanceW._energy == 0)    // 에너지가 없으면 다음 드릴을 찾기
-                    continue;
+                if(slot._instanceW._template.type == WeaponType.Drill)
+                {
+                    if(slot._instanceW._energy == 0)    // 에너지가 없으면 다음 드릴을 찾기
+                        continue;
 
-                return slot;
+                    return slot;
+                }
             }
         }
 
