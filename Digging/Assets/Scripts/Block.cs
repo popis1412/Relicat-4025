@@ -701,9 +701,11 @@ public class Block : MonoBehaviour
                 boxDestroyCount -= Time.deltaTime;
             else
             {
-                blocksDictionary.blockPosition.Remove(this.transform.position);
+                //blocksDictionary.blockPosition.Remove(this.transform.position);
+                blocksDictionary.DestroyBlock(this.gameObject);
                 Destroy(this.gameObject);
             }
+
         }
     }
 
