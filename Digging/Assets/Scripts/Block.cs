@@ -160,6 +160,12 @@ public class Block : MonoBehaviour
                 actvieRelicEffect = null;
             }
 
+            BoxCollider2D boxCollider = this.gameObject.GetComponent<BoxCollider2D>();
+            if (boxCollider != null && boxCollider.isTrigger == true && newBlockType != 1)
+            {
+                boxCollider.isTrigger = false;
+            }
+
             if (newBlockType == -1 || newBlockType == -2)
             {
                 spriteRenderer.sprite = block_unbreakable_0;
@@ -175,7 +181,6 @@ public class Block : MonoBehaviour
             else if(newBlockType == 1)
             {
                 spriteRenderer.sprite = boxCloseSprite;     //보물상자 들어와야 함
-                BoxCollider2D boxCollider = this.gameObject.GetComponent<BoxCollider2D>();
                 if (boxCollider != null)
                 {
                     boxCollider.isTrigger = true;
