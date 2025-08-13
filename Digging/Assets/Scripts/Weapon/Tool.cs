@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Tool : MonoBehaviour
 {
-    public List<Vector2> torchPositions = new List<Vector2>();
+    public List<GameObject> torchObj = new List<GameObject>();
     [SerializeField] private GameObject bombPrefab;
     public GameObject torchPrefab;
     [SerializeField] private Vector2 itemSpawnParent;
@@ -164,7 +164,7 @@ public class Tool : MonoBehaviour
             clone.transform.SetParent(null); // 부모 움직임의 영향 주지 않기
 
             if(prefab == torchPrefab)
-                torchPositions.Add(itemSpawnParent);
+                torchObj.Add(clone);
         }
 
         // 개수 감소
