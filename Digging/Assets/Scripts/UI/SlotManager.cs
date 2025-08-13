@@ -643,8 +643,8 @@ public class SlotManager : MonoBehaviour
 
         if(slot._typeS == SlotType.QuickSlot)
         {
-            int space = instance._item.stackLimit - instance._count;
-            toAdd = Mathf.Min(space, available);
+            //int space = instance._item.stackLimit - instance._count;
+            //toAdd = Mathf.Min(space, available);
 
             instance._count += toAdd;
         }
@@ -658,7 +658,8 @@ public class SlotManager : MonoBehaviour
     private ItemInstance GetOrCreateInstance(SlotInfo slot, Item template)
     {
         if(slot._instanceI != null)
-            return slot._instanceI;
+            if(slot._instanceI._item != null)
+                return slot._instanceI;
 
         var instance = new ItemInstance(template);
         return instance;
