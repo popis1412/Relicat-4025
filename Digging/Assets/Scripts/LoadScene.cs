@@ -153,6 +153,7 @@ public class LoadScene : MonoBehaviour
         else if(isAlreadyWatchStory == true)
         {
             Invoke("InvokeLoadMain", 1.5f);
+
         }
 
         difficulty_panel.SetActive(false);
@@ -259,7 +260,7 @@ public class LoadScene : MonoBehaviour
     }
 
     #region Skip!!!
-
+    /*
     private void OnGUI()
     {
         GUIStyle bigFontButton = new GUIStyle(GUI.skin.button);
@@ -278,6 +279,6 @@ public class LoadScene : MonoBehaviour
         GUILayout.EndVertical();
         GUILayout.EndArea();
     }
-
+    */
     #endregion
 }

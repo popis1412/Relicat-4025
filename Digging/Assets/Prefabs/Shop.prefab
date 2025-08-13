@@ -9053,7 +9053,7 @@ MonoBehaviour:
   shop_lightLvText: {fileID: 6307279008936568291}
   shop_lightUpdateText: {fileID: 3188068410780900007}
   playerlight: {fileID: 0}
-  pick_damage: 0
+  pick_damage: 6
   lightRadius: 0
   createDrill_textobj: {fileID: 239193057927594150}
   upgradeDrill_textobj: {fileID: 601205800512496942}

@@ -606,45 +606,19 @@ public class Block : MonoBehaviour
             }
             else if (SceneManager.GetActiveScene().buildIndex == 3 && LoadScene.instance.stage_Level == 0)
             {
-                //int randCoal = Random.Range(1, 11);
-                //int randCopper = Random.Range(1, 11);
+                int randCoal = Random.Range(1, 11);
+                int randCopper = Random.Range(1, 11);
 
-                //for (int i = 0; i < randCoal; i++)
-                //{
-                //    ItemDrop(1, 0, getPlayer.GetComponent<Player>(), 1);
-                //}
-
-                //for (int i = 0; i < randCopper; i++)
-                //{
-                //    ItemDrop(1, 1, playerScript.GetComponent<Player>(), 1);
-                //}
-
-                int randIron = Random.Range(1, 6);
-                int randGold = Random.Range(1, 6);
-
-                int randDrillcomponent = Random.Range(0, 3);
-
-                int randDrillBattery = Random.Range(0, 3);
-
-                for (int i = 0; i < randIron; i++)
+                for (int i = 0; i < randCoal; i++)
                 {
-                    ItemDrop(1, 2, playerScript.GetComponent<Player>(), 1);
-                }
-                for (int i = 0; i < randGold; i++)
-                {
-                    ItemDrop(1, 3, playerScript.GetComponent<Player>(), 1);
+                    ItemDrop(1, 0, getPlayer.GetComponent<Player>(), 1);
                 }
 
-                for (int i = 0; i < randDrillcomponent; i++)
+                for (int i = 0; i < randCopper; i++)
                 {
-                    int drillcomponent_num = Random.Range(1, 4);
-                    ItemDrop(3, drillcomponent_num, playerScript.GetComponent<Player>(), 1);
+                    ItemDrop(1, 1, playerScript.GetComponent<Player>(), 1);
                 }
 
-                if (randDrillBattery > 0)
-                {
-                    ItemDrop(4, 4, playerScript.GetComponent<Player>(), 1);
-                }
             }
             else if (LoadScene.instance.stage_Level == 1)
             {
@@ -654,6 +628,7 @@ public class Block : MonoBehaviour
 
                 int randDrillcomponent = Random.Range(0, 3);
 
+                int randDrillBattery = Random.Range(0, 3);
 
                 for (int i = 0; i < randCoal; i++)
                 {
@@ -674,7 +649,10 @@ public class Block : MonoBehaviour
                     int drillcomponent_num = Random.Range(1, 4);
                     ItemDrop(3, drillcomponent_num, playerScript.GetComponent<Player>(), 1);
                 }
-
+                if (randDrillBattery > 1)
+                {
+                    ItemDrop(4, 4, playerScript.GetComponent<Player>(), 1);
+                }
             }
             else if (LoadScene.instance.stage_Level == 2)
             {

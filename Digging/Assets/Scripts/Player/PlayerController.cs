@@ -4,8 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+#if UNITY_EDITOR
 using UnityEditor.Build;
 using UnityEditor.Rendering;
+#endif
+
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 using static Tool;
