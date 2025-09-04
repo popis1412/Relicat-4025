@@ -15,8 +15,16 @@ MonoBehaviour:
   itemName: "\uD683\uBD88"
   type: 3
   itemImage: {fileID: 21300000, guid: c8d53b7b29f8da941900fc219337123a, type: 3}
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
   count: 0
   stackLimit: 99
+=======
+=======
+>>>>>>> Stashed changes
+  count: 30
+  stackLimit: 10
+>>>>>>> Stashed changes
   accumulation_count: 0
   isMineral: 0
   isRelic: 0

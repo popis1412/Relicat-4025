@@ -8,25 +8,33 @@ using static UnityEditor.Progress;
 #endif
 using Unity.VisualScripting;
 using System.Collections.ObjectModel;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 using System.Linq;
 using System;
 using Spine;
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
 public class Inventory : MonoBehaviour
 {
+
     public static Inventory instance;
+
     public Collection collection;
 
     public List<Item> items;
     public int money;
     public Item money_item;
-    public TextMeshProUGUI money_text;
+    [SerializeField] private TextMeshProUGUI money_text;
 
     [SerializeField]
     private Transform slotParent;
     [SerializeField]
     private Slot[] slots;
-    public Slot[] Slots { get { return slots; } }
+    public Slot[] Slots { get; }
 
     [SerializeField] private GameObject getItem_LogPanel;
     [SerializeField] private Image getItem_Image;
@@ -46,6 +54,7 @@ public class Inventory : MonoBehaviour
     private void OnValidate()
     {
         slots = slotParent.GetComponentsInChildren<Slot>();
+        
     }
 #endif
 
@@ -86,8 +95,8 @@ public class Inventory : MonoBehaviour
 
             // UI 텍스트 업데이트
             Transform parent = slots[i].transform.parent;
-            TextMeshProUGUI text = parent.GetComponentInChildren<TextMeshProUGUI>();
-            text.text = items[i].count.ToString();
+            TextMeshProUGUI childtext = parent.GetChild(1).GetComponent<TextMeshProUGUI>();
+            childtext.text = items[i].count.ToString();
         }
 
         for (; i < slots.Length; i++)
@@ -99,8 +108,8 @@ public class Inventory : MonoBehaviour
 
             // 빈 슬롯이면 텍스트 비우기
             Transform parent = slots[i].transform.parent;
-            TextMeshProUGUI text = parent.GetComponentInChildren<TextMeshProUGUI>();
-            text.text = "";
+            TextMeshProUGUI childtext = parent.GetChild(1).GetComponent<TextMeshProUGUI>();
+            childtext.text = "";
         }
 
         money_text.text = money_item.count.ToString() + " 냥";
@@ -110,6 +119,7 @@ public class Inventory : MonoBehaviour
     // addEA: 갯수, _item: Item Object
     public void AddItem(Item _item, int addEA)
     {
+
         foreach (Item item in items)
         {
             if (item.itemName == _item.itemName)
@@ -121,12 +131,13 @@ public class Inventory : MonoBehaviour
                     if(slots[i].item.itemName == _item.itemName)
                     {
                         Transform parent = slots[i].transform.parent;
-                        TextMeshProUGUI text = parent.GetComponentInChildren<TextMeshProUGUI>();
-                        Debug.Log(text);
-                        text.text = item.count.ToString();
+                        TextMeshProUGUI childtext = parent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                        Debug.Log(childtext);
+                        childtext.text = item.count.ToString();
 
                         ItemLog(_item, addEA);
                     }
+                    
                 }
 
                 FreshSlot();
@@ -146,9 +157,9 @@ public class Inventory : MonoBehaviour
                 if (slots[i].item.itemName == _item.itemName)
                 {
                     Transform parent = slots[i].transform.parent;
-                    TextMeshProUGUI text = parent.GetComponentInChildren<TextMeshProUGUI>();
-                    Debug.Log(text);
-                    text.text = _item.count.ToString();
+                    TextMeshProUGUI childtext = parent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    Debug.Log(childtext);
+                    childtext.text = _item.count.ToString();
 
                     ItemLog(_item, addEA);
                 }
@@ -171,9 +182,9 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < items.Count; i++)
         {
             Transform parent = slots[i].transform.parent;
-            TextMeshProUGUI text = parent.GetComponentInChildren<TextMeshProUGUI>();
-            Debug.Log(text);
-            text.text = "";
+            TextMeshProUGUI childtext = parent.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            Debug.Log(childtext);
+            childtext.text = "";
         }
 
         items.Clear();
@@ -289,6 +300,8 @@ public class Inventory : MonoBehaviour
     // 아이템 획득 로그
     public void ItemLog(Item _item, int addEA)
     {
+        
+
         // 같은 아이템 연속 획득 시 
         if(getItem_Name.text == _item.itemName)
         {
@@ -383,7 +396,6 @@ public class Inventory : MonoBehaviour
         CancelInvoke("closeLogMessage");
         Invoke("closeLogMessage", 3f);
     }
-
     private void closeLogMessage()
     {
         logMessage_Panel.SetActive(false);

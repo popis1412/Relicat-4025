@@ -10,7 +10,15 @@ public class Enemy : MonoBehaviour
     float timer = 1f;
     float speed = 1f;
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public int damage = 1;
+=======
+    [SerializeField] int damage = 1;
+>>>>>>> Stashed changes
+=======
+    [SerializeField] int damage = 1;
+>>>>>>> Stashed changes
 
     float attackCooldown = 1f;
 

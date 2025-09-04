@@ -17,6 +17,7 @@ TagManager:
   - ReturnMuseum
   - tutorialExit
   - MainCanvas
+  - Floor
   layers:
   - Default
   - TransparentFX

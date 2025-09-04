@@ -18,6 +18,10 @@ public class Pickaxe : MonoBehaviour
 
     public int speed;
 
+    public float damage;
+
+    public float damage;
+
     public void Setup(WeaponInstance instance)
     {
         _instance = instance;
@@ -28,9 +32,34 @@ public class Pickaxe : MonoBehaviour
         diggingAudioSource = GameObject.FindWithTag("Player")?.GetComponent<AudioSource>();
     }
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void Digging(Vector2 worldMousePos, Player player, bool isSanded)
+=======
+    private void Start()
+=======
+    private void Start()
     {
-        RaycastHit2D hit = Physics2D.Raycast(worldMousePos, Vector2.zero);
+        damage = _instance._damage;
+    }
+
+    public void Digging(Vector2 worldMousePos, Player player)
+>>>>>>> Stashed changes
+    {
+        damage = _instance._damage;
+    }
+
+    public void Digging(Vector2 worldMousePos, Player player)
+>>>>>>> Stashed changes
+    {
+        RaycastHit2D hit = Physics2D.Raycast(worldMousePos, Vector2.zero, LayerMask.GetMask("Block"));
+
+        if(hit == null && hit.collider.gameObject.layer != LayerMask.GetMask("Block") && hit.collider == null)
+        {
+            print("블럭이 아닙니다.");
+            return;
+        }
+
         // 블럭 가져오기
         List<GameObject> blocks;
 
@@ -61,7 +90,17 @@ public class Pickaxe : MonoBehaviour
         {
             if(blockObj.TryGetComponent(out Block block))
             {
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 block.BlockDestroy(_instance._damage * Time.deltaTime, player);
+=======
+                block.BlockDestroy(damage * Time.deltaTime, player);
+                block.BlockDestroy(damage * Time.deltaTime, player);
+>>>>>>> Stashed changes
+=======
+                block.BlockDestroy(damage * Time.deltaTime, player);
+                block.BlockDestroy(damage * Time.deltaTime, player);
+>>>>>>> Stashed changes
                 PlayDigSound(block.blockType);
             }
         }

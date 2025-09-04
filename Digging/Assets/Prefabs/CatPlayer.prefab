@@ -181,7 +181,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bombPrefab: {fileID: 4969225968171647812, guid: f3306ce703067ce4897be033e57626c9, type: 3}
   torchPrefab: {fileID: 7803309434280011547, guid: 9129e7242d2181c408a505f1fa9bb0b7, type: 3}
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
   itemSpawnParent: {x: 0, y: 0}
+=======
+  teleportPrefab: {fileID: 7803309434280011547, guid: f37e06d466785ea47af128ec97b6f29c, type: 3}
+>>>>>>> Stashed changes
+=======
+  teleportPrefab: {fileID: 7803309434280011547, guid: f37e06d466785ea47af128ec97b6f29c, type: 3}
+>>>>>>> Stashed changes
   currentWeaponType: 0
   sprite: {fileID: 0}
 --- !u!1 &3083855431188750820

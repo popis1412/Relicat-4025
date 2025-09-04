@@ -48,12 +48,27 @@ public class Collection : MonoBehaviour
     [SerializeField] private GameObject[] stagePanels;
 
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     //#if UNITY_EDITOR
     //    private void OnValidate()
     //    {
     //        slots = slotParent.GetComponentsInChildren<Slot>();
     //    }
     //#endif
+=======
+=======
+>>>>>>> Stashed changes
+//#if UNITY_EDITOR
+//    private void OnValidate()
+//    {
+//        slots = slotParent.GetComponentsInChildren<Slot>();
+//    }
+//#endif
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
     private void Awake()
     {
@@ -66,7 +81,15 @@ public class Collection : MonoBehaviour
         }
         else
         {
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Destroy(this.gameObject);
+=======
+            Destroy(this.gameObject); 
+>>>>>>> Stashed changes
+=======
+            Destroy(this.gameObject); 
+>>>>>>> Stashed changes
         }
     }
 
@@ -79,7 +102,14 @@ public class Collection : MonoBehaviour
         is_collect_complete = new bool[5];
         player_lv = 0;
         collect_count = 0;
+<<<<<<< Updated upstream
 
+=======
+        
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         //collectView_idx = 0;
         //Switch_CollectView();
     }
@@ -111,7 +141,15 @@ public class Collection : MonoBehaviour
             if(collectionParent != null)
             {
                 Collection_Table = new GameObject[30];
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 for(int i = 0; i < 30; i++)
+=======
+                for (int i = 0; i < 30; i++)
+>>>>>>> Stashed changes
+=======
+                for (int i = 0; i < 30; i++)
+>>>>>>> Stashed changes
                 {
                     Transform child = collectionParent.Find(i.ToString());
                     if(child != null)
@@ -213,14 +251,34 @@ public class Collection : MonoBehaviour
                 }
                 break;
             case 2:
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 for(int i = 0; i < 30; i++)
                 {
                     if(li_isRelicOnTable[i] == true)
+=======
+                for (int i = 0; i < 30; i++)
+                {
+                    if (li_isRelicOnTable[i] == true)
+>>>>>>> Stashed changes
+=======
+                for (int i = 0; i < 30; i++)
+                {
+                    if (li_isRelicOnTable[i] == true)
+>>>>>>> Stashed changes
                     {
                         collect_count++;
                     }
                 }
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 if(collect_count == 30)
+=======
+                if (collect_count == 30)
+>>>>>>> Stashed changes
+=======
+                if (collect_count == 30)
+>>>>>>> Stashed changes
                 {
                     is_collect_complete[player_lv] = true;
                     rewardButton_List[2].GetComponent<Button>().interactable = true;
@@ -304,6 +362,8 @@ public class Collection : MonoBehaviour
     //    Switch_CollectView();
     //    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
     //}
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 
     //public void Button_Right()
@@ -318,6 +378,38 @@ public class Collection : MonoBehaviour
     //}
 
 
+=======
+
+    
+    //public void Button_Right()
+    //{
+    //    collectView_idx += 1;
+    //    if (collectView_idx > 1)
+    //    {
+    //        collectView_idx = 0;
+    //    }
+    //    Switch_CollectView();
+    //    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
+    //}
+
+
+>>>>>>> Stashed changes
+=======
+
+    
+    //public void Button_Right()
+    //{
+    //    collectView_idx += 1;
+    //    if (collectView_idx > 1)
+    //    {
+    //        collectView_idx = 0;
+    //    }
+    //    Switch_CollectView();
+    //    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
+    //}
+
+
+>>>>>>> Stashed changes
     //private void Switch_CollectView()
     //{
     //    switch (collectView_idx)
@@ -325,14 +417,34 @@ public class Collection : MonoBehaviour
     //        case 0:
     //            collectUIList[0].SetActive(true);
     //            collectUIList[1].SetActive(false);
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+                
+>>>>>>> Stashed changes
+=======
+                
+>>>>>>> Stashed changes
     //            break;
     //        case 1:
     //            collectUIList[0].SetActive(false);
     //            collectUIList[1].SetActive(true);
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
     //            break;
 
+=======
+                
+    //            break;
+            
+>>>>>>> Stashed changes
+=======
+                
+    //            break;
+            
+>>>>>>> Stashed changes
     //    }
     //}
 
@@ -446,7 +558,15 @@ public class Collection : MonoBehaviour
 
     public void SelectStageButton(int stage)
     {
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         switch(stage)
+=======
+        switch (stage)
+>>>>>>> Stashed changes
+=======
+        switch (stage)
+>>>>>>> Stashed changes
         {
             case 0:
                 stagePanels[stage].SetActive(true);
@@ -473,7 +593,15 @@ public class Collection : MonoBehaviour
 
     public void BackStageButton(int stage)
     {
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         switch(stage)
+=======
+        switch (stage)
+>>>>>>> Stashed changes
+=======
+        switch (stage)
+>>>>>>> Stashed changes
         {
             case 0:
                 stagePanels[stage].SetActive(false);

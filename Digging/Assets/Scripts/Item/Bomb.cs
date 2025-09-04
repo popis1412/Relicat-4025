@@ -8,7 +8,6 @@ public class Bomb : MonoBehaviour
 {
     [SerializeField] AudioSource audio;
     [SerializeField] Player playerScript;
-    [SerializeField] private ItemInstance _instance;
 
     // 카운트
     float timer;
@@ -37,11 +36,6 @@ public class Bomb : MonoBehaviour
 
     private bool isGrounded = false;
     private bool isAlreadyDamaged = false;
-
-    public void Setup(ItemInstance instance)
-    {
-        _instance = instance;
-    }
 
     private void Awake()
     {

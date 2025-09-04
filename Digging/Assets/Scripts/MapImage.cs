@@ -70,6 +70,36 @@ public class MapImage : MonoBehaviour
 
             rawImage.texture = texture;
         }
+        else if(stageNum == 2)   //스테이지 번호별로 밑에 추가하면 됨
+        {
+            width = 50 * textureSize;       //스테이지 가로길이 * textureSize
+            mapsizeX = 50;                  //스테이지 가로길이
+            height = 53 * textureSize;      //스테이지 세로길이 * textureSize
+            mapsizeY = 53;                  //스테이지 세로길이
+
+            texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            texture.filterMode = FilterMode.Point;
+            texture.wrapMode = TextureWrapMode.Clamp;
+
+            ClearTexture(texture);
+
+            rawImage.texture = texture;
+        }
+        else if(stageNum == 3)   //스테이지 번호별로 밑에 추가하면 됨
+        {
+            width = 50 * textureSize;       //스테이지 가로길이 * textureSize
+            mapsizeX = 50;                  //스테이지 가로길이
+            height = 53 * textureSize;      //스테이지 세로길이 * textureSize
+            mapsizeY = 53;                  //스테이지 세로길이
+
+            texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            texture.filterMode = FilterMode.Point;
+            texture.wrapMode = TextureWrapMode.Clamp;
+
+            ClearTexture(texture);
+
+            rawImage.texture = texture;
+        }
         else
         {
             width = 30 * textureSize;

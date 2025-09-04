@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -62,6 +62,8 @@ public class Shop : MonoBehaviour
         //if(SlotManager.Instance.IsEquipWeapon(WeaponType.Pickaxe) == true)
         //    pick_damage = SlotManager.Instance.currentWeapon._instanceW._damage;
     }
+
+
 
     private void OnDestroy()
     {
@@ -224,6 +226,8 @@ public class Shop : MonoBehaviour
             }
             
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
+
+<<<<<<< Updated upstream
         }
         else
         {
@@ -231,10 +235,15 @@ public class Shop : MonoBehaviour
         }
 
     }
+<<<<<<< Updated upstream
     public void Button_Buy_Item_Teleport()
+=======
+    public void Button_Buy_Item_Torch()
+>>>>>>> Stashed changes
     {
         if (Inventory.money_item.count >= player.UseItems[2].value)
         {
+<<<<<<< Updated upstream
             Inventory.money_item.count -= player.UseItems[2].value;
             Inventory.AddItem(player.UseItems[2], 1);
 
@@ -250,8 +259,14 @@ public class Shop : MonoBehaviour
                 SlotManager.Instance.FillSlot(player.UseItems[2], 1);
             }
 
+=======
+            Inventory.money_item.count -= player.UseItems[1].value;
+            Inventory.AddItem(player.UseItems[1], 1);
+>>>>>>> Stashed changes
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
 
+=======
+>>>>>>> Stashed changes
         }
         else
         {
@@ -264,6 +279,8 @@ public class Shop : MonoBehaviour
     public void Button_Upgrade_Pick()
     {
         if(Inventory.money_item.count >= player.UpgradeItems[0].value)
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         {            
             Inventory.money_item.count -= player.UpgradeItems[0].value;
             // 데미지 증가
@@ -274,11 +291,22 @@ public class Shop : MonoBehaviour
                 SlotManager.Instance.currentWeapon._instanceW._damage = pick_damage;
                 SlotManager.Instance.UpgradeWeapon(SlotManager.Instance.currentWeapon);
             }    
+=======
+        {
+            Inventory.money_item.count -= player.UpgradeItems[0].value;
+=======
+        {
+            Inventory.money_item.count -= player.UpgradeItems[0].value;
+>>>>>>> Stashed changes
+            pick_damage += 0.4f;
+            playerController.pickdamage = pick_damage;
+>>>>>>> Stashed changes
             player.UpgradeItems[0].count++;
             shop_pickLvText.text = "레벨 : " + player.UpgradeItems[0].count;
             player.UpgradeItems[0].value += 10;
             shop_pickUpdateText.text = "-" + player.UpgradeItems[0].value.ToString();
 
+            Debug.Log(playerController.pickdamage);
             Inventory.FreshSlot();
 
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
@@ -316,6 +344,8 @@ public class Shop : MonoBehaviour
     }
 
     public void Button_Create_Drill()
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     {
         // 드릴 제작 재료 도면 1, 너트 5, 모터 2
         if(player.Drill_Items[1].count > 0 && player.Drill_Items[2].count > 4 && player.Drill_Items[3].count > 1)
@@ -409,4 +439,97 @@ public class Shop : MonoBehaviour
     }*/
     #endregion Test
 }
+=======
+    {
+        // 드릴 제작 재료 도면 1, 너트 5, 모터 2
+        if (player.Drill_Items[1].count > 0 && player.Drill_Items[2].count > 4 && player.Drill_Items[3].count > 1)
+        {
+            // 재료 감소
+            player.Drill_Items[1].count -= 1;
+            player.Drill_Items[2].count -= 5;
+            player.Drill_Items[3].count -= 2;
 
+            // 드릴 기능 부여
+            isCreateDrill = true;
+            //
+
+            createDrill_textobj.SetActive(false);
+            upgradeDrill_textobj.SetActive(true);
+
+            player.Drill_Items[0].count++;
+            drill_Lv_Text.text = "레벨 : " + player.Drill_Items[0].count;
+            Inventory.FreshSlot();
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
+            Inventory.LogMessage("드릴을 제작했습니다");
+        }
+        else
+        {
+            Inventory.LogMessage("재료가 부족합니다");
+        }
+    }
+>>>>>>> Stashed changes
+
+=======
+    {
+        // 드릴 제작 재료 도면 1, 너트 5, 모터 2
+        if (player.Drill_Items[1].count > 0 && player.Drill_Items[2].count > 4 && player.Drill_Items[3].count > 1)
+        {
+            // 재료 감소
+            player.Drill_Items[1].count -= 1;
+            player.Drill_Items[2].count -= 5;
+            player.Drill_Items[3].count -= 2;
+
+            // 드릴 기능 부여
+            isCreateDrill = true;
+            //
+
+            createDrill_textobj.SetActive(false);
+            upgradeDrill_textobj.SetActive(true);
+
+            player.Drill_Items[0].count++;
+            drill_Lv_Text.text = "레벨 : " + player.Drill_Items[0].count;
+            Inventory.FreshSlot();
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
+            Inventory.LogMessage("드릴을 제작했습니다");
+        }
+        else
+        {
+            Inventory.LogMessage("재료가 부족합니다");
+        }
+    }
+
+>>>>>>> Stashed changes
+    public void Button_Upgrade_Drill()
+    {
+        // 드릴 강화 재료 도면 1, 너트 2, 모터 1
+        if (player.Drill_Items[1].count > 0 && player.Drill_Items[2].count > 1 && player.Drill_Items[3].count > 0)
+        {
+            // 재료 감소
+            player.Drill_Items[1].count -= 1;
+            player.Drill_Items[2].count -= 2;
+            player.Drill_Items[3].count -= 1;
+
+            // 기능 업그레이드
+
+            //
+
+            player.Drill_Items[0].count++;
+            drill_Lv_Text.text = "레벨 : " + player.Drill_Items[0].count;
+            Inventory.FreshSlot();
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
+            Inventory.LogMessage("드릴을 업그레이드 했습니다");
+
+        }
+        else
+        {
+            Inventory.LogMessage("재료가 부족합니다");
+        }
+    }
+
+}

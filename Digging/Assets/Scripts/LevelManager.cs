@@ -102,7 +102,15 @@ public class LevelManager : MonoBehaviour
         {
             remainingTime = totalTime_2;
         }
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         else if(LoadScene.instance.stage_Level == 2)
+=======
+        else if (LoadScene.instance.stage_Level == 2)
+>>>>>>> Stashed changes
+=======
+        else if (LoadScene.instance.stage_Level == 2)
+>>>>>>> Stashed changes
         {
             remainingTime = totalTime_2;
         }
@@ -110,7 +118,15 @@ public class LevelManager : MonoBehaviour
         {
             remainingTime = totalTime_1;
         }
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
+=======
+
+>>>>>>> Stashed changes
+=======
+
+>>>>>>> Stashed changes
         //SaveSystem.Instance.DeleteSaveFile();
         //SaveSystem.Instance.Load();
         originalTargetTextColor = stagetargetNumText.color;
@@ -128,15 +144,36 @@ public class LevelManager : MonoBehaviour
 
     private void OnSceneLoaded3(Scene scene, LoadSceneMode mode)
     {
-        //if (scene.buildIndex != 2) return;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        if (scene.buildIndex == 2)
+        {
+            stagetargetUI.SetActive(false);
+        }
+        else if(scene.buildIndex == 3 || scene.buildIndex == 4 || scene.buildIndex == 5)
+        {
+            stagetargetUI.SetActive(true);
+        }
         //if(scene.buildIndex != 3) return;
         if(scene.buildIndex == 3)
         {
-            Toggle_GuidePanel();
+            //Toggle_GuidePanel();
             player = FindObjectOfType<Player>();
             Debug.Log("asdfaeaafsa");
         }
         Debug.Log("asdfaeaafsa11111111111111");
+=======
+=======
+>>>>>>> Stashed changes
+        if (scene.buildIndex != 3) return;
+        if(scene.buildIndex == 3) 
+        {
+            Toggle_GuidePanel();
+        }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         // 씬이 로드된 후 Player 다시 찾기
         player = FindObjectOfType<Player>();
 
@@ -161,12 +198,27 @@ public class LevelManager : MonoBehaviour
         {
             stagetargetNumText.text = collection.collect_sum.ToString() + " / 20";
         }
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         else if(LoadScene.instance.stage_Level == 2)
         {
             stagetargetNumText.text = collection.collect_sum.ToString() + " / 30";
         }
         
         if(collection.collect_sum >= stagetargetNum[LoadScene.instance.stage_Level] && isStageClear == false)
+=======
+=======
+>>>>>>> Stashed changes
+        else if (LoadScene.instance.stage_Level == 2)
+        {
+            stagetargetNumText.text = collection.collect_sum.ToString() + " / 30";
+        }
+
+        if (collection.collect_sum >= stagetargetNum[LoadScene.instance.stage_Level] && isStageClear == false)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         {
             stagetargetNumText.color = Color.green;
             stagetimerText.color = Color.green;
@@ -183,11 +235,25 @@ public class LevelManager : MonoBehaviour
             {
                 ClearStagePanel_2.SetActive(true);
             }
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             else if(LoadScene.instance.stage_Level == 2)
             {
                 ClearStagePanel_3.SetActive(true);
             }
             
+=======
+=======
+>>>>>>> Stashed changes
+            else if (LoadScene.instance.stage_Level == 2)
+            {
+                ClearStagePanel_3.SetActive(true);
+            }
+
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
             collection.player.player.input.Disable();
         }
         
@@ -253,6 +319,8 @@ public class LevelManager : MonoBehaviour
         SaveSystem.Instance.DeleteSaveFile();
         LoadScene.instance.isAlreadyWatchStory = false;
         ResetGame();
+        shop.createDrill_textobj.SetActive(true);
+        shop.upgradeDrill_textobj.SetActive(false);
         Collection.instance.player.Inventory_obj.SetActive(false);
         Collection.instance.player.CollectUIPanel.SetActive(false);
         //Inventory.badgePanel.SetActive(false);
@@ -279,27 +347,51 @@ public class LevelManager : MonoBehaviour
         if (LoadScene.instance.stage_Level == 0)
         {
             remainingTime = totalTime_1;
+
         }
         else if (LoadScene.instance.stage_Level == 1)
         {
             remainingTime = totalTime_2;
             ClearStagePanel_1.SetActive(false);
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         }
         else if(LoadScene.instance.stage_Level == 2)
         {
             remainingTime = totalTime_2;
             ClearStagePanel_2.SetActive(false);
+=======
+>>>>>>> Stashed changes
         }
+=======
+        }
+>>>>>>> Stashed changes
+        else if (LoadScene.instance.stage_Level == 2)
+        {
+            remainingTime = totalTime_2;
+            ClearStagePanel_2.SetActive(false);
+        }
+
         stagetargetNumText.color = originalTargetTextColor;
         stagetimerText.color = originalTimerTextColor;
 
         collection.collect_sum = 0;
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
-        //isStageClear = false;
+        //isStageClear = true;
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         //ClearStagePanel_1.SetActive(false);
+=======
+        
+>>>>>>> Stashed changes
+=======
+        
+>>>>>>> Stashed changes
         NextStageButton.SetActive(false);
         collection.player.player.input.Enable();
+
+        LoadScene.instance.isUseContinue = false;
 
         SaveSystem.Instance.Save();
         LoadScene.instance.GoMain();
@@ -324,7 +416,13 @@ public class LevelManager : MonoBehaviour
         SaveSystem.Instance.Save();
         NextStageButton.SetActive(true);
     }
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     public void ContinueStageButton3()
     {
         collection.player.player.input.Enable();
@@ -342,6 +440,10 @@ public class LevelManager : MonoBehaviour
             remainingTime = totalTime_1;
         }
         else if (LoadScene.instance.stage_Level == 1)
+        {
+            remainingTime = totalTime_2;
+        }
+        else if(LoadScene.instance.stage_Level == 2)
         {
             remainingTime = totalTime_2;
         }
@@ -376,6 +478,10 @@ public class LevelManager : MonoBehaviour
         {
             remainingTime = totalTime_2;
         }
+        else if(LoadScene.instance.stage_Level == 2)
+        {
+            remainingTime = totalTime_2;
+        }
         stagetargetNumText.color = originalTargetTextColor;
         stagetimerText.color = originalTimerTextColor;
 
@@ -395,6 +501,41 @@ public class LevelManager : MonoBehaviour
         Collection.instance.player.Inventory_obj.SetActive(false);
         Collection.instance.player.CollectUIPanel.SetActive(false);
     }
+    public void CloseClearPanel_3()
+    {
+        //LoadScene.instance.stage_Level = 1;
+        if (LoadScene.instance.stage_Level == 0)
+        {
+            remainingTime = totalTime_1;
+        }
+        else if (LoadScene.instance.stage_Level == 1)
+        {
+            remainingTime = totalTime_2;
+        }
+        else if (LoadScene.instance.stage_Level == 2)
+        {
+            remainingTime = totalTime_2;
+        }
+        stagetargetNumText.color = originalTargetTextColor;
+        stagetimerText.color = originalTimerTextColor;
+
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
+        isStageClear = false;
+
+        ClearStagePanel_3.SetActive(false);
+        collection.player.player.input.Enable();
+
+        LoadScene.instance.GoMenu();
+        SaveSystem.Instance.Save();
+
+        stagetargetUI.SetActive(false);
+        guide_Button.SetActive(false);
+        pause_Button.SetActive(false);
+
+        Collection.instance.player.Inventory_obj.SetActive(false);
+        Collection.instance.player.CollectUIPanel.SetActive(false);
+    }
+<<<<<<< Updated upstream
 
     public void CloseClearPanel_3()
     {
@@ -430,6 +571,8 @@ public class LevelManager : MonoBehaviour
         Collection.instance.player.Inventory_obj.SetActive(false);
         Collection.instance.player.CollectUIPanel.SetActive(false);
     }
+=======
+>>>>>>> Stashed changes
 
     public void Restart_this_Stage_Button()
     {
@@ -487,6 +630,7 @@ public class LevelManager : MonoBehaviour
             remainingTime = totalTime_2;
         }
         
+
         stagetargetNumText.color = originalTargetTextColor;
         stagetimerText.color = originalTimerTextColor;
         isRunning = false;
@@ -549,14 +693,10 @@ public class LevelManager : MonoBehaviour
         shop.shop_lightUpdateText.text = "-" + Collection.instance.player.UpgradeItems[1].value.ToString();
         shop.isCreateDrill = false;
 
-        if (LoadScene.instance.stage_Level == 1)
-        {
-            remainingTime = totalTime_1;
-        }
-        else if (LoadScene.instance.stage_Level == 2)
-        {
-            remainingTime = totalTime_2;
-        }
+        
+        remainingTime = totalTime_1;
+        
+        
         stagetargetNumText.color = originalTargetTextColor;
         stagetimerText.color = originalTimerTextColor;
         isRunning = false;

@@ -5135,7 +5135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62bfc8ea9330aee4e93e0453866dd8f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageNum: 0
+  stageNum: 3
   mapImage: {fileID: 1641466506}
 --- !u!114 &914210596
 MonoBehaviour:

@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class Teleport : MonoBehaviour
 {
-    [SerializeField] private ItemInstance _instance;
+    PlayerController player;
 
-    public void Setup(ItemInstance instance)
+    private void Awake()
     {
-        _instance = instance;
+        player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
     }
 
-    public void Spawn(PlayerController player)
+    private void Start()
+    {
+
+    }
+
+    public void Spawn()
     {
         player.transform.position = new Vector3(14.5f, 0.5f, 0);
     }

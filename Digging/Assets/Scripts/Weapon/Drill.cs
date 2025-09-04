@@ -60,7 +60,13 @@ public class Drill : MonoBehaviour
             return;
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(worldMousePos, Vector2.zero);
+        RaycastHit2D hit = Physics2D.Raycast(worldMousePos, Vector2.zero, LayerMask.GetMask("Block"));
+
+        if(hit == null && hit.collider.gameObject.layer != LayerMask.GetMask("Block") && hit.collider == null)
+        {
+            print("블럭이 아닙니다.");
+            return;
+        }
 
         // 블럭 가져오기
         List<GameObject> blocks;

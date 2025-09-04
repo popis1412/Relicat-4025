@@ -1,16 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #if UNITY_EDITOR
 using UnityEditor.SearchService;
 #endif
 
 using System.Collections.ObjectModel;
 using Unity.VisualScripting;
+=======
+=======
+>>>>>>> Stashed changes
+using UnityEngine.SceneManagement;
+using System.IO;
+using UnityEditor.SearchService;
+using System.Collections.ObjectModel;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
 public class Player : MonoBehaviour
 {
@@ -81,6 +92,7 @@ public class Player : MonoBehaviour
 
     // 사망
     [SerializeField] private GameObject DiePanel;
+    public bool issave = false;
 
     // 지형 리셋
     [SerializeField] private GameObject ResetPanel;
@@ -94,6 +106,18 @@ public class Player : MonoBehaviour
     // 곡괭이 
     public GameObject pick_obj;
     public Sprite[] pick_imgs;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+    // 액션 입력
+    public System.Action<bool> OnInventoryOpen;
+>>>>>>> Stashed changes
+=======
+
+    // 액션 입력
+    public System.Action<bool> OnInventoryOpen;
+>>>>>>> Stashed changes
 
     private string savePath => Application.persistentDataPath + "/SaveData.json";
 
@@ -126,6 +150,8 @@ public class Player : MonoBehaviour
         //}
 
         player = GetComponent<PlayerController>();
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         //if(!File.Exists(savePath))  // 저장 없을 때
         //    InitItemCount();
     }
@@ -141,12 +167,28 @@ public class Player : MonoBehaviour
     }
 
     // 아이템 갯수 초기화
+=======
+
+        if(!File.Exists(savePath))
+            InitItemCount();
+
+    }
+
+    // 아이템 개수 초기화
+>>>>>>> Stashed changes
+=======
+
+        if(!File.Exists(savePath))
+            InitItemCount();
+
+    }
+
+    // 아이템 개수 초기화
+>>>>>>> Stashed changes
     void InitItemCount()
     {
         for(int i = 0; i < UseItems.Count; i++)
-        {
             UseItems[i].count = 0;
-        }
     }
 
     // Start is called before the first frame update
@@ -218,13 +260,15 @@ public class Player : MonoBehaviour
         CollectUIPanel.SetActive(true);
         Inventory.badgePanel.gameObject.SetActive(true);
         Inventory.moneyPanel.gameObject.SetActive(true);
-        Inventory.healthPanel.gameObject.SetActive(true); 
-        LevelManager.instance.stagetargetUI.SetActive(true);
+        Inventory.healthPanel.gameObject.SetActive(true);
+        //LevelManager.instance.stagetargetUI.SetActive(true);
         LevelManager.instance.guide_Button.SetActive(true);
         LevelManager.instance.pause_Button.SetActive(true);
         LevelManager.instance.isRunning = true;
 
         player.input.Enable();
+
+
 
         if (LevelManager.instance.isClickReset)
         {
@@ -233,6 +277,12 @@ public class Player : MonoBehaviour
         else if(LevelManager.instance.isStageClear)
         {
             LevelManager.instance.isStageClear = false;
+            if(LoadScene.instance.isUseContinue == true)
+            {
+                LoadScene.instance.isUseContinue = false;
+                SaveSystem.Instance.Load();
+            }
+            //SaveSystem.Instance.Save();
         }
         else
         {
@@ -240,8 +290,10 @@ public class Player : MonoBehaviour
         }
 
         // 첫 Level의 아이템 드랍
-        if(SceneManager.GetActiveScene().buildIndex == 3 && LoadScene.instance.isUseStart == true)
+        if((SceneManager.GetActiveScene().buildIndex == 3 && LoadScene.instance.isUseStart == true) || (SceneManager.GetActiveScene().buildIndex == 3 && !File.Exists(savePath)))
         {
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             LevelManager.instance.GuidePanel.SetActive(true);
             LevelManager.instance.guideView_idx = 0;
             LevelManager.instance.isOnGuide = true;
@@ -258,7 +310,7 @@ public class Player : MonoBehaviour
 
             Inventory.AddItem(UseItems[0], 3);
             Inventory.AddItem(UseItems[1], 10);
-            
+            //SaveSystem.Instance.Save();
         }
 
         //SaveSystem.Instance.Save();
@@ -268,12 +320,13 @@ public class Player : MonoBehaviour
         //    Inventory.AddItem(UseItems[0], 99);
         //    Inventory.AddItem(UseItems[1], 99);
         //}
+
         SlotManager.Instance.currentWeapon = null;
 
         SlotManager.Instance.BindPlayer(this);  // Player 다시 참조
         SlotManager.Instance.Init();    // 레벨에 따른 아이템 초기화
 
-        if (!File.Exists(savePath))
+        if(!File.Exists(savePath))
         {
             print("저장된 파일이 없습니다");
             yield return null;
@@ -283,9 +336,74 @@ public class Player : MonoBehaviour
             string jsonForLoad = File.ReadAllText(savePath);
             SaveData loaded = JsonUtility.FromJson<SaveData>(jsonForLoad);
             SlotManager.Instance.LoadQuickSlots(loaded);
+            SaveSystem.Instance.Save();
         }
 
+
+
+=======
+            if(SceneManager.GetActiveScene().buildIndex == 3)
+            {
+                LevelManager.instance.GuidePanel.SetActive(true);
+                LevelManager.instance.guideView_idx = 0;
+                LevelManager.instance.isOnGuide = true;
+                LevelManager.instance.Switch_GuideView();
+                LevelManager.instance.left_guideButton.SetActive(false);
+                LevelManager.instance.right_guideButton.SetActive(true);
+                LoadScene.instance.isUseStart = false;
+
+                for (int i = 0; i < UseItems.Count; i++)
+                {
+                    UseItems[i].count = 0;
+                }
+                Inventory.ClearItem();
+
+                Inventory.AddItem(UseItems[0], 3);
+                Inventory.AddItem(UseItems[1], 10);
+                //SaveSystem.Instance.Save();
+            }
+
+            if (SceneManager.GetActiveScene().buildIndex == 2)
+            {
+                Inventory.AddItem(UseItems[0], 99);
+                Inventory.AddItem(UseItems[1], 99);
+            }
+        }
         
+        
+>>>>>>> Stashed changes
+=======
+            if(SceneManager.GetActiveScene().buildIndex == 3)
+            {
+                LevelManager.instance.GuidePanel.SetActive(true);
+                LevelManager.instance.guideView_idx = 0;
+                LevelManager.instance.isOnGuide = true;
+                LevelManager.instance.Switch_GuideView();
+                LevelManager.instance.left_guideButton.SetActive(false);
+                LevelManager.instance.right_guideButton.SetActive(true);
+                LoadScene.instance.isUseStart = false;
+
+                for (int i = 0; i < UseItems.Count; i++)
+                {
+                    UseItems[i].count = 0;
+                }
+                Inventory.ClearItem();
+
+                Inventory.AddItem(UseItems[0], 3);
+                Inventory.AddItem(UseItems[1], 10);
+                //SaveSystem.Instance.Save();
+            }
+
+            if (SceneManager.GetActiveScene().buildIndex == 2)
+            {
+                Inventory.AddItem(UseItems[0], 99);
+                Inventory.AddItem(UseItems[1], 99);
+            }
+        }
+        
+        
+>>>>>>> Stashed changes
+
     }
 
     // Update is called once per frame
@@ -293,6 +411,8 @@ public class Player : MonoBehaviour
     {
         currentTime += Time.deltaTime;
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         if(UpgradeItems[0].count >= 50)
         {
             //pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[3];
@@ -306,11 +426,39 @@ public class Player : MonoBehaviour
         else if(UpgradeItems[0].count >= 15)
         {
             //pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[1];
+=======
+=======
+>>>>>>> Stashed changes
+        if (UpgradeItems[0].count >= 50)
+        {
+            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[3];
+            Shop.instance.pickImage.sprite = pick_imgs[3];
+        }
+        else if (UpgradeItems[0].count >= 35)
+        {
+            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[2];
+            Shop.instance.pickImage.sprite = pick_imgs[2];
+        }
+        else if (UpgradeItems[0].count >= 15)
+        {
+            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[1];
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
             Shop.instance.pickImage.sprite = pick_imgs[1];
         }
         else
         {
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             //pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[0];
+=======
+            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[0];
+>>>>>>> Stashed changes
+=======
+            pick_obj.GetComponent<SpriteRenderer>().sprite = pick_imgs[0];
+>>>>>>> Stashed changes
             Shop.instance.pickImage.sprite = pick_imgs[0];
         }
 
@@ -338,6 +486,7 @@ public class Player : MonoBehaviour
 
             if(isdebugmode == true)
             {
+<<<<<<< Updated upstream
                 if (Input.GetKeyDown(KeyCode.G))
                 {
                     Inventory.AddItem(UseItems[0], 3);
@@ -352,11 +501,45 @@ public class Player : MonoBehaviour
                 {
                     Inventory.AddItem(minerals[0], 1);
                 }
+=======
+                Inventory.AddItem(minerals[0], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                Inventory.AddItem(minerals[3], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                Inventory.AddItem(items[Random.Range(0, 20)], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                Inventory.AddItem(items[5], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                Inventory.AddItem(Drill_Items[1], 1);
+                Inventory.AddItem(Drill_Items[2], 1);
+                Inventory.AddItem(Drill_Items[3], 1);
+            }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                Collection.player_lv += 1;
+            }
+            // 잠시 추가함.
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+                Inventory.AddItem(UseItems[0], 3);
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+                Inventory.AddItem(UseItems[1], 3);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 
                 if (Input.GetKeyDown(KeyCode.X))
                 {
                     Inventory.AddItem(minerals[3], 100000);
                 }
+=======
+>>>>>>> Stashed changes
 
                 if (Input.GetKeyDown(KeyCode.C))
                 {
@@ -424,7 +607,15 @@ public class Player : MonoBehaviour
         Inventory.moneyPanel.SetActive(false);
         Inventory.healthPanel.SetActive(false);
         LevelManager.instance.stagetargetUI.SetActive(false);
+        LevelManager.instance.ClearStagePanel_1.SetActive(false);
+        LevelManager.instance.ClearStagePanel_2.SetActive(false);
+        LevelManager.instance.ClearStagePanel_3.SetActive(false);
+        LevelManager.instance.NextStageButton.SetActive(false);
+        LevelManager.instance.EndingButton.SetActive(false);
+        LevelManager.instance.isStageClear = false;
         LevelManager.instance.isOnEnding = false;
+        Shop.createDrill_textobj.SetActive(true);
+        Shop.upgradeDrill_textobj.SetActive(false);
         LoadScene.instance.stage_Level = 0;
         SlotManager.Instance.quitSlotUI.ResetQuickSlot();
     }
@@ -475,6 +666,9 @@ public class Player : MonoBehaviour
         {
             LevelManager.instance.ResetGame();
         }
+        LevelManager.instance.NextStageButton.SetActive(false);
+        LevelManager.instance.EndingButton.SetActive(false);
+
         Invoke("InvokeGoMainMenu", 1.5f);
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
@@ -664,7 +858,15 @@ public class Player : MonoBehaviour
         }
 
         // 도감 상호작용
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         if(isNearCollection && Input.GetKeyDown(KeyCode.F) && !isCollectMoving)
+=======
+        if (isNearCollection && Input.GetKeyDown(KeyCode.F) && !isCollectMoving)
+>>>>>>> Stashed changes
+=======
+        if (isNearCollection && Input.GetKeyDown(KeyCode.F) && !isCollectMoving)
+>>>>>>> Stashed changes
         {
             currentTime = 0f;
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
@@ -676,13 +878,28 @@ public class Player : MonoBehaviour
             else
             {
                 isCollectMoving = true;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             }
 
         }
         else if(!isNearCollection && isOnCollect && !isCollectMoving)
+=======
+                
+            }
+
+        }
+        else if (!isNearCollection && isOnCollect && !isCollectMoving)
+>>>>>>> Stashed changes
+=======
+                
+            }
+
+        }
+        else if (!isNearCollection && isOnCollect && !isCollectMoving)
+>>>>>>> Stashed changes
         {
             currentTime = 0f;
-            isInventoryMoving = true;
             isCollectMoving = true;
 
         }
@@ -706,11 +923,27 @@ public class Player : MonoBehaviour
             LoadScene.instance.GoMain();
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
         }
+
+        // 튜토리얼 탈출
+        if(isNearTutorialExit && Input.GetKeyDown(KeyCode.F))
+        {
+            LoadScene.instance.GoMain();
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
+        }
+
+        // 튜토리얼 탈출
+        if(isNearTutorialExit && Input.GetKeyDown(KeyCode.F))
+        {
+            LoadScene.instance.GoMain();
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[29]);
+        }
     }
 
     // 지형 리셋 버튼
     public void Reset_Ground_Button()
     {
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         LoadScene.instance.GoMain();
 
         isOnResetUI = false;
@@ -719,6 +952,24 @@ public class Player : MonoBehaviour
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[35]);
         LevelManager.instance.isClickReset = true;
         SaveSystem.Instance.Save();
+=======
+        isOnResetUI = false;
+        ResetPanel.SetActive(false);
+        SavePanel.SetActive(false);
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[35]);
+        LevelManager.instance.isClickReset = true;
+
+        LoadScene.instance.GoMain();
+>>>>>>> Stashed changes
+=======
+        isOnResetUI = false;
+        ResetPanel.SetActive(false);
+        SavePanel.SetActive(false);
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[35]);
+        LevelManager.instance.isClickReset = true;
+
+        LoadScene.instance.GoMain();
+>>>>>>> Stashed changes
 
     }
     public void Reset_Close_Button()
@@ -735,6 +986,7 @@ public class Player : MonoBehaviour
         SaveSystem.Instance.Save();
         GroundAutoHeal();
         Inventory.LogMessage("세이브 되었습니다");
+        issave = true;
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[34]);
 
     }
@@ -824,6 +1076,7 @@ public class Player : MonoBehaviour
         LevelManager.instance.isRunning = true;
         //Time.timeScale = 1f; // 게임 재개
         AddPlayerLife(3);
+
         
         if (!File.Exists(savePath))
         {
@@ -920,7 +1173,15 @@ public class Player : MonoBehaviour
             isNearReturnMuseum = true;
             Debug.Log("리턴에 접근했습니다. F 키로 상호작용.");
         }
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         if(other.CompareTag("tutorialExit"))
+=======
+        if (other.CompareTag("tutorialExit"))
+>>>>>>> Stashed changes
+=======
+        if (other.CompareTag("tutorialExit"))
+>>>>>>> Stashed changes
         {
             isNearTutorialExit = true;
             Debug.Log("튜토리얼 탈출에 접근했습니다. F 키로 상호작용.");
@@ -959,7 +1220,15 @@ public class Player : MonoBehaviour
             isNearReturnMuseum = false;
             Debug.Log("리턴에서 벗어났습니다.");
         }
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         if(other.CompareTag("tutorialExit"))
+=======
+        if (other.CompareTag("tutorialExit"))
+>>>>>>> Stashed changes
+=======
+        if (other.CompareTag("tutorialExit"))
+>>>>>>> Stashed changes
         {
             isNearTutorialExit = false;
             Debug.Log("튜토리얼 탈출에서 벗어났습니다.");
