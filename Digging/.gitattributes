@@ -1,0 +1,2 @@
+*.asset.resS filter=lfs diff=lfs merge=lfs -text
+Digging/Bin/Relicat4025_Date/*.asset.resS filter=lfs diff=lfs merge=lfs -text
