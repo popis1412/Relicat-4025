@@ -115,8 +115,6 @@ public class DropItem : MonoBehaviour
 
                     SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[13]);
                 }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                 else if(itemType == 3) // 이 아이템이 드릴 아이템이라면
                 {
                     playerScript.Inventory.AddItem(playerScript.Drill_Items[itemCode], addEA);
@@ -153,17 +151,10 @@ public class DropItem : MonoBehaviour
                     }
                 }
 
-=======
-=======
->>>>>>> Stashed changes
                 else if (itemType == 3) // 이 아이템이 드릴 아이템이라면
                 {
                     playerScript.Inventory.AddItem(playerScript.Drill_Items[itemCode], addEA);
                 }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
                 Destroy(this.gameObject);
 
                 Debug.Log("enter");

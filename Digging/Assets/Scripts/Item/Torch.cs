@@ -5,15 +5,9 @@ using UnityEngine.Rendering.Universal;
 
 public class Torch : MonoBehaviour
 {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     [SerializeField] AudioSource audio;
     [SerializeField] private ItemInstance _instance;
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     [SerializeField] GameObject dropItem;
     [SerializeField] Player playerScript;
     Light2D light2D;
@@ -31,28 +25,16 @@ public class Torch : MonoBehaviour
         light2D = this.gameObject.GetComponent<Light2D>();
         playerScript = playerObj.GetComponent<Player>();
         randFloat = Random.Range(0f, 1f);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         audio = GetComponent<AudioSource>();
     }
     private void Start()
     {
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[14]);
-=======
-=======
->>>>>>> Stashed changes
 
         playerSize = playerScript.GetComponent<SpriteRenderer>().size.y;
         torchSize = GetComponent<SpriteRenderer>().size.y;
-    }
 
-    private void Start()
-    {
         transform.position = new Vector3(Mathf.Round(playerScript.transform.position.x - 0.5f) + 0.5f, transform.position.y - (playerSize - torchSize));
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
 
     private void Update()

@@ -8,15 +8,9 @@ using static UnityEditor.Progress;
 #endif
 using Unity.VisualScripting;
 using System.Collections.ObjectModel;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 using System.Linq;
 using System;
 using Spine;
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
 public class Inventory : MonoBehaviour
 {
