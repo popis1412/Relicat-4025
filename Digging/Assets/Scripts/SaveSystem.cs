@@ -215,19 +215,16 @@ public class SaveSystem : MonoBehaviour
             UseItems = ConvertItemList(player.UseItems),
             UpgradeItems = ConvertItemList(player.UpgradeItems),
             Drill_Items = ConvertItemList(player.Drill_Items)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         };
 
-        //플레이어컨트롤러 저장 -> Tool의 인스턴스의 데이터 저장
-        //saveData.playerControllerData = new PlayerControllerData
+        Tool tool = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Tool>();
+
+
+        //플레이어컨트롤러 저장
+        //saveData.weaponData = new WeaponsData
         //{
-        //    pickDamage = playerController.pickdamage
+        //    //pickDamage = playerController.pickdamage
         //};
 
         //로드씬데이터 저장
@@ -235,15 +232,7 @@ public class SaveSystem : MonoBehaviour
         {
             isAlreadyWatchStory = loadSceneScript.isAlreadyWatchStory,
             stage_Level = loadSceneScript.stage_Level,
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
             difficulty_level = loadSceneScript.difficulty_level
-=======
-            //difficulty_level = loadSceneScript.difficulty_level
->>>>>>> Stashed changes
-=======
-            //difficulty_level = loadSceneScript.difficulty_level
->>>>>>> Stashed changes
         };
 
         //레벨매니저 저장
@@ -450,15 +439,7 @@ public class SaveSystem : MonoBehaviour
         //로드씬 로드
         loadSceneScript.isAlreadyWatchStory = loaded.loadSceneData.isAlreadyWatchStory;
         loadSceneScript.stage_Level = loaded.loadSceneData.stage_Level;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         loadSceneScript.difficulty_level = loaded.loadSceneData.difficulty_level;
-=======
-        //loadSceneScript.difficulty_level = loaded.loadSceneData.difficulty_level;
->>>>>>> Stashed changes
-=======
-        //loadSceneScript.difficulty_level = loaded.loadSceneData.difficulty_level;
->>>>>>> Stashed changes
 
         //레벨매니저 로드
         levelManager.remainingTime = loaded.levelManageData.remainingTime;
@@ -474,32 +455,32 @@ public class SaveSystem : MonoBehaviour
             Block blockScript = obj.GetComponent<Block>();
             if(blockScript != null)
             {
-                if(blockScript.blockType != -2 && !loadedBlockPos.Contains(pos))
+                if (blockScript.blockType != -2 && !loadedBlockPos.Contains(pos))
                 {
                     blocksToRemove.Add(obj);
                 }
             }
         }
-        foreach(GameObject obj in blocksToRemove)
+        foreach (GameObject obj in blocksToRemove)
         {
             Block blockScript = obj.GetComponent<Block>();
             if(blockScript != null)
             {
                 blockScript.BlockRemove();
-            }
+            }    
         }
 
-        foreach(BlockData blockData in loaded.blocksData.blockDatas)
+        foreach (BlockData blockData in loaded.blocksData.blockDatas)
         {
             GameObject obj;
-            if(blocksDictionary.blockPosition.ContainsKey(blockData.blockPosition))
+            if (blocksDictionary.blockPosition.ContainsKey(blockData.blockPosition))
             {
                 obj = blocksDictionary.blockPosition[blockData.blockPosition];
-                if(obj != null)
+                if (obj != null)
                 {
                     Block blockScript = obj.GetComponent<Block>();
 
-                    if(blockScript != null)
+                    if (blockScript != null)
                     {
                         blockScript.nowBlockType = blockData.nowBlockType;
                         blockScript.stageNum = blockData.stageNum;
@@ -512,49 +493,6 @@ public class SaveSystem : MonoBehaviour
                 print($"잘못된 키 ({blockData.blockPosition})");
         }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-        /*List<GameObject> reloadBlocks= new List<GameObject>();
-        foreach(GameObject obj in blocksDictionary.blockPosition.Values)
-        {
-            Block blockScript = obj.GetComponent<Block>();
-            if (blockScript != null)
-            {
-                if(blockScript.blockType != -2)
-                {
-                    reloadBlocks.Add(obj);
-                }
-            }
-        }
-        foreach(GameObject obj in reloadBlocks)
-        {
-            obj.GetComponent<Block>().BlockReload();
-        }
-
-        foreach(BlockData blockData in loaded.blocksData.blockDatas)
-        {
-            GameObject newBlock = Instantiate(blockPrefab);
-            Block blockScript = newBlock.GetComponent<Block>();
-
-            newBlock.transform.position = blockData.blockPosition;
-            blocksDictionary.blockPosition.Add(blockData.blockPosition, newBlock);
-            blockScript.blocksDictionary = blocksDictionary;
-            BlockBreakingEffectManager effectManager = FindObjectOfType<BlockBreakingEffectManager>();
-            if (effectManager != null)
-                blockScript.effectManager = effectManager;
-            blockScript.nowBlockType = blockData.nowBlockType;
-            blockScript.stageNum = blockData.stageNum;
-            blockScript.ChangeBlock(blockData.blockType);
-            blockScript.blockHealth = blockData.blockHealth;
-
-        }*/
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
         //몬스터들 로드
         Enemy[] enemys = FindObjectsOfType<Enemy>();
@@ -583,18 +521,9 @@ public class SaveSystem : MonoBehaviour
         }
 
         //UI재갱신(아마도 도감도 갱신 넣어야할 예정)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
         SlotManager.Instance.InitFillSlot();
->>>>>>> Stashed changes
         inventory.FreshSlot();
         print("로드완료");
-
-
-
     }
 
     public void LoadForLoadScene()

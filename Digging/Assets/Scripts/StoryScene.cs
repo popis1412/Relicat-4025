@@ -15,9 +15,6 @@ public class StoryScene : MonoBehaviour
     [SerializeField] private SkeletonAnimation storyAni;
     [SerializeField] private SkeletonDataAsset[] storyDataAssets;
 
-    // 페이드 인아웃 한번만
-    private bool isplayFade = false;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +22,6 @@ public class StoryScene : MonoBehaviour
         storyAni.skeletonDataAsset = storyDataAssets[0];
         storyAni.Initialize(true);
         storyAni.AnimationState.SetAnimation(0, "scene", false);
-        isplayFade = false;
         Invoke("invokeMore", 6f);
     }
 
@@ -63,10 +59,9 @@ public class StoryScene : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && isplayFade == false)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             FadeEffect.Instance.OnFade(FadeState.FadeInOut);
-            isplayFade = true;
             Invoke("InvokeLoadScene", 1.5f);
         }
     }

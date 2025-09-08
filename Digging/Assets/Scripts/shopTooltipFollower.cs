@@ -35,15 +35,7 @@ public class shopTooltipFollower : MonoBehaviour
 
 
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         if(isHovering && drill_tooltipPanel.activeSelf)
-=======
-        if (isHovering && drill_tooltipPanel.activeSelf)
->>>>>>> Stashed changes
-=======
-        if (isHovering && drill_tooltipPanel.activeSelf)
->>>>>>> Stashed changes
         {
             Vector2 pos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -97,15 +89,7 @@ public class shopTooltipFollower : MonoBehaviour
         isHovering = true;
         drill_tooltipPanel.SetActive(true);
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         if(shop.isCreateDrill)
-=======
-        if (shop.isCreateDrill)
->>>>>>> Stashed changes
-=======
-        if (shop.isCreateDrill)
->>>>>>> Stashed changes
         {
             drill_tooltipText_list[0].text = shop.player.Drill_Items[0].itemName;
             drill_tooltipText_list[1].text = "강화 비용 : ";
@@ -123,15 +107,7 @@ public class shopTooltipFollower : MonoBehaviour
             drill_tooltipText_list[4].text = "X 2";
             drill_tooltipText_list[5].text = shop.player.Drill_Items[0].Info;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
-        
->>>>>>> Stashed changes
-=======
-        
->>>>>>> Stashed changes
     }
     public void OnPointerExit_Drill()
     {

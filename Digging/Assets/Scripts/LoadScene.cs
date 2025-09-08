@@ -37,27 +37,11 @@ public class LoadScene : MonoBehaviour
     public int stage_Level = 0;
 
     // 난이도
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     public int difficulty_level = 1;
-=======
-    public int difficulty_level = 0;
->>>>>>> Stashed changes
-=======
-    public int difficulty_level = 0;
->>>>>>> Stashed changes
 
     [SerializeField] private GameObject difficulty_panel;
     [SerializeField] private Button[] difficulty_btns;
     [SerializeField] private GameObject[] difficulty_info_panels;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-    
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
     private void Awake()
     {
@@ -142,15 +126,7 @@ public class LoadScene : MonoBehaviour
         }
 
         // 세이브 삭제
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         if(Input.GetKeyDown(KeyCode.O))
-=======
-        if (Input.GetKeyDown(KeyCode.O))
->>>>>>> Stashed changes
-=======
-        if (Input.GetKeyDown(KeyCode.O))
->>>>>>> Stashed changes
         {
             SaveSystem.Instance.DeleteSaveFile();
             isAlreadyWatchStory = false;
@@ -168,7 +144,6 @@ public class LoadScene : MonoBehaviour
 
     public void GoMain()
     {
-        
         FadeEffect.Instance.OnFade(FadeState.FadeInOut);
         if(isAlreadyWatchStory == false)
         {
@@ -183,6 +158,7 @@ public class LoadScene : MonoBehaviour
             {
                 isUseContinue = true;
             }
+
         }
 
         difficulty_panel.SetActive(false);
@@ -199,15 +175,7 @@ public class LoadScene : MonoBehaviour
         {
             SceneManager.LoadScene("Main 1");
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         else if(stage_Level == 2)
-=======
-        else if (stage_Level == 2)
->>>>>>> Stashed changes
-=======
-        else if (stage_Level == 2)
->>>>>>> Stashed changes
         {
             SceneManager.LoadScene("Main 2");
         }
@@ -295,8 +263,6 @@ public class LoadScene : MonoBehaviour
 
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
     }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
     #region Skip!!!
     /*
@@ -320,8 +286,4 @@ public class LoadScene : MonoBehaviour
     }
     */
     #endregion
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 }

@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -110,8 +109,6 @@ public class SlotInteraction : MonoBehaviour, IPointerClickHandler
     // 이미지 없애기
     public void Clear()
     {
-        Tool.Instance.Unequip();
-
         Vector2 size = new Vector2(80, 80);
         rect.sizeDelta = size;
 
@@ -120,8 +117,6 @@ public class SlotInteraction : MonoBehaviour, IPointerClickHandler
 
         image.sprite = null;
         image.color = new Color(0, 0, 0, 0);
-
-        transform.parent.GetComponentInChildren<TextMeshProUGUI>().enabled = false;
     }
 
     #region Mouse Event

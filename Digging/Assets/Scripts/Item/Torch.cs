@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -14,10 +13,12 @@ public class Torch : MonoBehaviour
     float lightInnerRadius = 0.3f;
     float randFloat;
 
-    float playerSize;
-    float torchSize;
-
     bool itemDropped = false;
+
+    public void Setup(ItemInstance instance)
+    {
+        _instance = instance;
+    }
 
     private void Awake()
     {
@@ -30,11 +31,6 @@ public class Torch : MonoBehaviour
     private void Start()
     {
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[14]);
-
-        playerSize = playerScript.GetComponent<SpriteRenderer>().size.y;
-        torchSize = GetComponent<SpriteRenderer>().size.y;
-
-        transform.position = new Vector3(Mathf.Round(playerScript.transform.position.x - 0.5f) + 0.5f, transform.position.y - (playerSize - torchSize));
     }
 
     private void Update()

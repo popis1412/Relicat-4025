@@ -68,6 +68,7 @@ public class DropItem : MonoBehaviour
 
 
     }
+
     public void setDropItem(int newItemType, int newItemCode, Sprite renderSprite, int newAddEA)
     {
         itemType = newItemType;
@@ -151,10 +152,6 @@ public class DropItem : MonoBehaviour
                     }
                 }
 
-                else if (itemType == 3) // 이 아이템이 드릴 아이템이라면
-                {
-                    playerScript.Inventory.AddItem(playerScript.Drill_Items[itemCode], addEA);
-                }
                 Destroy(this.gameObject);
 
                 Debug.Log("enter");
@@ -234,14 +231,6 @@ public class DropItem : MonoBehaviour
                         }
                     }
                     
-                }
-                else if (itemType == 3) // 이 아이템이 드릴 아이템이라면
-                {
-                    playerScript.Inventory.AddItem(playerScript.Drill_Items[itemCode], addEA);
-                }
-                else if (itemType == 3) // 이 아이템이 드릴 아이템이라면
-                {
-                    playerScript.Inventory.AddItem(playerScript.Drill_Items[itemCode], addEA);
                 }
                 tryOnce = true;
                 Destroy(this.gameObject);

@@ -102,7 +102,7 @@ public class LevelManager : MonoBehaviour
         {
             remainingTime = totalTime_2;
         }
-        else if (LoadScene.instance.stage_Level == 2)
+        else if(LoadScene.instance.stage_Level == 2)
         {
             remainingTime = totalTime_2;
         }
@@ -110,7 +110,7 @@ public class LevelManager : MonoBehaviour
         {
             remainingTime = totalTime_1;
         }
-
+        
         //SaveSystem.Instance.DeleteSaveFile();
         //SaveSystem.Instance.Load();
         originalTargetTextColor = stagetargetNumText.color;
@@ -128,25 +128,18 @@ public class LevelManager : MonoBehaviour
 
     private void OnSceneLoaded3(Scene scene, LoadSceneMode mode)
     {
-        if (scene.buildIndex == 2)
-        {
-            stagetargetUI.SetActive(false);
-        }
-        else if(scene.buildIndex == 3 || scene.buildIndex == 4 || scene.buildIndex == 5)
-        {
-            stagetargetUI.SetActive(true);
-        }
+        //if (scene.buildIndex != 2) return;
         //if(scene.buildIndex != 3) return;
         if(scene.buildIndex == 3)
         {
-            //Toggle_GuidePanel();
+            Toggle_GuidePanel();
             player = FindObjectOfType<Player>();
             Debug.Log("asdfaeaafsa");
         }
         Debug.Log("asdfaeaafsa11111111111111");
 
-        if (scene.buildIndex != 3) return;
-        if(scene.buildIndex == 3) 
+        if(scene.buildIndex != 3) return;
+        if(scene.buildIndex == 3)
         {
             Toggle_GuidePanel();
         }
@@ -182,16 +175,6 @@ public class LevelManager : MonoBehaviour
         
         if(collection.collect_sum >= stagetargetNum[LoadScene.instance.stage_Level] && isStageClear == false)
         {
-
-        }
-
-        else if (LoadScene.instance.stage_Level == 2)
-        {
-            stagetargetNumText.text = collection.collect_sum.ToString() + " / 30";
-        }
-
-        if (collection.collect_sum >= stagetargetNum[LoadScene.instance.stage_Level] && isStageClear == false)
-        {
             stagetargetNumText.color = Color.green;
             stagetimerText.color = Color.green;
 
@@ -211,11 +194,7 @@ public class LevelManager : MonoBehaviour
             {
                 ClearStagePanel_3.SetActive(true);
             }
-            else if (LoadScene.instance.stage_Level == 2)
-            {
-                ClearStagePanel_3.SetActive(true);
-            }
-
+            
             collection.player.player.input.Disable();
         }
         
@@ -309,7 +288,6 @@ public class LevelManager : MonoBehaviour
         if (LoadScene.instance.stage_Level == 0)
         {
             remainingTime = totalTime_1;
-
         }
         else if (LoadScene.instance.stage_Level == 1)
         {
@@ -321,25 +299,16 @@ public class LevelManager : MonoBehaviour
             remainingTime = totalTime_2;
             ClearStagePanel_2.SetActive(false);
         }
-        else if (LoadScene.instance.stage_Level == 2)
-        {
-            remainingTime = totalTime_2;
-            ClearStagePanel_2.SetActive(false);
-        }
-
         stagetargetNumText.color = originalTargetTextColor;
         stagetimerText.color = originalTimerTextColor;
 
         collection.collect_sum = 0;
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
-        //isStageClear = true;
+        //isStageClear = false;
 
         //ClearStagePanel_1.SetActive(false);
-
         NextStageButton.SetActive(false);
         collection.player.player.input.Enable();
-
-        LoadScene.instance.isUseContinue = false;
 
         SaveSystem.Instance.Save();
         LoadScene.instance.GoMain();
@@ -535,7 +504,6 @@ public class LevelManager : MonoBehaviour
             remainingTime = totalTime_2;
         }
         
-
         stagetargetNumText.color = originalTargetTextColor;
         stagetimerText.color = originalTimerTextColor;
         isRunning = false;
@@ -598,10 +566,8 @@ public class LevelManager : MonoBehaviour
         shop.shop_lightUpdateText.text = "-" + Collection.instance.player.UpgradeItems[1].value.ToString();
         shop.isCreateDrill = false;
 
-        
         remainingTime = totalTime_1;
-        
-        
+
         stagetargetNumText.color = originalTargetTextColor;
         stagetimerText.color = originalTimerTextColor;
         isRunning = false;

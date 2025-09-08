@@ -47,6 +47,7 @@ public class Collection : MonoBehaviour
     [SerializeField] private GameObject MainPanel;
     [SerializeField] private GameObject[] stagePanels;
 
+
     //#if UNITY_EDITOR
     //    private void OnValidate()
     //    {
@@ -78,6 +79,7 @@ public class Collection : MonoBehaviour
         is_collect_complete = new bool[5];
         player_lv = 0;
         collect_count = 0;
+
         //collectView_idx = 0;
         //Switch_CollectView();
     }
@@ -109,7 +111,7 @@ public class Collection : MonoBehaviour
             if(collectionParent != null)
             {
                 Collection_Table = new GameObject[30];
-                for (int i = 0; i < 30; i++)
+                for(int i = 0; i < 30; i++)
                 {
                     Transform child = collectionParent.Find(i.ToString());
                     if(child != null)
@@ -211,14 +213,14 @@ public class Collection : MonoBehaviour
                 }
                 break;
             case 2:
-                for (int i = 0; i < 30; i++)
+                for(int i = 0; i < 30; i++)
                 {
-                    if (li_isRelicOnTable[i] == true)
+                    if(li_isRelicOnTable[i] == true)
                     {
                         collect_count++;
                     }
                 }
-                if (collect_count == 30)
+                if(collect_count == 30)
                 {
                     is_collect_complete[player_lv] = true;
                     rewardButton_List[2].GetComponent<Button>().interactable = true;
@@ -315,33 +317,24 @@ public class Collection : MonoBehaviour
     //    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
     //}
 
-    //public void Button_Right()
-    //{
-    //    collectView_idx += 1;
-    //    if (collectView_idx > 1)
-    //    {
-    //        collectView_idx = 0;
-    //    }
-    //    Switch_CollectView();
-    //    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[30]);
-    //}
 
     //private void Switch_CollectView()
     //{
-    //    switch(collectView_idx)
+    //    switch (collectView_idx)
     //    {
     //        case 0:
     //            collectUIList[0].SetActive(true);
     //            collectUIList[1].SetActive(false);
+
     //            break;
     //        case 1:
     //            collectUIList[0].SetActive(false);
     //            collectUIList[1].SetActive(true);
+
     //            break;
+
     //    }
     //}
-
-
 
     public void MouseOverIn_01()
     {
@@ -453,7 +446,7 @@ public class Collection : MonoBehaviour
 
     public void SelectStageButton(int stage)
     {
-        switch (stage)
+        switch(stage)
         {
             case 0:
                 stagePanels[stage].SetActive(true);
@@ -480,7 +473,7 @@ public class Collection : MonoBehaviour
 
     public void BackStageButton(int stage)
     {
-        switch (stage)
+        switch(stage)
         {
             case 0:
                 stagePanels[stage].SetActive(false);

@@ -769,32 +769,21 @@ public class SlotManager : MonoBehaviour
 
 
     // 퀵슬롯에 해당 무기 있는지 확인
-    public bool EquipWeaponByType(WeaponType weaponType)
+    public void EquipWeaponByType(WeaponType weaponType)
     {
         foreach(var slot in quitSlotUI.quickSlots)
         {
             if(slot._instanceW != null && slot._instanceI == null)
             {
-<<<<<<< Updated upstream
                 if(slot._instanceW._template.type == weaponType)
                 {
                     EquipWeapon(slot);
                     print($"타입: {slot._instanceW._template.type}, 적용된 슬롯: {slot}");
                     return;
                 }
-=======
-                EquipWeapon(slot);
-                return true;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             }
         }
-
         Debug.LogWarning($"해당 무기 타입({weaponType})을 가진 슬롯이 없습니다.");
-        return false;
-<<<<<<< Updated upstream
     }
 
     public bool IsEquipWeapon(WeaponType weaponType)
@@ -808,17 +797,13 @@ public class SlotManager : MonoBehaviour
             }
         }
         return false;
-=======
->>>>>>> Stashed changes
     }
 
     // 퀵슬롯에 해당 아이템 있는지 확인 
-    public void EquipItemByType(ItemType itemType, Transform spawnTransform)
+    public void EquipItemByType(ItemType itemType)
     {
         foreach(var slot in quitSlotUI.quickSlots)
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
             if(slot._instanceI != null && slot._instanceW == null)
             {
                 if(slot._instanceI._item.type == itemType && slot._instanceI._count > 0)
@@ -826,20 +811,8 @@ public class SlotManager : MonoBehaviour
                     EquipWeapon(slot);
                     return;
                 }
-=======
-=======
->>>>>>> Stashed changes
-            if(slot._instanceI != null && slot._instanceI._item.type == itemType)
-            {
-                EquipWeapon(slot);
-                Tool.Instance.UseItem(slot, spawnTransform);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             }
         }
-
         Debug.LogWarning($"해당 아이템 타입({itemType})을 가진 슬롯이 없습니다.");
     }
 

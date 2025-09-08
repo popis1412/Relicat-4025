@@ -1,20 +1,10 @@
-<<<<<<< Updated upstream
 using System.Collections.Generic;
-=======
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 using UnityEngine;
 
 public class Tool : MonoBehaviour
 {
     public List<GameObject> torchObj = new List<GameObject>();
     [SerializeField] private GameObject bombPrefab;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     public GameObject torchPrefab;
     [SerializeField] private Vector2 itemSpawnParent;
 
@@ -47,16 +37,6 @@ public class Tool : MonoBehaviour
             return _instance;
         }
     }
-=======
-    [SerializeField] private GameObject torchPrefab;
-
-=======
-    [SerializeField] private GameObject torchPrefab;
-
->>>>>>> Stashed changes
-    private Tool _instance;
-    public static Tool Instance;
->>>>>>> Stashed changes
 
     public WeaponType currentWeaponType;
 
@@ -65,8 +45,6 @@ public class Tool : MonoBehaviour
 
     private void Awake()
     {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         if(_instance == null)
         {
             _instance = this;
@@ -76,16 +54,7 @@ public class Tool : MonoBehaviour
             Destroy(gameObject);
         }
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         sprite = GetComponent<SpriteRenderer>();
-
-        if(_instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
     }
 
     // 무기 장착 + 표시
@@ -101,30 +70,27 @@ public class Tool : MonoBehaviour
         {
             SetWeaponSprite(instanceW);
             ReplaceToolComponent(instanceW); // T = WeaponInstance
+            currentItemInstance = null;
+            currentItemSlot = null;
         }
         else if(instanceI != null)
         {
             SetWeaponSprite(instanceI);
-            ReplaceToolComponent(instanceI); // T = ItemInstance
+            currentItemInstance = instanceI;
+            currentItemSlot = newSlot;
+        }
+        else
+        {
+            return; // 인스턴스가 아무것도 없음
         }
     }
 
     // 무기 사용
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     public void UseWeapon(Vector2 mousePos, Player player)
-=======
-    public void UseWeapon(Vector2 mousePos, Player player, WeaponType type)
->>>>>>> Stashed changes
-=======
-    public void UseWeapon(Vector2 mousePos, Player player, WeaponType type)
->>>>>>> Stashed changes
     {
         if(currentWeaponComponent == null)
             return;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         PlayerController _player = player.GetComponent<PlayerController>();
         bool isSanded = _player.ISInSand;   // 모래 갇힘 상태
 
@@ -146,77 +112,12 @@ public class Tool : MonoBehaviour
         if(currentItemInstance == null || currentItemInstance._item.count <= 0)
         {
             Debug.LogWarning("사용 가능한 아이템이 없습니다.");
-=======
-        switch(type)
-        {
-            case WeaponType.Pickaxe:
-                if(currentWeaponComponent is Pickaxe pickaxe)
-                    pickaxe.Digging(mousePos, player);
-                break;
-            case WeaponType.Drill:
-                if(currentWeaponComponent is Drill drill)
-                {
-                    // 처음 한 번만 바인딩하도록 체크
-                    if(drill.OnDecreaseEnergy == null)
-                        drill.OnDecreaseEnergy = SlotManager.Instance.BindDrillEnergy;
-                    
-                    drill.Digging(mousePos, player);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void UseItem(SlotInfo slot, Transform spawnTransform)
-    {
-        if(slot == null || slot._instanceI == null)
->>>>>>> Stashed changes
-=======
-        switch(type)
-        {
-            case WeaponType.Pickaxe:
-                if(currentWeaponComponent is Pickaxe pickaxe)
-                    pickaxe.Digging(mousePos, player);
-                break;
-            case WeaponType.Drill:
-                if(currentWeaponComponent is Drill drill)
-                {
-                    // 처음 한 번만 바인딩하도록 체크
-                    if(drill.OnDecreaseEnergy == null)
-                        drill.OnDecreaseEnergy = SlotManager.Instance.BindDrillEnergy;
-                    
-                    drill.Digging(mousePos, player);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void UseItem(SlotInfo slot, Transform spawnTransform)
-    {
-        if(slot == null || slot._instanceI == null)
->>>>>>> Stashed changes
             return;
-
-        var itemInstance = slot._instanceI;
-
-        // 아이템 수 감소
-        itemInstance._count--;
-        // UI 텍스트 갱신
-        SlotManager.Instance.UpdateSlotUI(slot, slot._instanceI._item);
-
-        // 개수 0 이하일 경우 슬롯 비움
-        if(itemInstance._count <= 0)
-        {
-            slot.GetComponentInChildren<SlotInteraction>()?.Clear();
         }
 
-        // 프리팹 찾기
         GameObject prefab = null;
 
-        switch(itemInstance._item.type)
+        switch(currentItemInstance._item.type)
         {
             case ItemType.Bomb:
                 prefab = bombPrefab;
@@ -237,8 +138,6 @@ public class Tool : MonoBehaviour
                 itemSpawnParent = new Vector3(Mathf.Round(transform.position.x - 0.5f) + 0.5f, transform.position.y - (playerSize - torchSize));
                 break;
             case ItemType.Teleport:
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                 if(!isGrounded)
                 {
                     print("텔레포트는 공중에서 사용할 수 없습니다");
@@ -248,24 +147,13 @@ public class Tool : MonoBehaviour
                 teleport.Spawn(transform.parent.GetComponent<PlayerController>());
                 break;
 
-=======
-                prefab = null;
-                break;
->>>>>>> Stashed changes
-=======
-                prefab = null;
-                break;
->>>>>>> Stashed changes
             default:
                 Debug.LogWarning("지원되지 않는 아이템 타입입니다.");
                 return;
         }
 
-        // 프리팹 클론 생성
-        if(prefab != null && spawnTransform != null)
+        if(prefab != null && itemSpawnParent != null)
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
             GameObject clone = Instantiate(prefab, itemSpawnParent, Quaternion.identity);
             clone.transform.position = transform.position; // 플레이어 위치에서 생성 (원하면 조정 가능)
             clone.transform.SetParent(null); // 부모 움직임의 영향 주지 않기
@@ -278,25 +166,6 @@ public class Tool : MonoBehaviour
         currentItemInstance._item.count--;
         // UI 갱신
         SlotManager.Instance.UpdateSlotUI(currentItemSlot, currentItemInstance._item);
-=======
-            Instantiate(prefab, spawnTransform.position, Quaternion.identity);
-        }
-        else if(currentWeaponComponent is Teleport teleport)
-        {
-            teleport.Spawn();
-        }
-=======
-            Instantiate(prefab, spawnTransform.position, Quaternion.identity);
-        }
-        else if(currentWeaponComponent is Teleport teleport)
-        {
-            teleport.Spawn();
-        }
-
-    }
->>>>>>> Stashed changes
-
->>>>>>> Stashed changes
     }
 
     // 장착 해제
@@ -322,8 +191,6 @@ public class Tool : MonoBehaviour
     // 타입에 맞는 무기 데이터 넣기
     public void ReplaceToolComponent<T>(T instance)
     {
-        
-
         if(instance == null) return;
 
         Component toolComponent = null;
@@ -344,23 +211,8 @@ public class Tool : MonoBehaviour
                     break;
             }
         }
-        else if(instance is ItemInstance item)
-        {
-            switch(item._item.type)
-            {
-                case ItemType.Teleport:
-                    toolComponent = gameObject.AddComponent<Teleport>();
-                    break;
-                default:
-                    break;
-
-            }
-        }
-<<<<<<< Updated upstream
 
         RemoveCurrentWeaponComponent();
-=======
->>>>>>> Stashed changes
 
         // 현재 장착된 무기 컴포넌트로 등록
         currentWeaponComponent = toolComponent;

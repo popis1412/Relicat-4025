@@ -51,13 +51,18 @@ public class PlayerData
     public List<ItemData> Drill_Items;
 }
 
-
 [System.Serializable]
 public class PlayerControllerData
 {
     public float pickDamage = 6f;
 }
 
+
+[System.Serializable]
+public class WeaponsData
+{
+    public List<WeaponsData> ownedWeapons;
+}
 
 [System.Serializable]
 public class LoadSceneData
@@ -148,7 +153,7 @@ public class SaveData
     public CollectionData collectionData;
     public ShopData shopData;
     public PlayerData playerData;
-    public PlayerControllerData playerControllerData;
+    public WeaponsData weaponData;
     public LoadSceneData loadSceneData;
     public LevelManageData levelManageData;
     public BlocksData blocksData;

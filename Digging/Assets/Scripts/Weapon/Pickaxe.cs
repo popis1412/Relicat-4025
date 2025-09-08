@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 
 public class Pickaxe : MonoBehaviour
 {
@@ -19,8 +21,9 @@ public class Pickaxe : MonoBehaviour
     public int speed;
 
     public float damage;
+    [SerializeField] float range = 1;
 
-    public float damage;
+    Vector2 tileSize;
 
     public void Setup(WeaponInstance instance)
     {
@@ -32,33 +35,21 @@ public class Pickaxe : MonoBehaviour
         diggingAudioSource = GameObject.FindWithTag("Player")?.GetComponent<AudioSource>();
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+    private void Start()
+    {
+        tileSize = new (1, 1);
+        damage = _instance._damage;
+    }
+
     public void Digging(Vector2 worldMousePos, Player player, bool isSanded)
-=======
-    private void Start()
-=======
-    private void Start()
     {
-        damage = _instance._damage;
-    }
-
-    public void Digging(Vector2 worldMousePos, Player player)
->>>>>>> Stashed changes
-    {
-        damage = _instance._damage;
-    }
-
-    public void Digging(Vector2 worldMousePos, Player player)
->>>>>>> Stashed changes
-    {
-        RaycastHit2D hit = Physics2D.Raycast(worldMousePos, Vector2.zero, LayerMask.GetMask("Block"));
-
-        if(hit == null && hit.collider.gameObject.layer != LayerMask.GetMask("Block") && hit.collider == null)
-        {
-            print("블럭이 아닙니다.");
+        RaycastHit2D hit = Physics2D.Raycast(worldMousePos, Vector2.zero, 0f, LayerMask.GetMask("Block"));
+        if(hit.collider == null)
             return;
-        }
+
+        var blocksDict = hit.collider.GetComponent<Block>().blocksDictionary;
+        if(blocksDict == null)
+            return;
 
         // 블럭 가져오기
         List<GameObject> blocks;
@@ -73,7 +64,8 @@ public class Pickaxe : MonoBehaviour
         else
         {
             // 정상적으로 주변 블럭 반환
-            blocks = GetVaildBlocksUnderMouse(hit);
+            //blocks = GetVaildBlocksUnderMouse(hit);
+            blocks = ToGrid(hit, blocksDict);
         }
 
         if(blocks == null || blocks.Count == 0)
@@ -90,17 +82,7 @@ public class Pickaxe : MonoBehaviour
         {
             if(blockObj.TryGetComponent(out Block block))
             {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                 block.BlockDestroy(_instance._damage * Time.deltaTime, player);
-=======
-                block.BlockDestroy(damage * Time.deltaTime, player);
-                block.BlockDestroy(damage * Time.deltaTime, player);
->>>>>>> Stashed changes
-=======
-                block.BlockDestroy(damage * Time.deltaTime, player);
-                block.BlockDestroy(damage * Time.deltaTime, player);
->>>>>>> Stashed changes
                 PlayDigSound(block.blockType);
             }
         }
@@ -218,7 +200,7 @@ public class Pickaxe : MonoBehaviour
             return null;
 
         Vector2 playerPos = transform.root.position;
-        Vector2 clickBlockPos = hit.collider.transform.position;
+        Vector2 clickBlockPos = hit.point;
 
         var blocksDict = hit.collider.GetComponent<Block>().blocksDictionary;
 
@@ -364,5 +346,120 @@ public class Pickaxe : MonoBehaviour
         return null;
     }
 
+    // Grid격자 형식으로 정규화
+    List<GameObject> ToGrid(RaycastHit2D hit, BlocksDictionary blocksDict)
+    {
+        List<GameObject> blocks = new();
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+        Vector2 playerPos = player.transform.position;
+        Vector2Int PgridPos = new Vector2Int   // 플레이어 격자 위치
+        (
+            Mathf.FloorToInt(playerPos.x / tileSize.x),
+            Mathf.FloorToInt(playerPos.y / tileSize.y)
+        );
+
+        Vector2 blockPos = hit.collider.gameObject.transform.position;
+
+        Vector2 direction = blockPos - playerPos;
+
+        for(int i = 0; i < range; i++)
+        {
+            float x = direction.x > 0 ? 1 : -1;
+            float y = direction.y > 0 ? 1 : -1;
+
+            Vector2 offset = Mathf.Round(Mathf.Abs(direction.y)) >= 1 ? new Vector2(0, i * y) : new Vector2(i * x, 0);
+            Vector2 blockWorldPos = blockPos + offset;
+
+            print($"방향: {direction}, offset: {offset}, 블럭위치: {blockWorldPos}");
+
+            Vector2Int BgridPos = new Vector2Int    // 블럭 격자 위치
+            (
+                Mathf.FloorToInt(blockWorldPos.x / tileSize.x),
+                Mathf.FloorToInt(blockWorldPos.y / tileSize.y)
+            );
+
+            // 격자 거리 계산(방향 O, 크기 O)
+            Vector2Int diff = BgridPos - PgridPos;
+
+            // 맨해튼 거리(격자 거리)로 1인지 판단 (방향 X, 크기 O)
+            int manhattanDistance = Mathf.Abs(diff.x) + Mathf.Abs(diff.y);
+
+            bool isDiagonalBlock = CanDiagonalBlock(playerPos, diff, blocksDict);
+
+            if(manhattanDistance <= range && !isDiagonalBlock) // 정면(상하좌우)
+            {
+                if(blocksDict.blockPosition.TryGetValue(blockWorldPos, out GameObject obj))
+                {
+                    blocks.Add(obj);
+                }
+            }
+            else if(manhattanDistance <= range + 1 && isDiagonalBlock) // 대각선
+            {
+                if(playerPos.y == diff.y)
+                    return null;
+
+                blocks.Add(hit.collider.gameObject);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        return blocks;
+    }
+
+    // 대각선 여부
+    bool CanDiagonalBlock(Vector2 playerPos, Vector2 diff, BlocksDictionary blocksDict)
+    {
+        if(diff.x == 0 || diff.y == 0)
+            return false;
+
+        bool _right = true;
+        bool _left = true;
+        bool _up = true;
+        bool _down = true;
+
+        playerPos = new Vector2(Mathf.Floor(playerPos.x) + 0.5f, Mathf.Floor(playerPos.y) + 0.5f);
+
+        Vector2[] directions = new Vector2[]
+        {
+            diff.x > 0 ? Vector2.right : Vector2.left,
+            diff.y > 0 ? Vector2.up : Vector2.down
+        };
+
+        foreach(Vector2 dir in directions)
+        {
+            Vector2 neighborPos = playerPos + dir;
+
+            if(!blocksDict.blockPosition.TryGetValue(neighborPos, out GameObject obj))
+            {
+                if(dir == Vector2.left)
+                    _left = false;
+                else if(dir == Vector2.right)
+                    _right = false;
+                else if(dir == Vector2.up)
+                    _up = false;
+                else if(dir == Vector2.down)
+                    _down = false;
+            }
+        }
+
+        //print($"왼쪽: {_left}, 오른쪽: {_right}, 위쪽: {_up}, 아래쪽: {_down}");
+
+        // 대각선 방향에 따라 필요한 두 방향만 검사
+        if(diff.x > 0 && diff.y > 0)       // ↗
+            return !_right || !_up;
+        else if(diff.x < 0 && diff.y > 0)  // ↖
+            return !_left || !_up;
+        else if(diff.x < 0 && diff.y < 0)  // ↙
+            return !_left || !_down;
+        else if(diff.x > 0 && diff.y < 0)  // ↘
+            return !_right || !_down;
+
+        return false;
+    }
 
 }
+

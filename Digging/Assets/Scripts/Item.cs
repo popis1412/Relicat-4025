@@ -5,8 +5,7 @@ public enum ItemType
     Null,
     Bomb,
     Teleport,
-    Torch,
-    Drill
+    Torch
 }
 
 [CreateAssetMenu]
