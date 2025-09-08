@@ -6155,6 +6155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stageNum: 0
+  leftTopPos: {x: 0, y: 0}
   mapImage: {fileID: 872021132}
 --- !u!114 &1819582853
 MonoBehaviour:

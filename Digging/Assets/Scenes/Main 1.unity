@@ -1419,6 +1419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stageNum: 1
+  leftTopPos: {x: -10, y: 0}
   mapImage: {fileID: 1119960946}
 --- !u!114 &338744239
 MonoBehaviour:
@@ -9439,6 +9440,30 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8413585571617564358, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827712192596130242, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827712192596130242, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827712192596130242, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827712192596130242, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827712192596130242, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8827712192596130242, guid: 22c64cc1ba756d04291b60a1a7b20a14, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}

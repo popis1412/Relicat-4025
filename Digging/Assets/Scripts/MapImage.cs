@@ -10,6 +10,7 @@ public class MapImage : MonoBehaviour
     float px, py;
     int mapsizeX, mapsizeY;
     int textureSize = 15;
+    Vector2 leftTopPos = new Vector2(0, 0);
 
     public GameObject player;
     [SerializeField] RawImage rawImage;
@@ -21,7 +22,7 @@ public class MapImage : MonoBehaviour
         public int x;
         public int y;
         public Color color;
-        
+
         public MiniMapPixel(int x, int y, Color color)
         {
             this.x = x;
@@ -45,17 +46,18 @@ public class MapImage : MonoBehaviour
             px = player.transform.position.x;
             py = player.transform.position.y;
 
-            float targetX = (mapsizeX / 2 - px) * textureSize;
-            float targetY = (-mapsizeY/2 -py) * textureSize;
-            rectTransform.anchoredPosition = new Vector2 (targetX, targetY);
+            float targetX = (mapsizeX / 2 - px + leftTopPos.x) * textureSize;
+            float targetY = (-mapsizeY / 2 - py + leftTopPos.y) * textureSize;
+            rectTransform.anchoredPosition = new Vector2(targetX, targetY);
         }
     }
 
-    public void SetTextureSize(int stageNum)
+    public void SetTextureSize(int stageNum, Vector2 newLeftTopPos)
     {
         int width, height;
+        leftTopPos = newLeftTopPos;
 
-        if(stageNum == 1)   //스테이지 번호별로 밑에 추가하면 됨
+        if(stageNum == 0)   //스테이지 번호별로 밑에 추가하면 됨
         {
             width = 30 * textureSize;       //스테이지 가로길이 * textureSize
             mapsizeX = 30;                  //스테이지 가로길이
@@ -70,7 +72,7 @@ public class MapImage : MonoBehaviour
 
             rawImage.texture = texture;
         }
-        else if(stageNum == 2)   //스테이지 번호별로 밑에 추가하면 됨
+        else if(stageNum == 1)   //스테이지 번호별로 밑에 추가하면 됨
         {
             width = 50 * textureSize;       //스테이지 가로길이 * textureSize
             mapsizeX = 50;                  //스테이지 가로길이
@@ -85,7 +87,7 @@ public class MapImage : MonoBehaviour
 
             rawImage.texture = texture;
         }
-        else if(stageNum == 3)   //스테이지 번호별로 밑에 추가하면 됨
+        else if(stageNum == 2)   //스테이지 번호별로 밑에 추가하면 됨
         {
             width = 50 * textureSize;       //스테이지 가로길이 * textureSize
             mapsizeX = 50;                  //스테이지 가로길이
@@ -122,7 +124,7 @@ public class MapImage : MonoBehaviour
     {
         Color[] clearTex = new Color[tex.width * tex.height];
 
-        for (int i = 0; i < clearTex.Length; i++)
+        for(int i = 0; i < clearTex.Length; i++)
             clearTex[i] = Color.clear;
         tex.SetPixels(clearTex);
         tex.Apply();
@@ -131,16 +133,16 @@ public class MapImage : MonoBehaviour
 
     public void DrawSquare(int x, int y, Color color)
     {
-        int targetX = x * textureSize;
-        int targetY = (y + mapsizeY) * textureSize;
+        int targetX = (x - Mathf.RoundToInt(leftTopPos.x)) * textureSize;
+        int targetY = (y - Mathf.RoundToInt(leftTopPos.y) + mapsizeY) * textureSize;
         int size = textureSize;
-        for (int dx = -size / 2; dx <= size / 2; dx++)
+        for(int dx = -size / 2; dx <= size / 2; dx++)
         {
-            for (int dy = -size / 2; dy <= size / 2; dy++)
+            for(int dy = -size / 2; dy <= size / 2; dy++)
             {
                 int px = targetX + dx;
                 int py = targetY + dy;
-                if (px >= 0 && px < texture.width && py >= 0 && py < texture.height)
+                if(px >= 0 && px < texture.width && py >= 0 && py < texture.height)
                 {
                     texture.SetPixel(px, py, color);
                 }
@@ -158,14 +160,14 @@ public class MapImage : MonoBehaviour
         int targetX = x * textureSize;
         int targetY = (y + mapsizeY) * textureSize;
         int size = textureSize;
-        for (int dx = -size / 2; dx <= size / 2; dx++)
+        for(int dx = -size / 2; dx <= size / 2; dx++)
         {
-            for (int dy = -size / 2; dy <= size / 2; dy++)
+            for(int dy = -size / 2; dy <= size / 2; dy++)
             {
                 int px = targetX + dx;
                 int py = targetY + dy;
 
-                if (px >= 0 && px < texture.width && py >= 0 && py < texture.height)
+                if(px >= 0 && px < texture.width && py >= 0 && py < texture.height)
                 {
                     texture.SetPixel(px, py, Color.clear);
                 }
@@ -173,7 +175,7 @@ public class MapImage : MonoBehaviour
                 {
                     //print("픽셀을 그리려는 위치가 텍스쳐의 바깥임");
                 }
-                    
+
             }
         }
         print($"지우기로 한 좌표는 ({x},{y})");

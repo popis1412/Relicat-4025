@@ -311,7 +311,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -475,7 +475,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -637,7 +637,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -1343,7 +1343,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -1426,7 +1426,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -2408,7 +2408,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -2562,7 +2562,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -2640,7 +2640,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -2802,7 +2802,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -2885,7 +2885,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -3047,7 +3047,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -4006,7 +4006,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -5136,6 +5136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stageNum: 2
+  leftTopPos: {x: -10, y: 0}
   mapImage: {fileID: 1641466506}
 --- !u!114 &914210596
 MonoBehaviour:
@@ -5737,7 +5738,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -6226,7 +6227,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -6304,7 +6305,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -6471,7 +6472,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -6619,7 +6620,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -7844,7 +7845,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -8014,7 +8015,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -8092,7 +8093,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -8327,7 +8328,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -8507,7 +8508,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -8660,7 +8661,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -9004,7 +9005,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager
@@ -9082,7 +9083,7 @@ PrefabInstance:
       objectReference: {fileID: 3083855430976654824}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: stageNum
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3723327669396438254, guid: 0763acabc5f229a479500d49faf1cf1c, type: 3}
       propertyPath: effectManager

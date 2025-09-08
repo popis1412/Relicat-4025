@@ -11,6 +11,7 @@ public class StoryScene : MonoBehaviour
     [SerializeField] private GameObject storyScene;
     [SerializeField] private Sprite[] storyImages;
     private bool isActiveStroy = true;
+    private bool isSkipOnce = false;
 
     [SerializeField] private SkeletonAnimation storyAni;
     [SerializeField] private SkeletonDataAsset[] storyDataAssets;
@@ -18,6 +19,7 @@ public class StoryScene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isSkipOnce = false;
         storyNum = 0;
         storyAni.skeletonDataAsset = storyDataAssets[0];
         storyAni.Initialize(true);
@@ -55,12 +57,11 @@ public class StoryScene : MonoBehaviour
                     Invoke("InvokeLoadScene", 1.5f);
                     break;
             }
-
-
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !isSkipOnce)
         {
+            isSkipOnce = true;
             FadeEffect.Instance.OnFade(FadeState.FadeInOut);
             Invoke("InvokeLoadScene", 1.5f);
         }
