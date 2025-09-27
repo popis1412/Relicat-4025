@@ -18,6 +18,8 @@ public class Chunk : MonoBehaviour
     [SerializeField] int hardBlockCount = 7;    //생성할 단단한블럭 개수
     [SerializeField] int unbreakableCount = 3;  //생성할 안부서지는블럭 개수
     [SerializeField] int monsterBlockCount = 3;  //생성할 몬스터블럭 개수
+    [SerializeField] int poisonBlcokCount = 2; //생성할 독블럭 개수
+    [SerializeField] int explodeBlockCount = 2; //생성할 폭탄블럭 개수
 
 
     public void AppendBlocksDictionary()
@@ -70,6 +72,8 @@ public class Chunk : MonoBehaviour
             hardBlockCount = 3;    //생성할 단단한블럭 개수
             unbreakableCount = 0;  //생성할 안부서지는블럭 개수
             monsterBlockCount = 0;  //생성할 몬스터블럭 개수
+            poisonBlcokCount = 0;   //생성할 독블럭 개수
+            explodeBlockCount = 0;   //생성할 폭탄블럭 개수
         }
         else if (LoadScene.instance.difficulty_level == 0)
         {
@@ -81,6 +85,8 @@ public class Chunk : MonoBehaviour
             hardBlockCount = 7;    //생성할 단단한블럭 개수
             unbreakableCount = 3;  //생성할 안부서지는블럭 개수
             monsterBlockCount = 0;  //생성할 몬스터블럭 개수
+            poisonBlcokCount = 0;   //생성할 독블럭 개수(임의)
+            explodeBlockCount = 0;   //생성할 폭탄블럭 개수(임의)
         }
         else if (LoadScene.instance.difficulty_level == 1)
         {
@@ -92,6 +98,8 @@ public class Chunk : MonoBehaviour
             hardBlockCount = 7;    //생성할 단단한블럭 개수
             unbreakableCount = 3;  //생성할 안부서지는블럭 개수
             monsterBlockCount = 1;  //생성할 몬스터블럭 개수
+            poisonBlcokCount = 2;   //생성할 독블럭 개수(임의)
+            explodeBlockCount = 2;   //생성할 폭탄블럭 개수(임의)
         }
         else if (LoadScene.instance.difficulty_level == 2)
         {
@@ -103,6 +111,8 @@ public class Chunk : MonoBehaviour
             hardBlockCount = 7;    //생성할 단단한블럭 개수
             unbreakableCount = 3;  //생성할 안부서지는블럭 개수
             monsterBlockCount = 2;  //생성할 몬스터블럭 개수
+            poisonBlcokCount = 5;   //생성할 독블럭 개수(임의)
+            explodeBlockCount = 5;   //생성할 폭탄블럭 개수
         }
         else
         {
@@ -329,6 +339,14 @@ public class Chunk : MonoBehaviour
         //몬스터블럭 생성 시작
         generateBlock(numbers, blockChangeCount, monsterBlockCount, 5);
         //몬스터블럭 생성 끝
+
+        //독블럭 생성 시작
+        generateBlock(numbers, blockChangeCount, poisonBlcokCount, 101);
+        //독블럭 생성 끝
+
+        //폭탄블럭 생성 시작
+        generateBlock(numbers, blockChangeCount, poisonBlcokCount, 102);
+        //폭탄블럭 생성 끝
     }
 
 
