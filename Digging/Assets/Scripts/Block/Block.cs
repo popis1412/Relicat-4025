@@ -84,7 +84,6 @@ public class Block : MonoBehaviour
     [SerializeField] Sprite block_Poison_3;
     [SerializeField] Sprite block_Poison_4;
 
-    [SerializeField] Sprite block_UXB_0;
     [SerializeField] Sprite block_UXB_1;
     [SerializeField] Sprite block_UXB_2;
     [SerializeField] Sprite block_UXB_3;
@@ -287,8 +286,7 @@ public class Block : MonoBehaviour
             }
             else if (newBlockType == 102) //폭탄 블럭
             {
-                spriteRenderer.sprite = block_Normal_4; //폭탄블럭 이미지 들어올시 삭제할 행, 삭제후에는 block_UXB가 들어있으면서 주석처리된 모든 행의 주석을 없애야함
-                //spriteRenderer.sprite = block_UXB_0; 
+                spriteRenderer.sprite = block_Normal_0;
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
@@ -357,7 +355,7 @@ public class Block : MonoBehaviour
                     }
                     else if (blockType == 102) //폭탄 블럭
                     {
-                        //spriteRenderer.sprite = block_UXB_1;
+                        spriteRenderer.sprite = block_UXB_1;
                     }
                 }
                 else if (blockHealth < blockMaxHealth / 4 * 3 && blockHealth >= blockMaxHealth / 2) //블럭 체력이 4분의 3 이하 절반 이상일 때
@@ -404,7 +402,7 @@ public class Block : MonoBehaviour
                     }
                     else if (blockType == 102) //폭탄 블럭
                     {
-                        //spriteRenderer.sprite = block_UXB_2;
+                        spriteRenderer.sprite = block_UXB_2;
                     }
                 }
                 else if (blockHealth < blockMaxHealth / 2 && blockHealth >= blockMaxHealth / 4) //블럭 체력이 절반 이하 4분의 1 이상일 때
@@ -451,7 +449,7 @@ public class Block : MonoBehaviour
                     }
                     else if (blockType == 102) //폭탄 블럭
                     {
-                        //spriteRenderer.sprite = block_UXB_3;
+                        spriteRenderer.sprite = block_UXB_3;
                     }
                 }
                 else if (blockHealth < blockMaxHealth / 4 && blockHealth > 0) //블럭 체력이 4분의 1 이하일 때
@@ -498,7 +496,7 @@ public class Block : MonoBehaviour
                     }
                     else if (blockType == 102) //폭탄 블럭
                     {
-                        //spriteRenderer.sprite = block_UXB_4;
+                        spriteRenderer.sprite = block_UXB_4;
                     }
                 }
             }

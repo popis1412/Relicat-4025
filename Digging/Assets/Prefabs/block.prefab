@@ -182,11 +182,10 @@ MonoBehaviour:
   block_Poison_2: {fileID: 21300000, guid: d1d68e25a0e65a04cab12bd0b9f2037b, type: 3}
   block_Poison_3: {fileID: 21300000, guid: a5ca5b3968f7276418bd4e7f36f68f2a, type: 3}
   block_Poison_4: {fileID: 21300000, guid: 721b9edd21df94d408cad28579aaf63d, type: 3}
-  block_UXB_0: {fileID: 0}
-  block_UXB_1: {fileID: 0}
-  block_UXB_2: {fileID: 0}
-  block_UXB_3: {fileID: 0}
-  block_UXB_4: {fileID: 0}
+  block_UXB_1: {fileID: 21300000, guid: df1f319dd7444cd43846ddedbbfae991, type: 3}
+  block_UXB_2: {fileID: 21300000, guid: fc51ddee5acda7843b8570bb5f7416ff, type: 3}
+  block_UXB_3: {fileID: 21300000, guid: 0d240443e2294ac4980f232f5137f77f, type: 3}
+  block_UXB_4: {fileID: 21300000, guid: 6966f3e36eb877f4ba2175429b13df57, type: 3}
   nowBlockType: 0
   blockType: 0
   blockHealth: 3
