@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relicEffect: {fileID: 1965937476717315258, guid: d42c1c791b82e7a4e8adf2cc57f94f3a, type: 3}
+  explodeEffect: {fileID: 1278522267305725683, guid: 2e1f98f8764df494aa0eccdcd6b9326c, type: 3}
   dropItem: {fileID: 5480586821343649714, guid: 202c5e0557af70e4aaf46a08c4f977b3, type: 3}
   monster1: {fileID: 7607264377076006493, guid: ffa88da670edaeb459bc8f4f0d4202de, type: 3}
   block_Normal_0: {fileID: 21300000, guid: 65023ee168a12c447a36c79744bc962d, type: 3}
@@ -176,6 +177,16 @@ MonoBehaviour:
   block_unbreakable_0: {fileID: 21300000, guid: 6ca785946826488488f6193c53db908a, type: 3}
   boxCloseSprite: {fileID: 21300000, guid: b9c014df8fbd4ae4281a081c0cd835f0, type: 3}
   boxOpenSprite: {fileID: 21300000, guid: 295090e2154a2314b9288e304890a78c, type: 3}
+  block_Poison_0: {fileID: 21300000, guid: 8b19c88d36a4d7040b4c529a169ffa5b, type: 3}
+  block_Poison_1: {fileID: 21300000, guid: b474459947ddb574181a46d90436fbb1, type: 3}
+  block_Poison_2: {fileID: 21300000, guid: d1d68e25a0e65a04cab12bd0b9f2037b, type: 3}
+  block_Poison_3: {fileID: 21300000, guid: a5ca5b3968f7276418bd4e7f36f68f2a, type: 3}
+  block_Poison_4: {fileID: 21300000, guid: 721b9edd21df94d408cad28579aaf63d, type: 3}
+  block_UXB_0: {fileID: 0}
+  block_UXB_1: {fileID: 0}
+  block_UXB_2: {fileID: 0}
+  block_UXB_3: {fileID: 0}
+  block_UXB_4: {fileID: 0}
   nowBlockType: 0
   blockType: 0
   blockHealth: 3

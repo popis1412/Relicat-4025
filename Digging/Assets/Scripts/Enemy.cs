@@ -45,6 +45,7 @@ public class Enemy : MonoBehaviour
 
     public void EnemyDie() //플레이어or폭탄이 호출해서 적을 죽이는 함수
     {
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[25]);
         Destroy(this.gameObject);
     }
 

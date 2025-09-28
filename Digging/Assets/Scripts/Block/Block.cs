@@ -11,6 +11,8 @@ public class Block : MonoBehaviour
 {
     [SerializeField] GameObject relicEffect;
     GameObject actvieRelicEffect;
+
+    [SerializeField] GameObject explodeEffect;
     
 
     [SerializeField] GameObject dropItem;
@@ -76,6 +78,17 @@ public class Block : MonoBehaviour
     [SerializeField] Sprite boxCloseSprite;
     [SerializeField] Sprite boxOpenSprite;
 
+    [SerializeField] Sprite block_Poison_0;
+    [SerializeField] Sprite block_Poison_1;
+    [SerializeField] Sprite block_Poison_2;
+    [SerializeField] Sprite block_Poison_3;
+    [SerializeField] Sprite block_Poison_4;
+
+    [SerializeField] Sprite block_UXB_0;
+    [SerializeField] Sprite block_UXB_1;
+    [SerializeField] Sprite block_UXB_2;
+    [SerializeField] Sprite block_UXB_3;
+    [SerializeField] Sprite block_UXB_4;
 
 
     public int nowBlockType = 0; //다른 코드에서 blockChange를 실행했지만 실제 blockType 변동까지 느리기 때문에 다른 코드에서 blockChange를 호출함과 동시에 미리 무슨 blockType 으로 바뀔지 확인할 변수
@@ -103,6 +116,11 @@ public class Block : MonoBehaviour
     bool boxOpen = false;
     float boxDestroyCount = 2f;
 
+    BoxCollider2D originalBoxCollider;
+    BoxCollider2D hitBoxCollider;
+
+    float hitCooldown = 0f;
+
     Player player;
     PlayerController playerController;
     
@@ -112,6 +130,7 @@ public class Block : MonoBehaviour
         spriteRenderer = this.GetComponent<SpriteRenderer>();
         player = Player.FindAnyObjectByType<Player>();
         playerController = PlayerController.FindAnyObjectByType<PlayerController>();
+        originalBoxCollider = this.GetComponent<BoxCollider2D>();
     }
 
     void ItemDrop(int itemType, int itemCode, Player playerScript, int addEA) //itemType 0은 유물, 1은 광물 2는 사용아이템 3은 드릴 아이템 4는 드릴 배터리
@@ -148,104 +167,134 @@ public class Block : MonoBehaviour
     public void ChangeBlock(int newBlockType)   //블럭 교체 명령
     {
         //-2는 세이브데이터에 안들어갈 무적블럭,-1은 무적블럭, 0은 normal, 1은 보물상자, 2는 석탄, 3은 단단한바위, 4는 유물, 5는 몬스터, 6은 모래, 7은 구리, 8은 철(은), 9는 금, 10은 루비, 11은 다이아
+        //101은 독블럭 102는 폭탄블럭
         //if (blockType != 0)
         //    Debug.Log(transform.position + " : 잘못된 호출");
         if (blockType != -2)
         {
             blockType = newBlockType;
 
+            //일단 유물이펙트 활성화 되어있으면 삭제
             if(actvieRelicEffect != null)
             {
                 Destroy(actvieRelicEffect);
                 actvieRelicEffect = null;
             }
 
-            BoxCollider2D boxCollider = this.gameObject.GetComponent<BoxCollider2D>();
-            if (boxCollider != null && boxCollider.isTrigger == true && newBlockType != 1)
+            //상자가 아니라면 콜라이더의 트리거 삭제
+            if (originalBoxCollider != null && originalBoxCollider.isTrigger == true && newBlockType != 1)
             {
-                boxCollider.isTrigger = false;
+                originalBoxCollider.isTrigger = false;
             }
 
-            if (newBlockType == -1 || newBlockType == -2)
+            //독블럭 전환시 생성된 히트박스가 남아있으면 일단 삭제
+            if(hitBoxCollider != null)
+            {
+                Destroy (hitBoxCollider);
+            }
+
+
+            if (newBlockType == -1 || newBlockType == -2) //무적블럭
             {
                 spriteRenderer.sprite = block_unbreakable_0;
                 blockHealth = 100;
                 blockMaxHealth = 100;
             }
-            else if (newBlockType == 0)
+            else if (newBlockType == 0) //기본블럭
             {
                 spriteRenderer.sprite = block_Normal_0;
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
-            else if(newBlockType == 1)
+            else if (newBlockType == 1) //보물상자
             {
-                spriteRenderer.sprite = boxCloseSprite;     //보물상자 들어와야 함
-                if (boxCollider != null)
+                spriteRenderer.sprite = boxCloseSprite;
+                if (originalBoxCollider != null)
                 {
-                    boxCollider.isTrigger = true;
+                    originalBoxCollider.isTrigger = true;
                 }
             }
-            else if (newBlockType == 2)
+            else if (newBlockType == 2) //석탄
             {
                 spriteRenderer.sprite = block_Jewel_Coal_0;
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
-            else if (newBlockType == 3)
+            else if (newBlockType == 3) //단단한 바위
             {
                 spriteRenderer.sprite = block_Rock_0;
                 blockHealth = 9;
                 blockMaxHealth = 9;
             }
-            else if (newBlockType == 4)
+            else if (newBlockType == 4) //유물
             {
                 spriteRenderer.sprite = block_Normal_0;
                 actvieRelicEffect = Instantiate(relicEffect, this.transform);
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
-            else if (newBlockType == 5)
+            else if (newBlockType == 5) //몬스터 블럭
             {
                 spriteRenderer.sprite = block_Normal_1; //일반블럭처럼 보이게 함
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
-            else if (newBlockType == 6)
+            else if (newBlockType == 6) //모래
             {
                 spriteRenderer.sprite = block_Sand_0;
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
-            else if (newBlockType == 7)
+            else if (newBlockType == 7) //구리
             {
                 spriteRenderer.sprite = block_Jewel_Copper_0;
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
-            else if (newBlockType == 8)
+            else if (newBlockType == 8) //철
             {
                 spriteRenderer.sprite = block_Jewel_Iron_0;
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
-            else if (newBlockType == 9)
+            else if (newBlockType == 9) //금
             {
                 spriteRenderer.sprite = block_Jewel_Gold_0;
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
-            else if (newBlockType == 10)
+            else if (newBlockType == 10) //루비
             {
                 spriteRenderer.sprite = block_Jewel_Ruby_0;
                 blockHealth = 3;
                 blockMaxHealth = 3;
             }
-            else if (newBlockType == 11)
+            else if (newBlockType == 11) //다이아
             {
                 spriteRenderer.sprite = block_Jewel_Diamond_0;
                 blockHealth = 3;
                 blockMaxHealth = 3;
+            }
+            else if (newBlockType == 101) //독블럭
+            {
+                spriteRenderer.sprite = block_Poison_0;
+                blockHealth = 3;
+                blockMaxHealth = 3;
+
+                hitBoxCollider = this.gameObject.AddComponent<BoxCollider2D>();
+                hitBoxCollider.isTrigger = true;
+                hitBoxCollider.size = new Vector2(1.1f, 1.1f);
+            }
+            else if (newBlockType == 102) //폭탄 블럭
+            {
+                spriteRenderer.sprite = block_Normal_4; //폭탄블럭 이미지 들어올시 삭제할 행, 삭제후에는 block_UXB가 들어있으면서 주석처리된 모든 행의 주석을 없애야함
+                //spriteRenderer.sprite = block_UXB_0; 
+                blockHealth = 3;
+                blockMaxHealth = 3;
+            }
+            else
+            {
+                print($"설정 해두지 않은 블럭 코드로 변환을 시도했습니다!\n해당 블럭의 좌표는 ({this.transform.position.x}, {this.transform.position.y})이며 시도한 블럭코드는 {newBlockType}입니다!");
             }
         }
         else
@@ -264,7 +313,7 @@ public class Block : MonoBehaviour
                 if(blockType >= 0)
                     blockHealth -= blockDamage;
 
-                if (blockHealth < blockMaxHealth && blockHealth >= blockMaxHealth / 4 * 3) //블럭 체력이 3분의 1 이하일 때
+                if (blockHealth < blockMaxHealth && blockHealth >= blockMaxHealth / 4 * 3) //블럭 체력이 최대는 아니지만 4분의 3 이상일 때
                 {
                     if (blockType == 0 || blockType == 4 ||blockType == 5) //일반블럭 or 유물블럭 or몬스터 블럭
                     {
@@ -302,8 +351,16 @@ public class Block : MonoBehaviour
                     {
                         spriteRenderer.sprite = block_Jewel_Diamond_1;
                     }
+                    else if(blockType == 101) //독블럭
+                    {
+                        spriteRenderer.sprite = block_Poison_1;
+                    }
+                    else if (blockType == 102) //폭탄 블럭
+                    {
+                        //spriteRenderer.sprite = block_UXB_1;
+                    }
                 }
-                else if (blockHealth < blockMaxHealth / 4 * 3 && blockHealth >= blockMaxHealth / 2) //블럭 체력이 3분의 1 이하일 때
+                else if (blockHealth < blockMaxHealth / 4 * 3 && blockHealth >= blockMaxHealth / 2) //블럭 체력이 4분의 3 이하 절반 이상일 때
                 {
                     if (blockType == 0 || blockType == 4 || blockType == 5) //일반블럭 or 유물블럭 or몬스터 블럭
                     {
@@ -341,8 +398,16 @@ public class Block : MonoBehaviour
                     {
                         spriteRenderer.sprite = block_Jewel_Diamond_2;
                     }
+                    else if (blockType == 101) //독블럭
+                    {
+                        spriteRenderer.sprite = block_Poison_2;
+                    }
+                    else if (blockType == 102) //폭탄 블럭
+                    {
+                        //spriteRenderer.sprite = block_UXB_2;
+                    }
                 }
-                else if (blockHealth < blockMaxHealth / 2 && blockHealth >= blockMaxHealth / 4) //블럭 체력이 3분의 1 이하일 때
+                else if (blockHealth < blockMaxHealth / 2 && blockHealth >= blockMaxHealth / 4) //블럭 체력이 절반 이하 4분의 1 이상일 때
                 {
                     if (blockType == 0 || blockType == 4 || blockType == 5) //일반블럭 or 유물블럭 or몬스터 블럭
                     {
@@ -380,8 +445,16 @@ public class Block : MonoBehaviour
                     {
                         spriteRenderer.sprite = block_Jewel_Diamond_3;
                     }
+                    else if (blockType == 101) //독블럭
+                    {
+                        spriteRenderer.sprite = block_Poison_3;
+                    }
+                    else if (blockType == 102) //폭탄 블럭
+                    {
+                        //spriteRenderer.sprite = block_UXB_3;
+                    }
                 }
-                else if (blockHealth < blockMaxHealth / 4 && blockHealth > 0) //블럭 체력이 3분의 1 이하일 때
+                else if (blockHealth < blockMaxHealth / 4 && blockHealth > 0) //블럭 체력이 4분의 1 이하일 때
                 {
                     if (blockType == 0 || blockType == 4 || blockType == 5) //일반블럭 or 유물블럭 or몬스터 블럭
                     {
@@ -418,6 +491,14 @@ public class Block : MonoBehaviour
                     else if (blockType == 11) //다이아
                     {
                         spriteRenderer.sprite = block_Jewel_Diamond_4;
+                    }
+                    else if (blockType == 101) //독블럭
+                    {
+                        spriteRenderer.sprite = block_Poison_4;
+                    }
+                    else if (blockType == 102) //폭탄 블럭
+                    {
+                        //spriteRenderer.sprite = block_UXB_4;
                     }
                 }
             }
@@ -506,6 +587,18 @@ public class Block : MonoBehaviour
                     SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[1]);
                     ItemDrop(1, 5, playerScript, 1);
                 }
+                else if (blockType == 101) 
+                {
+                    //독블럭 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[1]);
+                }
+                else if (blockType == 102) 
+                {
+                    //폭탄블럭 부쉈을 때
+                    SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[1]);
+
+                    Instantiate(explodeEffect, this.transform.position, Quaternion.identity);
+                }
 
                 blocksDictionary.DestroyBlock(this.gameObject);
                 if (isGroundSurface)
@@ -522,7 +615,7 @@ public class Block : MonoBehaviour
                     }
                 }
 
-                Destroy(this.gameObject);//무조건 이 if문에서 맨 마지막으로
+                Destroy(this.gameObject);//무조건 이 블럭파괴 if문에서 맨 마지막으로
                 
             }
         }
@@ -707,17 +800,28 @@ public class Block : MonoBehaviour
             }
 
         }
+
+        if (hitCooldown > 0)
+        {
+            hitCooldown -= Time.deltaTime;
+        }
     }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (blockType == 1 && collision.tag == "Player")
+        if (blockType == 1 && collision.tag == "Player") //보물상자 열 수 있음
         {
             getPlayer = collision.gameObject;
             canOpenBox = true;
         }
 
+        if ((blockType == 101) && collision.tag == "Player" && hitCooldown <= 0 && collision.gameObject.GetComponent<PlayerController>() != null) //플레이어 공격
+        {
+            hitCooldown = 1;
+            getPlayer = collision.gameObject;
+            getPlayer.GetComponent<PlayerController>().TakeDamage(1, this.transform);
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -727,6 +831,13 @@ public class Block : MonoBehaviour
             getPlayer = collision.gameObject;
             canOpenBox = true;
         }
+
+        if ((blockType == 101) && collision.tag == "Player" && hitCooldown <= 0 && collision.gameObject.GetComponent<PlayerController>() != null)
+        {
+            hitCooldown = 1;
+            getPlayer = collision.gameObject;
+            getPlayer.GetComponent<PlayerController>().TakeDamage(1, this.transform);
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -735,6 +846,13 @@ public class Block : MonoBehaviour
         {
             getPlayer = collision.gameObject;
             canOpenBox = false;
+        }
+
+        if ((blockType == 101) && collision.tag == "Player" && hitCooldown <= 0 && collision.gameObject.GetComponent<PlayerController>() != null)
+        {
+            hitCooldown = 1;
+            getPlayer = collision.gameObject;
+            getPlayer.GetComponent<PlayerController>().TakeDamage(1, this.transform);
         }
     }
 }

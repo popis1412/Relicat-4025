@@ -93,7 +93,7 @@ public class Pickaxe : MonoBehaviour
     private void PlayDigSound(int blockType)
     {
         //// Dig »ç¿îµå
-        if(blockType == 0 || blockType == 4 || blockType == 5)
+        if(blockType == 0 || blockType == 4 || blockType == 5 || blockType == 101 || blockType == 102)
         {
             int idx = UnityEngine.Random.Range(5, 9);
             if(isDigging && isDigSound == false)
