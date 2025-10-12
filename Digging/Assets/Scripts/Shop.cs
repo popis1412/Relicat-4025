@@ -18,11 +18,16 @@ public class Shop : MonoBehaviour
     public int shopView_idx;
     [SerializeField] private GameObject[] shopList;
 
+    // 곡괭이
     public Image pickImage;
     public TextMeshProUGUI shop_pickLvText;
     public TextMeshProUGUI shop_pickUpdateText;
+    // 시야
     public TextMeshProUGUI shop_lightLvText;
     public TextMeshProUGUI shop_lightUpdateText;
+    // 체력
+    public TextMeshProUGUI shop_hpLvText;
+    public TextMeshProUGUI shop_hpUpdateText;
 
     public GameObject playerlight;
 
@@ -35,6 +40,9 @@ public class Shop : MonoBehaviour
     public GameObject upgradeDrill_textobj;
     public TextMeshProUGUI drill_Lv_Text;
     public bool isCreateDrill;
+
+    // 시간 구매
+    private int timer_value = 100;
 
     private void Awake()
     {
@@ -57,7 +65,7 @@ public class Shop : MonoBehaviour
     private void Start()
     {
         shopView_idx = 0;
-        Switch_ShopView();
+        //Switch_ShopView();
 
         //if(SlotManager.Instance.IsEquipWeapon(WeaponType.Pickaxe) == true)
         //    pick_damage = SlotManager.Instance.currentWeapon._instanceW._damage;
@@ -260,15 +268,78 @@ public class Shop : MonoBehaviour
 
     }
 
+    public void Button_Buy_Item_AddTime()
+    {
+        if (Inventory.money_item.count >= timer_value)
+        {
+            Inventory.money_item.count -= timer_value;
+
+            LevelManager.instance.remainingTime += 60f;
+            LevelManager.instance.UpdateTimerUI();
+
+            Inventory.LogMessage("시간이 1분 추가되었습니다.");
+
+            Inventory.FreshSlot();
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
+
+        }
+        else
+        {
+            Inventory.LogMessage("돈이 부족합니다");
+        }
+    }
+
+    public void Button_Buy_Item_ResetTicket()
+    {
+        if (Inventory.money_item.count >= player.UseItems[5].value)
+        {
+            Inventory.money_item.count -= player.UseItems[5].value;
+            Inventory.AddItem(player.UseItems[5], 1);
+
+            
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[33]);
+
+        }
+        else
+        {
+            Inventory.LogMessage("돈이 부족합니다");
+        }
+
+    }
+
     // 업그레이드 버튼
     public void Button_Upgrade_Pick()
     {
-        if(Inventory.money_item.count >= player.UpgradeItems[0].value)
-        {            
+        // 1스테이지
+        if(LoadScene.instance.stage_Level == 0 && player.UpgradeItems[0].count < 10)
+        {
+            buy_pick();
+        }
+        else if(LoadScene.instance.stage_Level == 1 && player.UpgradeItems[0].count < 20)
+        {
+            buy_pick();
+        }
+        else if(LoadScene.instance.stage_Level == 2 && player.UpgradeItems[0].count < 30)
+        {
+            buy_pick();
+        }
+        else
+        {
+            Inventory.LogMessage("다음 스테이지에서 해금 됩니다.");
+        }
+
+    }
+
+    void buy_pick()
+    {
+        if (Inventory.money_item.count >= player.UpgradeItems[0].value)
+        {
             Inventory.money_item.count -= player.UpgradeItems[0].value;
 
             // 이미지 삽입
-            if(SlotManager.Instance.currentWeapon._instanceW._template.type == WeaponType.Pickaxe)
+            if (SlotManager.Instance.currentWeapon._instanceW._template.type == WeaponType.Pickaxe)
             {
                 SlotManager.Instance.currentWeapon._instanceW._damage = pick_damage;
                 SlotManager.Instance.UpgradeWeapon(SlotManager.Instance.currentWeapon);
@@ -294,6 +365,7 @@ public class Shop : MonoBehaviour
             Inventory.LogMessage("돈이 부족합니다");
         }
     }
+
     public void Button_Upgrade_EyeLight()
     {
         if(Inventory.money_item.count >= player.UpgradeItems[1].value)
@@ -312,6 +384,34 @@ public class Shop : MonoBehaviour
             SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
 
             Inventory.LogMessage("시야 업그레이드 완료");
+        }
+        else
+        {
+            Inventory.LogMessage("돈이 부족합니다");
+        }
+    }
+
+    public void Button_Upgrade_HP()
+    {
+        if (Inventory.money_item.count >= player.UpgradeItems[2].value)
+        {
+            Inventory.money_item.count -= player.UpgradeItems[2].value;
+            
+            
+            player.UpgradeItems[2].count++;
+            shop_hpLvText.text = "레벨 : " + player.UpgradeItems[2].count;
+            player.UpgradeItems[2].value += 50;
+            shop_hpUpdateText.text = "-" + player.UpgradeItems[2].value.ToString();
+
+            player.currentHP += 1;
+            player.SetHP();
+
+            Inventory.FreshSlot();
+
+            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[31]);
+
+            Inventory.LogMessage("체력 업그레이드 완료");
+            Debug.Log("현재 최대 체력은 : " + player.total_maxHP);
         }
         else
         {

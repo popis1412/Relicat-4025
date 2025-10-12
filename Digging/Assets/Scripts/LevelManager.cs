@@ -17,7 +17,7 @@ public class LevelManager : MonoBehaviour
 
     // 스테이지 목표 유물 개수
     public GameObject stagetargetUI;
-    [SerializeField] private TextMeshProUGUI stagetargetNumText;
+    public TextMeshProUGUI stagetargetNumText;
     private Color originalTargetTextColor;
     public int[] stagetargetNum = new int[2];
 
@@ -134,9 +134,9 @@ public class LevelManager : MonoBehaviour
         {
             Toggle_GuidePanel();
             player = FindObjectOfType<Player>();
-            Debug.Log("asdfaeaafsa");
+            
         }
-        Debug.Log("asdfaeaafsa11111111111111");
+        
 
         if(scene.buildIndex != 3) return;
         if(scene.buildIndex == 3)
@@ -160,42 +160,22 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (LoadScene.instance.stage_Level == 0)
-        {
-            stagetargetNumText.text = collection.collect_sum.ToString() + " / 10";
-        }
-        else if (LoadScene.instance.stage_Level == 1)
-        {
-            stagetargetNumText.text = collection.collect_sum.ToString() + " / 20";
-        }
-        else if(LoadScene.instance.stage_Level == 2)
-        {
-            stagetargetNumText.text = collection.collect_sum.ToString() + " / 30";
-        }
+        //if (LoadScene.instance.stage_Level == 0)
+        //{
+        //    stagetargetNumText.text = collection.collect_sum.ToString() + " / 10";
+        //}
+        //else if (LoadScene.instance.stage_Level == 1)
+        //{
+        //    stagetargetNumText.text = collection.collect_sum.ToString() + " / 20";
+        //}
+        //else if(LoadScene.instance.stage_Level == 2)
+        //{
+        //    stagetargetNumText.text = collection.collect_sum.ToString() + " / 30";
+        //}
         
         if(collection.collect_sum >= stagetargetNum[LoadScene.instance.stage_Level] && isStageClear == false)
         {
-            stagetargetNumText.color = Color.green;
-            stagetimerText.color = Color.green;
-
-            isRunning = false;
-            SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[37]);
-            isStageClear = true;
-
-            if (LoadScene.instance.stage_Level == 0)
-            {
-                ClearStagePanel_1.SetActive(true);
-            }
-            else if (LoadScene.instance.stage_Level == 1)
-            {
-                ClearStagePanel_2.SetActive(true);
-            }
-            else if(LoadScene.instance.stage_Level == 2)
-            {
-                ClearStagePanel_3.SetActive(true);
-            }
             
-            collection.player.player.input.Disable();
         }
         
         if(SceneManager.GetActiveScene().buildIndex > 2 && stagetargetUI.activeSelf == true && !isStageClear)
@@ -237,7 +217,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    void UpdateTimerUI()
+    public void UpdateTimerUI()
     {
         int minutes = Mathf.FloorToInt(remainingTime / 60f);
         int seconds = Mathf.FloorToInt(remainingTime % 60f);
@@ -253,6 +233,31 @@ public class LevelManager : MonoBehaviour
         }
     }
     
+    public void stageClear()
+    {
+        stagetargetNumText.color = Color.green;
+        stagetimerText.color = Color.green;
+
+        isRunning = false;
+        SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[37]);
+        isStageClear = true;
+
+        if (LoadScene.instance.stage_Level == 0)
+        {
+            ClearStagePanel_1.SetActive(true);
+        }
+        else if (LoadScene.instance.stage_Level == 1)
+        {
+            ClearStagePanel_2.SetActive(true);
+        }
+        else if (LoadScene.instance.stage_Level == 2)
+        {
+            ClearStagePanel_3.SetActive(true);
+        }
+
+        collection.player.player.input.Disable();
+    }
+
     public void EndingSequence()
     {
         isOnEnding = true;
@@ -303,6 +308,9 @@ public class LevelManager : MonoBehaviour
         stagetimerText.color = originalTimerTextColor;
 
         collection.collect_sum = 0;
+        collection.collect_count = 0;
+        stagetargetNumText.text = collection.collect_count.ToString() + " / 10";
+
         SoundManager.Instance.SFXPlay(SoundManager.Instance.SFXSounds[28]);
         //isStageClear = false;
 
@@ -474,6 +482,8 @@ public class LevelManager : MonoBehaviour
         collection.player.UpgradeItems[0].value = 10;
         collection.player.UpgradeItems[1].count = 1;
         collection.player.UpgradeItems[1].value = 50;
+        collection.player.UpgradeItems[2].count = 1;
+        collection.player.UpgradeItems[2].value = 50;
 
         collection.Inventory.money_item.count = 0;
         collection.Inventory.ClearItem();
@@ -539,6 +549,8 @@ public class LevelManager : MonoBehaviour
         collection.player.UpgradeItems[0].value = 10;
         collection.player.UpgradeItems[1].count = 1;
         collection.player.UpgradeItems[1].value = 50;
+        collection.player.UpgradeItems[2].count = 1;
+        collection.player.UpgradeItems[2].value = 50;
 
         collection.player.Drill_Items[1].count = 0;
         collection.player.Drill_Items[2].count = 0;
@@ -611,6 +623,8 @@ public class LevelManager : MonoBehaviour
         collection.player.UpgradeItems[0].value = 10;
         collection.player.UpgradeItems[1].count = 1;
         collection.player.UpgradeItems[1].value = 50;
+        collection.player.UpgradeItems[2].count = 1;
+        collection.player.UpgradeItems[2].value = 50;
 
         collection.player.Drill_Items[1].count = 0;
         collection.player.Drill_Items[2].count = 0;

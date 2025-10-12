@@ -39,8 +39,11 @@ public class Inventory : MonoBehaviour
     public GameObject moneyPanel;
     public GameObject healthPanel;
 
-    [SerializeField] private GameObject logMessage_Panel;
+    [SerializeField] private GameObject logText_obj;
     [SerializeField] private TextMeshProUGUI logText;
+    [SerializeField] private GameObject logMessage_Panel;
+    
+    
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -377,8 +380,9 @@ public class Inventory : MonoBehaviour
     public void LogMessage(string log)
     {
         logText.text = log;
+        logText_obj.SetActive(true);
 
-        logMessage_Panel.SetActive(true);
+        //logMessage_Panel.SetActive(true);
 
         CancelInvoke("closeLogMessage");
         Invoke("closeLogMessage", 3f);
@@ -386,7 +390,7 @@ public class Inventory : MonoBehaviour
 
     private void closeLogMessage()
     {
-        logMessage_Panel.SetActive(false);
+        logText_obj.SetActive(false);
         logText.text = "";
     }
 }

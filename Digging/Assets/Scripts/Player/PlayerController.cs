@@ -47,6 +47,9 @@ public class PlayerController : MonoBehaviour
     int maxHP;
     int currentHP = 0;
 
+    [SerializeField] private Transform healthBar; // 체력바 Transform 연결 (인스펙터에서 드래그)
+    private bool facingRight = true;
+
     // Block Detection
     private int blockLayer;
 
@@ -240,9 +243,26 @@ public class PlayerController : MonoBehaviour
 
         if(moveInput.x != 0)
         {
-            Vector3 newScale = transform.localScale;
-            newScale.x = moveInput.x > 0 ? 0.9f : -0.9f;
-            transform.localScale = newScale;
+            bool isMovingRight = moveInput.x > 0;
+
+            // 🟢 방향이 바뀌었을 때만 스케일 변경
+            if (isMovingRight != facingRight)
+            {
+                facingRight = isMovingRight;
+
+                // 캐릭터 반전
+                Vector3 newScale = transform.localScale;
+                newScale.x = isMovingRight ? 0.9f : -0.9f;
+                transform.localScale = newScale;
+
+                // 체력바 반전 방지
+                if (healthBar != null)
+                {
+                    Vector3 hbScale = healthBar.localScale;
+                    hbScale.x *= -1;
+                    healthBar.localScale = hbScale;
+                }
+            }
 
             if (switchStepSound && !footstepAudioSourse02.isPlaying && isGround)
             {
@@ -399,7 +419,7 @@ public class PlayerController : MonoBehaviour
 
         if(damage > 0)
         {
-            playerScript.LostPlayerLife(currentHP);
+            playerScript.LostHP(damage);
         }
     }
 
@@ -439,7 +459,7 @@ public class PlayerController : MonoBehaviour
         transform.position = new Vector3(15.5f, 0.5f, 0f);
         sr.color = Color.white;
         currentHP = maxHP;
-        playerScript.AddPlayerLife(currentHP);
+        playerScript.GroundAutoHeal();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

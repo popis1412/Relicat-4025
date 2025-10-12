@@ -19,12 +19,12 @@ MonoBehaviour:
   levelSprite:
   - level: 1
     sprite: {fileID: 21300000, guid: f60f233f88987d642bf531283ff6b2d4, type: 3}
-  - level: 15
-    sprite: {fileID: 21300000, guid: 79e8a98219e0e854ca7de4a24c2b504e, type: 3}
-  - level: 35
-    sprite: {fileID: 21300000, guid: f83ad5343b2fb434780691c4dd83a8d3, type: 3}
-  - level: 50
-    sprite: {fileID: 21300000, guid: f4806b3c905f798478198effe34235d2, type: 3}
+  - level: 5
+    sprite: {fileID: 21300000, guid: dfbac0bf0ef293841afd259f425c7360, type: 3}
+  - level: 11
+    sprite: {fileID: 21300000, guid: 3323c52e673fc764c83fc4aafd9d39e6, type: 3}
+  - level: 21
+    sprite: {fileID: 21300000, guid: 3ef3332c5de03af49aec9ae55a92c364, type: 3}
   damage: 6
   level: 1
   range: {x: 1, y: 1}
